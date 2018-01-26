@@ -1,25 +1,28 @@
 #!/bin/bash
 
+# 0. Notify & get message
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
-
-# Commit changes.
 msg="Rebuilding site `date`"
 if [ $# -eq 1 ]
   then msg="$1"
 fi
-git commit -m "$msg"
 
-# Build the project.
-hugo
-
-# Checkout to master
-git checkout master
-# Add changes to git.
+# 1. Commit changes to develop first
 git add .
 git commit -m "$msg"
 
-# Push source and build repos.
-git push origin master
+# 2. Build the project in develop
+hugo
 
-# Come back to develop
+# 3. Checkout to master
+git checkout master
+
+# 4. Add changes to master
+git add .
+git commit -m "$msg"
+
+# 5. Push to develop & master
+git push origin master develop
+
+# 6. Come back to develop
 git checkout develop
