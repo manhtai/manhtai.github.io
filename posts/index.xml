@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Go slowly</title>
+    <link>https://manhtai.github.io/posts/</link>
+    <description>Recent content in Posts on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 26 Jan 2018 23:52:49 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2018</title>
+      <link>https://manhtai.github.io/posts/2018/</link>
+      <pubDate>Fri, 26 Jan 2018 23:52:49 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/2018/</guid>
+      <description>&lt;p&gt;A new year has come, guess what, I made a new blog. Yay!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

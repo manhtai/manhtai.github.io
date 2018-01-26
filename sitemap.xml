@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/2018/</loc>
+    <lastmod>2018-01-26T23:52:49+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/about/</loc>
+    <lastmod>2018-01-26T23:51:08+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/archives/</loc>
+    <lastmod>2018-01-26T23:49:57+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/</loc>
+    <lastmod>2018-01-26T23:52:49+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/new-year/</loc>
+    <lastmod>2018-01-26T23:52:49+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2018-01-26T23:52:49+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/short/</loc>
+    <lastmod>2018-01-26T23:52:49+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2018-01-26T23:52:49+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>
