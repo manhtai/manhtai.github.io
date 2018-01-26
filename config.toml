@@ -1,8 +1,0 @@
-baseURL = "https://manhtai.github.io/"
-languageCode = "en-us"
-title = "Go slowly"
-
-theme = "one"
-
-[params]
-    navigation = ["archives.md", "about.md"]
