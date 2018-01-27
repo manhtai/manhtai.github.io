@@ -12,11 +12,11 @@
     
     
     <item>
-      <title>Django transaction</title>
-      <link>https://manhtai.github.io/posts/django-transaction/</link>
+      <title>Django transactions</title>
+      <link>https://manhtai.github.io/posts/django-transactions/</link>
       <pubDate>Sat, 27 Jan 2018 17:39:26 +0700</pubDate>
       
-      <guid>https://manhtai.github.io/posts/django-transaction/</guid>
+      <guid>https://manhtai.github.io/posts/django-transactions/</guid>
       <description>&lt;p&gt;Django &lt;a href=&#34;https://docs.djangoproject.com/en/dev/topics/db/transactions/&#34;&gt;documentation&lt;/a&gt; about transaction points out:&lt;/p&gt;
 
 &lt;blockquote&gt;
