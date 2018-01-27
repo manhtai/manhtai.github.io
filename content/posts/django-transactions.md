@@ -1,6 +1,7 @@
 ---
 title: "Django transactions"
 date: 2018-01-27T17:39:26+07:00
+tags: ["python", "django"]
 draft: false
 ---
 
