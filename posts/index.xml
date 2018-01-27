@@ -6,10 +6,52 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Jan 2018 16:26:24 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 27 Jan 2018 17:39:26 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Django transaction</title>
+      <link>https://manhtai.github.io/posts/django-transaction/</link>
+      <pubDate>Sat, 27 Jan 2018 17:39:26 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/django-transaction/</guid>
+      <description>&lt;p&gt;Django &lt;a href=&#34;https://docs.djangoproject.com/en/dev/topics/db/transactions/&#34;&gt;documentation&lt;/a&gt; about transaction points out:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Django uses transactions or savepoints automatically to guarantee the integrity
+of ORM operations that require multiple queries, especially &lt;code&gt;delete()&lt;/code&gt; and
+&lt;code&gt;update()&lt;/code&gt; queries.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This means whenever we call &lt;code&gt;save()&lt;/code&gt; or &lt;code&gt;create()&lt;/code&gt;, it&amp;rsquo;s already wrapped in
+a transaction. And usually new data is not in the database yet when we try to
+get that again somewhere after.&lt;/p&gt;
+
+&lt;p&gt;To make sure it&amp;rsquo;s commited, we have to use &lt;code&gt;transaction.on_commit()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;There are 2 popular cases I find that we must use &lt;code&gt;on_commit()&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The first one&lt;/em&gt; is when we send task to a Celery queue. The error we usually made
+here is to put that on a &lt;code&gt;post_save&lt;/code&gt; signal and hope for the best. Remember that
+&lt;code&gt;post_save&lt;/code&gt; is in the same transaction with &lt;code&gt;save()&lt;/code&gt;, so there is no guarantee
+that new data will be in the database when Celery task get it from there.&lt;/p&gt;
+
+&lt;p&gt;We must use put the task to &lt;code&gt;on_commit()&lt;/code&gt; function like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;transaction.on_commit(lambda: celery_task_with_id(id))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;The second case&lt;/em&gt; is when we want to do something after all inline forms in
+admin page is saved. But the thing we actually want is data is commited to
+database. You already know how to do it, just like the case above.&lt;/p&gt;
+
+&lt;p&gt;The catch here is we can put &lt;code&gt;on_commit()&lt;/code&gt; function in many places, as long as
+it&amp;rsquo;s in the transaction. I usually put that on &lt;code&gt;save_model()&lt;/code&gt; or &lt;code&gt;save_related()&lt;/code&gt;,
+depend on what extra infomation I need for further processing.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Metabase alerts</title>
