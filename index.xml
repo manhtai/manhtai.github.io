@@ -65,6 +65,8 @@ git push origin master develop
 # 6. Come back to develop
 git checkout develop
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can checkout the source code &lt;a href=&#34;https://github.com/manhtai/manhtai.github.io&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     
