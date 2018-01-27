@@ -1,6 +1,6 @@
 baseURL = "https://manhtai.github.io/"
 languageCode = "en-us"
-publishDir = "."
+publishDir = "public"
 title = "Go slowly"
 
 theme = "one"

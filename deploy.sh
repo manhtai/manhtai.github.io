@@ -18,6 +18,7 @@ hugo
 git checkout master
 
 # 4. Add changes to master
+mv public/* .
 git add .
 git commit -m "$msg"
 
