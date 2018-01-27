@@ -18,6 +18,42 @@
       
       <guid>https://manhtai.github.io/posts/2018/</guid>
       <description>&lt;p&gt;A new year has come, guess what, I made a new blog. Yay!&lt;/p&gt;
+
+&lt;p&gt;This blog is powered by &lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt; and hosted by &lt;a href=&#34;https://github.com&#34;&gt;GitHub&lt;/a&gt;. I modified the
+&lt;a href=&#34;https://gohugo.io/hosting-and-deployment/hosting-on-github/#github-user-or-organization-pages&#34;&gt;deployment script&lt;/a&gt; a little bit to use 2 braches in 1 repo instead of
+2 repos. It looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;#!/bin/bash
+
+# 0. Notify &amp;amp; get message
+echo -e &amp;quot;\033[0;32mDeploying updates to GitHub...\033[0m&amp;quot;
+msg=&amp;quot;Rebuilding site `date`&amp;quot;
+if [ $# -eq 1 ]
+  then msg=&amp;quot;$1&amp;quot;
+fi
+
+# 1. Commit changes to develop first
+git add .
+git commit -m &amp;quot;$msg&amp;quot;
+
+# 2. Build the project in develop
+hugo
+
+# 3. Checkout to master
+git checkout master
+
+# 4. Add changes to master
+cp -r public/* .
+rm -rf public
+git add .
+git commit -m &amp;quot;$msg&amp;quot;
+
+# 5. Push to develop &amp;amp; master
+git push origin master develop
+
+# 6. Come back to develop
+git checkout develop
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
