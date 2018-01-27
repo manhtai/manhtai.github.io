@@ -6,4 +6,4 @@ title = "Go slowly"
 theme = "one"
 
 [params]
-    navigation = ["archives.md", "about.md"]
+    navigation = ["about.md", "contact.md", "archives.md"]
