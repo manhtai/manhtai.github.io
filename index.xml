@@ -6,10 +6,40 @@
     <description>Recent content on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Jan 2018 15:50:26 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 27 Jan 2018 16:26:24 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Metabase alerts</title>
+      <link>https://manhtai.github.io/posts/metabase-alerts/</link>
+      <pubDate>Sat, 27 Jan 2018 16:26:24 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/metabase-alerts/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://metabase.com&#34;&gt;Metabase&lt;/a&gt; is a simple and powerful BI tool for business. We use it to get
+insights about almost everything that happens in our system. In &lt;a href=&#34;https://metabase.com/blog/Metabase-0.27/index.html&#34;&gt;recent&lt;/a&gt;
+version it added alerts feature to question, but has some limitations.&lt;/p&gt;
+
+&lt;p&gt;Firstly, shortest time it allows to check for something bad may happen is
+one hour. It may seem acceptable in some business model but not ours. We need
+at most 5 minutes delay time in alerting.&lt;/p&gt;
+
+&lt;p&gt;Secondly, we can&amp;rsquo;t customize Slack alert format, and it sucks most of the
+time.&lt;/p&gt;
+
+&lt;p&gt;Lastly, I don&amp;rsquo;t know whether it&amp;rsquo;s a bug or not, but sometime the alerts just
+stop working!&lt;/p&gt;
+
+&lt;p&gt;Fortunately, Metabase has a &lt;a href=&#34;https://github.com/metabase/metabase/blob/master/docs/api-documentation.md&#34;&gt;rich&lt;/a&gt; API for frontend part, and we can use
+that to make our own alert system.&lt;/p&gt;
+
+&lt;p&gt;So our solution is use a Slack bot to call the question API periodically, and
+send a message to a choosen channel if the response is not empty.&lt;/p&gt;
+
+&lt;p&gt;Checkout the sample code &lt;a href=&#34;https://github.com/manhtai/mimi/blob/master/metabase.js&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Contact</title>
