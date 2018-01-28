@@ -1,9 +1,10 @@
 baseURL = "https://manhtai.github.io/"
 languageCode = "en-us"
 publishDir = "public"
-title = "Go slowly"
 
+title = "Go slowly"
 theme = "one"
+googleAnalytics = "UA-52114958-1"
 
 [params]
     navigation = ["about.md", "contact.md", "archives.md"]
