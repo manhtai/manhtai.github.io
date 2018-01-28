@@ -6,10 +6,124 @@
     <description>Recent content on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Jan 2018 17:39:26 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 28 Jan 2018 16:53:15 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How we build a working ERP system using Django and React Native in 3 months</title>
+      <link>https://manhtai.github.io/posts/building-erp-using-django-react-native/</link>
+      <pubDate>Sun, 28 Jan 2018 16:53:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/building-erp-using-django-react-native/</guid>
+      <description>
+
+&lt;p&gt;The title may seem too promising, and but it is a working ERP, not a complete
+one, we are still having many things to build and improve.&lt;/p&gt;
+
+&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;Within 3 months, 2 developers, we managed to build an web UI (using &lt;a href=&#34;https://www.djangoproject.com&#34;&gt;Django&lt;/a&gt;) and
+a mobile app (using &lt;a href=&#34;https://facebook.github.io/react-native/&#34;&gt;React Native&lt;/a&gt;), with this core business flow:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Quotation &amp;gt; Sales Order &amp;gt; Purchase Order&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;A little bit about above flow looks like this.&lt;/p&gt;
+
+&lt;p&gt;The sales staffs create Quotations when they are selling Products to Customers,
+usually over telephones. They make an assignment to services staff in the same
+screen they create the quotation. This services staff will instantly receive a
+notification about this new quotation assigned for them through an app, and
+know when and where they should meet the customer.&lt;/p&gt;
+
+&lt;p&gt;When the services staff delivers service to customer, they will make a sales
+order in their app, print an invoice using a thermal printer and get the money.
+They can do all of that offline, and do it fast.&lt;/p&gt;
+
+&lt;p&gt;After that, they must be online to sync the sales orders back to our server.
+In there, some purchase orders will be created automatically base on the products
+customers bought from us. Those purchase orders will be sent to corresponding
+suppliers for purchasing.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-fail&#34;&gt;The fail&lt;/h2&gt;
+
+&lt;p&gt;I am the technical lead of this new ERP project, and the first task is to do
+research about ERP frameworks that already out there in the market. We don&amp;rsquo;t
+think about create one from scratch at first because it must be too big for us
+to handle. We are only a small startup team after all.&lt;/p&gt;
+
+&lt;p&gt;After a day or two playing around, two most promising ones I found are &lt;a href=&#34;https://www.odoo.com/&#34;&gt;Odoo&lt;/a&gt;
+and &lt;a href=&#34;https://erpnext.com/&#34;&gt;ERPNext&lt;/a&gt;. But soon I drop Oddo because it&amp;rsquo;s too big and not very
+&amp;ldquo;open&amp;rdquo; anymore in the sense of open source softwares.&lt;/p&gt;
+
+&lt;p&gt;And then, after that, there was 2 sweaty weeks of trying to fit our business
+model in to ERPNext. Finally I must give up. It&amp;rsquo;s not our business flow is too
+complex, but the devil is in the details. I need freedom to create models and
+calculations for the system that ERPNext just does not allow.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;We must create all from scratch&lt;/em&gt;, I told our CTO. And he agreed.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-web&#34;&gt;The web&lt;/h2&gt;
+
+&lt;p&gt;I choose Django mainly for its battery-included features: ORM &amp;amp; admin interfaces.
+All we need to do is to declare models, and it will generate migration files
+and fire up an admin page for us, so we can create and change things fast.&lt;/p&gt;
+
+&lt;p&gt;We use &lt;a href=&#34;http://grappelliproject.com/&#34;&gt;Grappelli&lt;/a&gt; for admin style instead of default one, and use admin UI as
+default UI for our staffs. It does not look fancy, but simple and configurable.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-api&#34;&gt;The API&lt;/h2&gt;
+
+&lt;p&gt;The first thing in mind when we start the project is the mobile app, not the
+web UI, hence the API, and Django with its famous &lt;a href=&#34;http://www.django-rest-framework.org/&#34;&gt;REST framework&lt;/a&gt; suits our
+need very well. At least I thought that, because I have many experiences working
+with this.&lt;/p&gt;
+
+&lt;p&gt;But then, something pop up in my eyes: &lt;a href=&#34;http://graphql.org/learn/&#34;&gt;Graphql&lt;/a&gt;, and it looks shiny!
+After digging around, I found this &lt;a href=&#34;http://graphene-python.org/&#34;&gt;Graphene&lt;/a&gt; for Python, give it a try, and
+the choice has been made.&lt;/p&gt;
+
+&lt;p&gt;Graphql help us build API faster &amp;amp; easier than REST, just declare your schema
+and boom, you got an full-fledged API!&lt;/p&gt;
+
+&lt;h2 id=&#34;the-app&#34;&gt;The app&lt;/h2&gt;
+
+&lt;p&gt;At first our team has only one mobile dev, and he is using &lt;a href=&#34;https://ionicframework.com/&#34;&gt;Ionic&lt;/a&gt; for some
+of our apps. I myself am a backend developer most of the time, so I need
+another man for the project. I can&amp;rsquo;t take the only mobile developer we had because
+he is very busy himself. Our CTO suggests that I should use the same mobile framework
+we already use, i.e. Ionic, so I can get support from the experienced one.&lt;/p&gt;
+
+&lt;p&gt;I also thought that myself, but then, you know, many things pop up in our
+little eyes these days. You already know what it is this time: React Native.
+As I just said, our team only had one mobile developer, but fortunately, all
+our frontend dev already use a frontend framework at another project of ours:
+&lt;a href=&#34;https://vuejs.org/&#34;&gt;Vuejs&lt;/a&gt;. And React Native is just &lt;a href=&#34;https://reactjs.org/&#34;&gt;Reactjs&lt;/a&gt; in the mobile world, and it
+must be the same!&lt;/p&gt;
+
+&lt;p&gt;When I mention React Native, one of our dev shows the interest, so I invited
+him to join, and it turns out he and I made an awesome team! He
+builds most parts of the app, I only help for some. And the most tricky thing
+I face is to print Vietnamese characters to thermal printer. I really should write
+a post about that later.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-result&#34;&gt;The result&lt;/h2&gt;
+
+&lt;p&gt;We had a working ERP system for recording our core business activities that we
+can take advantages of by using other data centric tools for making reports,
+alerts, forecast, etc. All fancy things that we imagined we can do with the data,
+now we can do it.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-ongoing&#34;&gt;The ongoing&lt;/h2&gt;
+
+&lt;p&gt;There are many parts of the system need to be added: CRM, Call center, etc.
+But really, choosing the right tools from the start is the key for any success
+later. Good tools are all around, just pick one for your need!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Django transactions</title>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Go slowly</title>
-    <link>https://manhtai.github.io/posts/</link>
-    <description>Recent content in Posts on Go slowly</description>
+    <title>React Native on Go slowly</title>
+    <link>https://manhtai.github.io/tags/react-native/</link>
+    <description>Recent content in React Native on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 28 Jan 2018 16:53:15 +0700</lastBuildDate>
     
-        <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://manhtai.github.io/tags/react-native/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -122,126 +122,6 @@ now we can do it.&lt;/p&gt;
 &lt;p&gt;There are many parts of the system need to be added: CRM, Call center, etc.
 But really, choosing the right tools from the start is the key for any success
 later. Good tools are all around, just pick one for your need!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Django transactions</title>
-      <link>https://manhtai.github.io/posts/django-transactions/</link>
-      <pubDate>Sat, 27 Jan 2018 17:39:26 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/django-transactions/</guid>
-      <description>&lt;p&gt;Django &lt;a href=&#34;https://docs.djangoproject.com/en/dev/topics/db/transactions/&#34;&gt;documentation&lt;/a&gt; about transaction points out:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Django uses transactions or savepoints automatically to guarantee the integrity
-of ORM operations that require multiple queries, especially &lt;code&gt;delete()&lt;/code&gt; and
-&lt;code&gt;update()&lt;/code&gt; queries.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;This means whenever we call &lt;code&gt;save()&lt;/code&gt; or &lt;code&gt;create()&lt;/code&gt;, it&amp;rsquo;s already wrapped in
-a transaction. And usually new data is not in the database yet when we try to
-get that again somewhere after.&lt;/p&gt;
-
-&lt;p&gt;To make sure it&amp;rsquo;s commited, we have to use &lt;code&gt;transaction.on_commit()&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;There are 2 popular cases I find that we must use &lt;code&gt;on_commit()&lt;/code&gt; function.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;The first one&lt;/em&gt; is when we send task to a Celery queue. The error we usually made
-here is to put that on a &lt;code&gt;post_save&lt;/code&gt; signal and hope for the best. Remember that
-&lt;code&gt;post_save&lt;/code&gt; is in the same transaction with &lt;code&gt;save()&lt;/code&gt;, so there is no guarantee
-that new data will be in the database when Celery task get it from there.&lt;/p&gt;
-
-&lt;p&gt;We must use put the task to &lt;code&gt;on_commit()&lt;/code&gt; function like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;transaction.on_commit(lambda: celery_task_with_id(id))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;The second case&lt;/em&gt; is when we want to do something after all inline forms in
-admin page is saved. But the thing we actually want is data is commited to
-database. You already know how to do it, just like the case above.&lt;/p&gt;
-
-&lt;p&gt;The catch here is we can put &lt;code&gt;on_commit()&lt;/code&gt; function in many places, as long as
-it&amp;rsquo;s in the transaction. I usually put that on &lt;code&gt;save_model()&lt;/code&gt; or &lt;code&gt;save_related()&lt;/code&gt;,
-depend on what extra infomation I need for further processing.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Metabase alerts</title>
-      <link>https://manhtai.github.io/posts/metabase-alerts/</link>
-      <pubDate>Sat, 27 Jan 2018 16:26:24 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/metabase-alerts/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://metabase.com&#34;&gt;Metabase&lt;/a&gt; is a simple and powerful BI tool for business. We use it to get
-insights about almost everything that happens in our system. In &lt;a href=&#34;https://metabase.com/blog/Metabase-0.27/index.html&#34;&gt;recent&lt;/a&gt;
-version it added alerts feature to question, but has some limitations.&lt;/p&gt;
-
-&lt;p&gt;Firstly, shortest time it allows to check for something bad may happen is
-one hour. It may seem acceptable in some business model but not ours. We need
-at most 5 minutes delay time in alerting.&lt;/p&gt;
-
-&lt;p&gt;Secondly, we can&amp;rsquo;t customize Slack alert format, and it sucks most of the
-time.&lt;/p&gt;
-
-&lt;p&gt;Lastly, I don&amp;rsquo;t know whether it&amp;rsquo;s a bug or not, but sometime the alerts just
-stop working!&lt;/p&gt;
-
-&lt;p&gt;Fortunately, Metabase has a &lt;a href=&#34;https://github.com/metabase/metabase/blob/master/docs/api-documentation.md&#34;&gt;rich&lt;/a&gt; API for frontend part, and we can use
-that to make our own alert system.&lt;/p&gt;
-
-&lt;p&gt;So our solution is use a Slack bot to call the question API periodically, and
-send a message to a choosen channel if the response is not empty.&lt;/p&gt;
-
-&lt;p&gt;Checkout the sample code &lt;a href=&#34;https://github.com/manhtai/mimi/blob/master/metabase.js&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>2018</title>
-      <link>https://manhtai.github.io/posts/2018/</link>
-      <pubDate>Fri, 26 Jan 2018 23:52:49 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/2018/</guid>
-      <description>&lt;p&gt;A new year has come, guess what, I made a new blog. Yay!&lt;/p&gt;
-
-&lt;p&gt;This blog is powered by &lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt; and hosted by &lt;a href=&#34;https://github.com&#34;&gt;GitHub&lt;/a&gt;. I modified the
-&lt;a href=&#34;https://gohugo.io/hosting-and-deployment/hosting-on-github/#github-user-or-organization-pages&#34;&gt;deployment script&lt;/a&gt; a little bit to use 2 braches in 1 repo instead of
-2 repos. It looks like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;#!/bin/bash
-
-# 0. Notify &amp;amp; get message
-echo -e &amp;quot;\033[0;32mDeploying updates to GitHub...\033[0m&amp;quot;
-msg=&amp;quot;Rebuilding site `date`&amp;quot;
-if [ $# -eq 1 ]
-  then msg=&amp;quot;$1&amp;quot;
-fi
-
-# 1. Commit changes to develop first
-git add .
-git commit -m &amp;quot;$msg&amp;quot;
-
-# 2. Build the project in develop
-hugo
-
-# 3. Checkout to master
-git checkout master
-
-# 4. Add changes to master
-cp -r public/* .
-rm -rf public
-git add .
-git commit -m &amp;quot;$msg&amp;quot;
-
-# 5. Push to develop &amp;amp; master
-git push origin master develop
-
-# 6. Come back to develop
-git checkout develop
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can checkout the source code &lt;a href=&#34;https://github.com/manhtai/manhtai.github.io&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     
