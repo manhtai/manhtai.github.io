@@ -6,10 +6,76 @@
     <description>Recent content on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Jan 2018 16:53:15 +0700</lastBuildDate>
+    <lastBuildDate>Tue, 30 Jan 2018 22:31:54 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Django staticfiles</title>
+      <link>https://manhtai.github.io/posts/django-staticfiles/</link>
+      <pubDate>Tue, 30 Jan 2018 22:31:54 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/django-staticfiles/</guid>
+      <description>&lt;p&gt;Recently we move our sass &amp;amp; js complier from good ol&amp;rsquo; &lt;a href=&#34;https://django-compressor.readthedocs.io/en/latest/&#34;&gt;django-compressor&lt;/a&gt;
+and &lt;a href=&#34;https://github.com/etianen/django-require/&#34;&gt;django-require&lt;/a&gt; (one for compile sass, one for bundle js), to
+&lt;a href=&#34;https://webpack.js.org/&#34;&gt;webpack&lt;/a&gt;, a client-side bundler (it will do both sass &amp;amp; js for us). It&amp;rsquo;s
+a long process, I admit, but things go smoothly eventually. Till something
+pops up.&lt;/p&gt;
+
+&lt;p&gt;Before, we use django-require&amp;rsquo;s &lt;code&gt;OptimizedStaticFilesStorage&lt;/code&gt; to generate
+bundlers offline. This storage will generate a cache buster files side by
+side with original staticfiles in our &lt;code&gt;STATIC_ROOT&lt;/code&gt; folder. Some folder will
+look like this after collectstatic:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# public/
+
+cms/header.css
+cms/header.0847d6eff302.css
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After that, we must use &lt;a href=&#34;https://aws.amazon.com/cli/&#34;&gt;aws cli&lt;/a&gt; to sync staticfiles manually to our S3
+bucket, then set &lt;code&gt;STATIC_URL&lt;/code&gt; to our Cloudfront endpoint. It works, till now.&lt;/p&gt;
+
+&lt;p&gt;I now remove both django-compressor and django-require, and use Django&amp;rsquo;s
+&lt;code&gt;ManifestFilesMixin&lt;/code&gt; storage instead, with combination with &lt;code&gt;S3BotoStorage&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We must change default &lt;code&gt;manifest_name&lt;/code&gt; a little bit using git commit digest
+to support multiple deployments in the same bucket. The storage we use now
+looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class S3ManifestStaticFilesStorage(ManifestFilesMixin, S3BotoStorage):
+    &amp;quot;&amp;quot;&amp;quot;
+    This storage uses S3 as backend and having cache busting property of
+    ManifestStaticFilesStorage
+    &amp;quot;&amp;quot;&amp;quot;
+    manifest_strict = False
+
+    @property
+    def manifest_name(self):
+        filename = &#39;staticfiles-{version}.json&#39;
+        version = subprocess.check_output([&#39;git&#39;, &#39;rev-parse&#39;, &#39;HEAD&#39;]).strip()
+        return filename.format(version=version.decode(&#39;utf-8&#39;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now whenever we call &lt;code&gt;collectstatic&lt;/code&gt;, it will collect all our staticfiles to
+S3, no need another step to sync them manually.&lt;/p&gt;
+
+&lt;p&gt;Things will work beautifully if Django collect all files, instead it
+&lt;strong&gt;WILL NOT&lt;/strong&gt; collect anything which are collected before, even when we&amp;rsquo;ve
+changed our storage backend.&lt;/p&gt;
+
+&lt;p&gt;I have done many twists back and forth but the &lt;code&gt;static&lt;/code&gt; template tags got wrong
+urls all the time. Then after checking &lt;code&gt;last-modified&lt;/code&gt; in one of response
+header, I find out that the file hasn&amp;rsquo;t change for very long time. Hence
+Django mustn&amp;rsquo;t touch these files when I change staticfiles backend storage.&lt;/p&gt;
+
+&lt;p&gt;Voyla!&lt;/p&gt;
+
+&lt;p&gt;Just copy all staticfiles form old folder into the new one, and problem
+solved, new files would work as expected.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>How we build a working ERP system using Django and React Native in 3 months</title>
