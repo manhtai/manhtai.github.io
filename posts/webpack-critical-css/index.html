@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Webpack critical CSS plugin</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="Webpack critical CSS plugin">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="Webpack critical CSS plugin">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/webpack-critical-css/">
+	<meta name="og:site_name" content="Webpack critical CSS plugin">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-52114958-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Webpack critical CSS plugin <aside></aside></h1>
+  <p>If you don&rsquo;t already know what critical CSS is, then do <a href="https://developers.google.com/speed/pagespeed/insights/">get some insights</a>
+for your web, read the reference about <a href="https://developers.google.com/speed/docs/insights/OptimizeCSSDelivery">optimizing CSS delivery</a>, and I&rsquo;ll
+meet you here after. Really, just do it.</p>
+
+<p>We use Django for some of our web projects for the server side. And with
+support from <a href="https://github.com/ezhome/django-webpack-loader">django-webpack-loader</a>, now we can use Webpack in the client
+side, using massive libraries from Nodejs world to power our frontend part.
+We feel very happy about this integration.</p>
+
+<p>And now I have to find a library support generate critical CSS from our CSS
+bundler, and put only that to <code>&lt;head&gt;</code>, not all our CSS build.</p>
+
+<p><a href="https://github.com/addyosmani/critical">Some</a> <a href="https://github.com/anthonygore/html-critical-webpack-plugin">of</a> <a href="https://github.com/pocketjoso/penthouse">them</a> do exists. But it may do more work than I want:
+modify HTML / exact CSS file out of Webpack build process, or it is just
+a library that can output a critical CSS file. Yeah, time for me to write the
+plugin I want myself.</p>
+
+<p>So what do I want?</p>
+
+<blockquote>
+<p>I want a plugin that can get the CSS output from latest Webpack build step, do
+some magic to get critical CSS from that, then output an additional CSS file
+for me, then I&rsquo;ll decide what to do with it later.</p>
+</blockquote>
+
+<p>You can do exactly that with a plugin that wrap around a serious critical CSS
+extractor. I choose <a href="https://github.com/pocketjoso/penthouse">penthouse</a> to do the heavy work, follow the <a href="https://github.com/webpack/docs/wiki/how-to-write-a-plugin">guide</a>
+on how to write a Webpack plugin, I create <a href="https://github.com/manhtai/webpack-critical-css-plugin">webpack-critical-css-plugin</a>
+for you to use.</p>
+
+<p>Take a look, and send some PRs!</p>
+
+<p>Now for it to work with <strong>django-webpack-loader</strong>, put your second CSS build
+(the critical CSS) in the head, and put the first one (the original CSS) in
+the body.</p>
+
+<p>Try it, then re-check your web score in Google PageSpeed Insights!</p>
+
+</div>
+
+
+
+
+<footer>
+	<p><aside>&copy;2018</aside></a>
+</footer>
+</body>
+</html>
+
