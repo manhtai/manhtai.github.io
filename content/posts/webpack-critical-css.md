@@ -1,6 +1,7 @@
 ---
 title: "Webpack critical CSS plugin"
 date: 2018-02-01T19:17:48+07:00
+tags: ["django", "webpack"]
 draft: false
 ---
 
