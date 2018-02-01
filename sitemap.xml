@@ -60,7 +60,7 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/django/</loc>
-    <lastmod>2018-01-30T22:31:54+07:00</lastmod>
+    <lastmod>2018-02-01T19:17:48+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -115,6 +115,12 @@
   <url>
     <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2018-01-27T16:26:24+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/webpack/</loc>
+    <lastmod>2018-02-01T19:17:48+07:00</lastmod>
     <priority>0</priority>
   </url>
   
