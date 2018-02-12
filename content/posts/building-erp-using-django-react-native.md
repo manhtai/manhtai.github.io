@@ -10,7 +10,7 @@ one, we are still having many things to build and improve.
 
 ## Overview
 
-Within 3 months, 2 developers, we managed to build an web UI (using [Django][1]) and
+Within 3 months, 2 developers, we managed to build a web UI (using [Django][1]) and
 a mobile app (using [React Native][2]), with this core business flow:
 
 > Quotation > Sales Order > Purchase Order
@@ -44,7 +44,7 @@ and [ERPNext][11]. But soon I drop Oddo because it's too big and not very
 "open" anymore in the sense of open source softwares.
 
 And then, after that, there was 2 sweaty weeks of trying to fit our business
-model in to ERPNext. Finally I must give up. It's not our business flow is too
+model in to ERPNext. Finally, I must give up. It's not our business flow is too
 complex, but the devil is in the details. I need freedom to create models and
 calculations for the system that ERPNext just does not allow.
 
@@ -71,7 +71,7 @@ After digging around, I found this [Graphene][6] for Python, give it a try, and
 the choice has been made.
 
 Graphql help us build API faster & easier than REST, just declare your schema
-and boom, you got an full-fledged API!
+and boom, you got a full-fledged API!
 
 ## The app
 

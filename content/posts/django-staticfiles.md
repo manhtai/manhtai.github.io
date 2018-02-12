@@ -11,7 +11,7 @@ and [django-require][4] (one for compile sass, one for bundle js), to
 a long process, I admit, but things go smoothly eventually. Till something
 pops up.
 
-Before, we use django-require's `OptimizedStaticFilesStorage` to generate
+Before that, we use django-require's `OptimizedStaticFilesStorage` to generate
 bundlers offline. This storage will generate a cache buster files side by
 side with original staticfiles in our `STATIC_ROOT` folder. Some folder will
 look like this after collectstatic:

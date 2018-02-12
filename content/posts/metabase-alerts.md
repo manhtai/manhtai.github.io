@@ -9,7 +9,7 @@ draft: false
 insights about almost everything that happens in our system. In [recent][2]
 version it added alerts feature to question, but has some limitations.
 
-Firstly, shortest time it allows to check for something bad may happen is
+Firstly, the shortest time it allows checking for something bad may happen is
 one hour. It may seem acceptable in some business model but not ours. We need
 at most 5 minutes delay time in alerting.
 

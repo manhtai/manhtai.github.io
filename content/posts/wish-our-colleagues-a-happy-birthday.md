@@ -13,10 +13,10 @@ accounting's matter).
 I'm not interested in my colleagues' days of leave, but I wish they got a happy
 birthday, so why don't we send out a wish, automatically?
 
-I wrrite a question in SQL, it's just as simple as list out all people who has
-date and month equal to today's date and month. And use a [bot][1] to check
-the question everyday at 10am, then send out a wish if the question is not
-empty.
+I wrrite a question in SQL, it's just as simple as list out all people who
+have date and month equal to today's date and month. And use a [bot][1] to
+check the question everyday at 10am, then send out a wish if the question is
+not empty.
 
 The tricky part is we don't know firsthand what should be included in the
 message, like our colleagues' name, slack id, etc. So I have to evaluate them
