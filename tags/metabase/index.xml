@@ -6,10 +6,49 @@
     <description>Recent content in Metabase on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Jan 2018 16:26:24 +0700</lastBuildDate>
+    <lastBuildDate>Mon, 12 Feb 2018 22:04:15 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/metabase/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Wish our colleages a happy birthday</title>
+      <link>https://manhtai.github.io/posts/wish-our-colleages-a-happy-birthday/</link>
+      <pubDate>Mon, 12 Feb 2018 22:04:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/wish-our-colleages-a-happy-birthday/</guid>
+      <description>&lt;p&gt;We build an intranet app using Django to help HR manage people at work. And
+since we use Metabase for all our analysis tasks, we got the HR database to
+query all the things about our colleages (not the salary though, it&amp;rsquo;s
+accounting&amp;rsquo;s matter).&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m not interested in my colleages&amp;rsquo; days of leave, but I wish they got a happy
+birthday, so why don&amp;rsquo;t we send out a wish, automatically?&lt;/p&gt;
+
+&lt;p&gt;I wrrite a question in SQL, it&amp;rsquo;s just as simple as list out all people who has
+date and month equal to today&amp;rsquo;s date and month. And use a &lt;a href=&#34;https://manhtai.github.io/posts/metabase-alerts&#34;&gt;bot&lt;/a&gt; to check
+the question everyday at 10am, then send out a wish if the question is not
+empty.&lt;/p&gt;
+
+&lt;p&gt;The tricky part is we don&amp;rsquo;t know firsthand what should be included in the
+message, like our colleages&amp;rsquo; name, slack id, etc. So I have to evaluate them
+at running time. The solution is to pass a string to alert message and then
+convert it to string interpolation later. Like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// When creating alert
+const originalMessage = &amp;quot;Happy birthday to ${rows.join(&amp;quot;, &amp;quot;)}!&amp;quot;;
+
+// At running time
+const rows = [&amp;quot;some&amp;quot;, &amp;quot;data&amp;quot;];
+const theMessage = eval(&#39;`&#39; + originalMessage + &#39;`&#39;);
+sendMessageToSlack(theMessage);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I know it&amp;rsquo;s extremely risky to use &lt;code&gt;eval()&lt;/code&gt; anywhere, so I use &lt;a href=&#34;https://github.com/hacksparrow/safe-eval&#34;&gt;safe-eval&lt;/a&gt;
+instead. Although at the moment it has a security &lt;a href=&#34;https://github.com/hacksparrow/safe-eval/issues/5&#34;&gt;bug&lt;/a&gt;, it should be fine
+for our internal use, at least for now.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Metabase alerts</title>
