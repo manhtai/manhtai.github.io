@@ -25,10 +25,10 @@ accounting&amp;rsquo;s matter).&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m not interested in my colleagues&amp;rsquo; days of leave, but I wish they got a happy
 birthday, so why don&amp;rsquo;t we send out a wish, automatically?&lt;/p&gt;
 
-&lt;p&gt;I wrrite a question in SQL, it&amp;rsquo;s just as simple as list out all people who has
-date and month equal to today&amp;rsquo;s date and month. And use a &lt;a href=&#34;https://manhtai.github.io/posts/metabase-alerts&#34;&gt;bot&lt;/a&gt; to check
-the question everyday at 10am, then send out a wish if the question is not
-empty.&lt;/p&gt;
+&lt;p&gt;I wrrite a question in SQL, it&amp;rsquo;s just as simple as list out all people who
+have date and month equal to today&amp;rsquo;s date and month. And use a &lt;a href=&#34;https://manhtai.github.io/posts/metabase-alerts&#34;&gt;bot&lt;/a&gt; to
+check the question everyday at 10am, then send out a wish if the question is
+not empty.&lt;/p&gt;
 
 &lt;p&gt;The tricky part is we don&amp;rsquo;t know firsthand what should be included in the
 message, like our colleagues&amp;rsquo; name, slack id, etc. So I have to evaluate them
@@ -60,7 +60,7 @@ for our internal use, at least for now.&lt;/p&gt;
 insights about almost everything that happens in our system. In &lt;a href=&#34;https://metabase.com/blog/Metabase-0.27/index.html&#34;&gt;recent&lt;/a&gt;
 version it added alerts feature to question, but has some limitations.&lt;/p&gt;
 
-&lt;p&gt;Firstly, shortest time it allows to check for something bad may happen is
+&lt;p&gt;Firstly, the shortest time it allows checking for something bad may happen is
 one hour. It may seem acceptable in some business model but not ours. We need
 at most 5 minutes delay time in alerting.&lt;/p&gt;
 

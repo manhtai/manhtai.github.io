@@ -69,7 +69,7 @@ and &lt;a href=&#34;https://github.com/etianen/django-require/&#34;&gt;django-re
 a long process, I admit, but things go smoothly eventually. Till something
 pops up.&lt;/p&gt;
 
-&lt;p&gt;Before, we use django-require&amp;rsquo;s &lt;code&gt;OptimizedStaticFilesStorage&lt;/code&gt; to generate
+&lt;p&gt;Before that, we use django-require&amp;rsquo;s &lt;code&gt;OptimizedStaticFilesStorage&lt;/code&gt; to generate
 bundlers offline. This storage will generate a cache buster files side by
 side with original staticfiles in our &lt;code&gt;STATIC_ROOT&lt;/code&gt; folder. Some folder will
 look like this after collectstatic:&lt;/p&gt;
@@ -136,7 +136,7 @@ one, we are still having many things to build and improve.&lt;/p&gt;
 
 &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
 
-&lt;p&gt;Within 3 months, 2 developers, we managed to build an web UI (using &lt;a href=&#34;https://www.djangoproject.com&#34;&gt;Django&lt;/a&gt;) and
+&lt;p&gt;Within 3 months, 2 developers, we managed to build a web UI (using &lt;a href=&#34;https://www.djangoproject.com&#34;&gt;Django&lt;/a&gt;) and
 a mobile app (using &lt;a href=&#34;https://facebook.github.io/react-native/&#34;&gt;React Native&lt;/a&gt;), with this core business flow:&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -172,7 +172,7 @@ and &lt;a href=&#34;https://erpnext.com/&#34;&gt;ERPNext&lt;/a&gt;. But soon I d
 &amp;ldquo;open&amp;rdquo; anymore in the sense of open source softwares.&lt;/p&gt;
 
 &lt;p&gt;And then, after that, there was 2 sweaty weeks of trying to fit our business
-model in to ERPNext. Finally I must give up. It&amp;rsquo;s not our business flow is too
+model in to ERPNext. Finally, I must give up. It&amp;rsquo;s not our business flow is too
 complex, but the devil is in the details. I need freedom to create models and
 calculations for the system that ERPNext just does not allow.&lt;/p&gt;
 
@@ -199,7 +199,7 @@ After digging around, I found this &lt;a href=&#34;http://graphene-python.org/&#
 the choice has been made.&lt;/p&gt;
 
 &lt;p&gt;Graphql help us build API faster &amp;amp; easier than REST, just declare your schema
-and boom, you got an full-fledged API!&lt;/p&gt;
+and boom, you got a full-fledged API!&lt;/p&gt;
 
 &lt;h2 id=&#34;the-app&#34;&gt;The app&lt;/h2&gt;
 
