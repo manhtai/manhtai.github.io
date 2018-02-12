@@ -1,5 +1,5 @@
 ---
-title: "Wish our colleages a happy birthday"
+title: "Wish our colleagues a happy birthday"
 date: 2018-02-12T22:04:15+07:00
 tags: ["bot", "metabase", "slack"]
 draft: false
@@ -7,10 +7,10 @@ draft: false
 
 We build an intranet app using Django to help HR manage people at work. And
 since we use Metabase for all our analysis tasks, we got the HR database to
-query all the things about our colleages (not the salary though, it's
+query all the things about our colleagues (not the salary though, it's
 accounting's matter).
 
-I'm not interested in my colleages' days of leave, but I wish they got a happy
+I'm not interested in my colleagues' days of leave, but I wish they got a happy
 birthday, so why don't we send out a wish, automatically?
 
 I wrrite a question in SQL, it's just as simple as list out all people who has
@@ -19,7 +19,7 @@ the question everyday at 10am, then send out a wish if the question is not
 empty.
 
 The tricky part is we don't know firsthand what should be included in the
-message, like our colleages' name, slack id, etc. So I have to evaluate them
+message, like our colleagues' name, slack id, etc. So I have to evaluate them
 at running time. The solution is to pass a string to alert message and then
 convert it to string interpolation later. Like this:
 
