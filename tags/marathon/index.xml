@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Marathon on Go slowly</title>
+    <link>https://manhtai.github.io/tags/marathon/</link>
+    <description>Recent content in Marathon on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 25 Feb 2018 21:45:30 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/marathon/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Marathon plan</title>
+      <link>https://manhtai.github.io/posts/marathon-12-weeks-plan/</link>
+      <pubDate>Sun, 25 Feb 2018 21:45:30 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/marathon-12-weeks-plan/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve generated a two-12-weeks &lt;a href=&#34;https://docs.google.com/spreadsheets/d/1EGDOGJBFqMY-nIQkyLcGU0YRrwygnGIP-zq_AZjrXNM&#34;&gt;marathon plan&lt;/a&gt; using &lt;a href=&#34;https://runkeeper.com&#34;&gt;Runkeeper&lt;/a&gt; app for
+my race in this summer.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

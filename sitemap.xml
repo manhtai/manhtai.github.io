@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/marathon-12-weeks-plan/</loc>
+    <lastmod>2018-02-25T21:45:30+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/posts/happy-lunnar-new-year/</loc>
     <lastmod>2018-02-16T18:56:22+07:00</lastmod>
   </url>
@@ -76,7 +81,13 @@
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2018-02-16T18:56:22+07:00</lastmod>
+    <lastmod>2018-02-25T21:45:30+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/marathon/</loc>
+    <lastmod>2018-02-25T21:45:30+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -94,7 +105,7 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2018-02-16T18:56:22+07:00</lastmod>
+    <lastmod>2018-02-25T21:45:30+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -112,7 +123,7 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/short/</loc>
-    <lastmod>2018-01-26T23:52:49+07:00</lastmod>
+    <lastmod>2018-02-25T21:45:30+07:00</lastmod>
     <priority>0</priority>
   </url>
   
