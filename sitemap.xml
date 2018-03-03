@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/django-rate-limit/</loc>
+    <lastmod>2018-03-03T10:08:15+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/posts/marathon-12-weeks-plan/</loc>
     <lastmod>2018-02-25T21:45:30+07:00</lastmod>
   </url>
@@ -75,13 +80,13 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/django/</loc>
-    <lastmod>2018-02-01T19:17:48+07:00</lastmod>
+    <lastmod>2018-03-03T10:08:15+07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2018-02-25T21:45:30+07:00</lastmod>
+    <lastmod>2018-03-03T10:08:15+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -105,7 +110,7 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2018-02-25T21:45:30+07:00</lastmod>
+    <lastmod>2018-03-03T10:08:15+07:00</lastmod>
     <priority>0</priority>
   </url>
   

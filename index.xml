@@ -6,10 +6,92 @@
     <description>Recent content on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 25 Feb 2018 21:45:30 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 03 Mar 2018 10:08:15 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Django rate limit (and monkey patching)</title>
+      <link>https://manhtai.github.io/posts/django-rate-limit/</link>
+      <pubDate>Sat, 03 Mar 2018 10:08:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/django-rate-limit/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/jsocol/django-ratelimit&#34;&gt;Django Ratelimit&lt;/a&gt; is a good rate limiter for Django. It has a convenient
+decorator for views, so we can do this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;@ratelimit(key=&#39;post:username&#39;, rate=&#39;5/m&#39;)
+def login(request):
+    return HttpResponse()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;to limit the times we can try to login with one specific username to
+5 requests per minute.&lt;/p&gt;
+
+&lt;p&gt;The decorator can be used with function-based views and class-based views, but
+if we want to use it with built-in views, e.g. admin login view, we have to
+monkey patch them.&lt;/p&gt;
+
+&lt;p&gt;Django allows us to patch any function from any module when init app.
+I usually do this in &lt;code&gt;AppConfig&lt;/code&gt; class, like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyAppConfig(AppConfig):
+    name = &#39;my_app&#39;
+
+    def ready(self):
+        from my_app.monkey_patching import patch
+        patch()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And this is the &lt;code&gt;patch()&lt;/code&gt; function, for admin login view:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def patch():
+    from django.contrib.admin.sites import AdminSite
+    AdminSite.login = new_login
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Where &lt;code&gt;new_login()&lt;/code&gt; is our patched function and &lt;code&gt;login()&lt;/code&gt; is original function
+that handles requests for logging user in.&lt;/p&gt;
+
+&lt;p&gt;The thing is we don&amp;rsquo;t want to rewrite &lt;code&gt;new_login()&lt;/code&gt; to be exactly like the old
+&lt;code&gt;login()&lt;/code&gt; function with the &lt;code&gt;ratelimit&lt;/code&gt; decorator. We only want to &amp;ldquo;magically&amp;rdquo;
+attach the decorator to the original function. How can we do that?&lt;/p&gt;
+
+&lt;p&gt;One idea is to write a function to input function &lt;code&gt;login()&lt;/code&gt; and return function
+&lt;code&gt;new_login()&lt;/code&gt; with &lt;code&gt;ratelimit&lt;/code&gt; decorator, like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def limit_login(login):
+
+    @ratelimit(key=&#39;post:username&#39;, rate=&#39;10/m&#39;, method=&#39;POST&#39;, block=True)
+    def new_login(*args, **kwargs):
+        return login(*args, **kwargs)
+
+    return new_login
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So now we can do this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def patch():
+    from django.contrib.admin.sites import AdminSite
+    AdminSite.login = limit_login(AdminSite.login)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can make &lt;code&gt;limit_login()&lt;/code&gt; function even more generic, with some defaults:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def limit_rate(func, group=None, key=&#39;post:username&#39;, rate=&#39;10/m&#39;, method=&#39;POST&#39;, block=True):
+
+    @ratelimit(group=group, key=key, rate=rate, method=method, block=block)
+    def new_func(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    return new_func
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can patch any view easily with our short &lt;code&gt;limit_rate()&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;p&gt;Have good time limiting around!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Marathon plan</title>
