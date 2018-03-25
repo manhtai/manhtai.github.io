@@ -6,10 +6,24 @@
     <description>Recent content in Short on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 25 Feb 2018 21:45:30 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 25 Mar 2018 20:51:25 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/short/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>12 weeks onto Crypto</title>
+      <link>https://manhtai.github.io/posts/12-weeks-onto-crypto/</link>
+      <pubDate>Sun, 25 Mar 2018 20:51:25 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/12-weeks-onto-crypto/</guid>
+      <description>&lt;p&gt;I now commit 12 weeks to learn about Cryptography. That&amp;rsquo;s minimum time needed to
+prepare for a marathon, and I think it should apply to crypto, too. My plan is
+based on 12 weeks to read &lt;a href=&#34;https://www.amazon.com/exec/obidos/ASIN/0470474246/counterpane/&#34;&gt;Cryptography Engineering&lt;/a&gt; chapter by chapter.&lt;/p&gt;
+
+&lt;p&gt;And after that, who &lt;a href=&#34;https://www.amazon.com/Mastering-Bitcoin-Programming-Open-Blockchain/dp/1491954388/&#34;&gt;knows&lt;/a&gt;?&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Marathon plan</title>
