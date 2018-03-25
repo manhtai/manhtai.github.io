@@ -288,6 +288,34 @@ solved, new files would work as expected.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Build a distributed chat app in Golang</title>
+      <link>https://manhtai.github.io/posts/chat-app-in-golang/</link>
+      <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/chat-app-in-golang/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve built a &lt;a href=&#34;https://github.com/manhtai/golang-mongodb-chat&#34;&gt;demo&lt;/a&gt; chat app in Go before, using Go channels to broadcast
+messages, data is saved to MongoDB. It&amp;rsquo;s quite a fun learning experience,
+but when you want a chat app at scale, you need more. Yes I am looking at
+you: &lt;strong&gt;microservices&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now I know one thing or two about microservices and distributed systems,
+I think at least these three are in need:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1. A service for saving messages to DB&lt;/li&gt;
+&lt;li&gt;2. A service for handling messages from clients&lt;/li&gt;
+&lt;li&gt;3. A proper message queue, for the talkings between services&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now we&amp;rsquo;ll start to build one.&lt;/p&gt;
+
+&lt;p&gt;(Some time after&amp;hellip;)&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s on &lt;a href=&#34;https://github.com/manhtai/golang-nsq-chat&#34;&gt;GitHub&lt;/a&gt; now. The README should be enough to explain the idea.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>How we build a working ERP system using Django and React Native in 3 months</title>
       <link>https://manhtai.github.io/posts/building-erp-using-django-react-native/</link>
       <pubDate>Sun, 28 Jan 2018 16:53:15 +0700</pubDate>

@@ -38,6 +38,11 @@
   </url>
   
   <url>
+    <loc>https://manhtai.github.io/posts/chat-app-in-golang/</loc>
+    <lastmod>2018-01-29T21:19:23+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/posts/building-erp-using-django-react-native/</loc>
     <lastmod>2018-01-28T16:53:15+07:00</lastmod>
   </url>
@@ -84,6 +89,12 @@
   </url>
   
   <url>
+    <loc>https://manhtai.github.io/tags/chat/</loc>
+    <lastmod>2018-01-29T21:19:23+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/tags/crypto/</loc>
     <lastmod>2018-03-25T20:51:25+07:00</lastmod>
     <priority>0</priority>
@@ -98,6 +109,12 @@
   <url>
     <loc>https://manhtai.github.io/</loc>
     <lastmod>2018-03-25T20:51:25+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/golang/</loc>
+    <lastmod>2018-01-29T21:19:23+07:00</lastmod>
     <priority>0</priority>
   </url>
   
