@@ -1,7 +1,8 @@
 ---
 title: "Build a distributed chat app in Golang"
 date: 2018-01-29T21:19:23+07:00
-draft: true
+draft: false
+tags: ["golang", "chat"]
 ---
 
 I've built a [demo][1] chat app in Go before, using Go channels to broadcast
@@ -18,5 +19,10 @@ I think at least these three are in need:
 
 Now we'll start to build one.
 
+(Some time after...)
+
+It's on [GitHub][2] now. The README should be enough to explain the idea.
+
 
 [1]: https://github.com/manhtai/golang-mongodb-chat
+[2]: https://github.com/manhtai/golang-nsq-chat
