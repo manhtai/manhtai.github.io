@@ -226,6 +226,14 @@ code {
 	hyphens: none;
 }
 
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+
 figcaption {
     font-weight: 400;
     font-style: italic;
@@ -247,4 +255,3 @@ blockquote {
 blockquote p {
   display: inline;
 }
-
