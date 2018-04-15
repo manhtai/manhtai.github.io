@@ -25,7 +25,7 @@ tasks will consume most of the server memory and then become idle.&lt;/p&gt;
 guess what? Celery will consume 99.9% of that limit then become idle after
 some times. It&amp;rsquo;s good for the server but doesn&amp;rsquo;t solve our problem.&lt;/p&gt;
 
-&lt;p&gt;My second attempt was set &lt;code&gt;CELERYD_TASK_TIME_LIMIT&lt;/code&gt; to 600, so celery tasks
+&lt;p&gt;My second attempt was set &lt;code&gt;CELERYD_TASK_TIME_LIMIT&lt;/code&gt; to 300, so celery tasks
 will be killed after 5 minutes no matter what. This time Celery continue to
 take memory percentage as much as it can and then become inactive, but after
 5 minutes it kills all the tasks to release memory and then back to work
