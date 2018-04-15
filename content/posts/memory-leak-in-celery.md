@@ -13,7 +13,7 @@ My first attempt was set [hard limit][2] for container memory to 1GiB. And
 guess what? Celery will consume 99.9% of that limit then become idle after
 some times. It's good for the server but doesn't solve our problem.
 
-My second attempt was set `CELERYD_TASK_TIME_LIMIT` to 600, so celery tasks
+My second attempt was set `CELERYD_TASK_TIME_LIMIT` to 300, so celery tasks
 will be killed after 5 minutes no matter what. This time Celery continue to
 take memory percentage as much as it can and then become inactive, but after
 5 minutes it kills all the tasks to release memory and then back to work
