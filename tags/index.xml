@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Celery</title>
+      <link>https://manhtai.github.io/tags/celery/</link>
+      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/celery/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Chat</title>
       <link>https://manhtai.github.io/tags/chat/</link>
       <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
@@ -44,6 +53,24 @@
       <pubDate>Sat, 03 Mar 2018 10:08:15 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/django/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>https://manhtai.github.io/tags/docker/</link>
+      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ecs</title>
+      <link>https://manhtai.github.io/tags/ecs/</link>
+      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/ecs/</guid>
       <description></description>
     </item>
     
