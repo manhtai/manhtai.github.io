@@ -3,11 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://manhtai.github.io/posts/memory-leak-in-celery/</loc>
-    <lastmod>2018-04-15T10:51:06+07:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://manhtai.github.io/posts/12-weeks-onto-crypto/</loc>
     <lastmod>2018-03-25T20:51:25+07:00</lastmod>
   </url>
@@ -94,12 +89,6 @@
   </url>
   
   <url>
-    <loc>https://manhtai.github.io/tags/celery/</loc>
-    <lastmod>2018-04-15T10:51:06+07:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://manhtai.github.io/tags/chat/</loc>
     <lastmod>2018-01-29T21:19:23+07:00</lastmod>
     <priority>0</priority>
@@ -118,20 +107,8 @@
   </url>
   
   <url>
-    <loc>https://manhtai.github.io/tags/docker/</loc>
-    <lastmod>2018-04-15T10:51:06+07:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/ecs/</loc>
-    <lastmod>2018-04-15T10:51:06+07:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2018-04-15T10:51:06+07:00</lastmod>
+    <lastmod>2018-03-25T20:51:25+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -161,7 +138,7 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2018-04-15T10:51:06+07:00</lastmod>
+    <lastmod>2018-03-25T20:51:25+07:00</lastmod>
     <priority>0</priority>
   </url>
   

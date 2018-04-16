@@ -6,41 +6,10 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 15 Apr 2018 10:51:06 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 25 Mar 2018 20:51:25 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Memory Leak in Celery</title>
-      <link>https://manhtai.github.io/posts/memory-leak-in-celery/</link>
-      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/memory-leak-in-celery/</guid>
-      <description>&lt;p&gt;Turn out Celery has &lt;a href=&#34;https://github.com/celery/celery/issues/1427&#34;&gt;some memory leaks&lt;/a&gt;. We don&amp;rsquo;t know that beforehand.
-After deploying some Celery servers using AWS ECS we notice that all Celery
-tasks will consume most of the server memory and then become idle.&lt;/p&gt;
-
-&lt;p&gt;My first attempt was set &lt;a href=&#34;https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html&#34;&gt;hard limit&lt;/a&gt; for container memory to 1GiB. And
-guess what? Celery will consume 99.9% of that limit then become idle after
-some times. It&amp;rsquo;s good for the server but doesn&amp;rsquo;t solve our problem.&lt;/p&gt;
-
-&lt;p&gt;My second attempt was set &lt;code&gt;CELERYD_TASK_TIME_LIMIT&lt;/code&gt; to 300, so celery tasks
-will be killed after 5 minutes no matter what. This time Celery continue to
-take memory percentage as much as it can and then become inactive, but after
-5 minutes it kills all the tasks to release memory and then back to work
-normally.&lt;/p&gt;
-
-&lt;p&gt;I can&amp;rsquo;t say I&amp;rsquo;m satisfied with this solution, but it works for now. Till next
-time.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;:&lt;/p&gt;
-
-&lt;p&gt;After running for some periods, Celery still hung. so it&amp;rsquo;s not due to the leak
-anymore. Forturnately, some guys has encountered this before and share the
-&lt;a href=&#34;https://stackoverflow.com/a/33936673/4400989&#34;&gt;solution&lt;/a&gt; with us. Thumbs up!&lt;/p&gt;
-</description>
-    </item>
     
     <item>
       <title>12 weeks onto Crypto</title>
