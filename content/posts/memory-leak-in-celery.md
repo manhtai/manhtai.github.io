@@ -32,4 +32,4 @@ anymore. Forturnately, some guys has encountered this before and share the
 
 [1]: https://github.com/celery/celery/issues/1427
 [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html
-[3]: https://www.caktusgroup.com/blog/2013/10/30/using-strace-debug-stuck-celery-tasks/
+[3]: https://stackoverflow.com/a/33936673/4400989
