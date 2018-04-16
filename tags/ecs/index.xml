@@ -38,7 +38,7 @@ time.&lt;/p&gt;
 
 &lt;p&gt;After running for some periods, Celery still hung. so it&amp;rsquo;s not due to the leak
 anymore. Forturnately, some guys has encountered this before and share the
-&lt;a href=&#34;https://www.caktusgroup.com/blog/2013/10/30/using-strace-debug-stuck-celery-tasks/&#34;&gt;solution&lt;/a&gt; with us. Thumbs up!&lt;/p&gt;
+&lt;a href=&#34;https://stackoverflow.com/a/33936673/4400989&#34;&gt;solution&lt;/a&gt; with us. Thumbs up!&lt;/p&gt;
 </description>
     </item>
     
