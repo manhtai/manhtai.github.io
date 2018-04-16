@@ -22,8 +22,14 @@ normally.
 I can't say I'm satisfied with this solution, but it works for now. Till next
 time.
 
+**Update**:
+
+After running for some periods, Celery still hung. so it's not due to the leak
+anymore. Forturnately, some guys has encountered this before and share the
+[solution][3] with us. Thumbs up!
 
 
 
 [1]: https://github.com/celery/celery/issues/1427
 [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html
+[3]: https://www.caktusgroup.com/blog/2013/10/30/using-strace-debug-stuck-celery-tasks/
