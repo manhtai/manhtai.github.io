@@ -45,6 +45,42 @@ the shit done.&lt;/p&gt;&lt;/li&gt;
     </item>
     
     <item>
+      <title>Memory Leak in Celery</title>
+      <link>https://manhtai.github.io/posts/memory-leak-in-celery/</link>
+      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/memory-leak-in-celery/</guid>
+      <description>&lt;p&gt;Turn out Celery has &lt;a href=&#34;https://github.com/celery/celery/issues/1427&#34;&gt;some memory leaks&lt;/a&gt;. We don&amp;rsquo;t know that beforehand.
+After deploying some Celery servers using AWS ECS we notice that all Celery
+tasks will consume most of the server memory and then become idle.&lt;/p&gt;
+
+&lt;p&gt;My first attempt was set &lt;a href=&#34;https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html&#34;&gt;hard limit&lt;/a&gt; for container memory to 1GiB. And
+guess what? Celery will consume 99.9% of that limit then become idle after
+some times. It&amp;rsquo;s good for the server but doesn&amp;rsquo;t solve our problem.&lt;/p&gt;
+
+&lt;p&gt;My second attempt was set &lt;code&gt;CELERYD_TASK_TIME_LIMIT&lt;/code&gt; to 300, so celery tasks
+will be killed after 5 minutes no matter what. This time Celery continue to
+take memory percentage as much as it can and then become inactive, but after
+5 minutes it kills all the tasks to release memory and then back to work
+normally.&lt;/p&gt;
+
+&lt;p&gt;I thought it worked, but it didn&amp;rsquo;t.&lt;/p&gt;
+
+&lt;p&gt;After running for some periods, Celery still hung. So it&amp;rsquo;s not due to the leak
+anymore. Continue digging around, I found out the main reason Celery hangs is
+due to &lt;a href=&#34;https://github.com/celery/celery/issues/2917&#34;&gt;some thread locks&lt;/a&gt; caused by &lt;a href=&#34;https://github.com/neo4j/neo4j-python-driver&#34;&gt;neo4j python driver&lt;/a&gt;. And that can
+only be solved completely by changing the way neo4j driver save &amp;amp; fetch data
+to async, which is still &lt;a href=&#34;https://github.com/neo4j/neo4j-python-driver/issues/180&#34;&gt;an open issue&lt;/a&gt; on GitHub. Although people gave
+some temporary solutions to the problem, it&amp;rsquo;s only apply for Python3, and our
+project is still Python2. Hence, a &lt;a href=&#34;https://manhtai.github.io/posts/python-2to3-transition&#34;&gt;transition&lt;/a&gt; from Python2 to Python3 is
+needed.&lt;/p&gt;
+
+&lt;p&gt;In the mean time, I set up a cronjob to restart Celery after some times to
+remove the lock.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>12 weeks onto Crypto</title>
       <link>https://manhtai.github.io/posts/12-weeks-onto-crypto/</link>
       <pubDate>Sun, 25 Mar 2018 20:51:25 +0700</pubDate>

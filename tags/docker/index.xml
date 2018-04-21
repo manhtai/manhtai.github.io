@@ -31,14 +31,19 @@ take memory percentage as much as it can and then become inactive, but after
 5 minutes it kills all the tasks to release memory and then back to work
 normally.&lt;/p&gt;
 
-&lt;p&gt;I can&amp;rsquo;t say I&amp;rsquo;m satisfied with this solution, but it works for now. Till next
-time.&lt;/p&gt;
+&lt;p&gt;I thought it worked, but it didn&amp;rsquo;t.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;:&lt;/p&gt;
+&lt;p&gt;After running for some periods, Celery still hung. So it&amp;rsquo;s not due to the leak
+anymore. Continue digging around, I found out the main reason Celery hangs is
+due to &lt;a href=&#34;https://github.com/celery/celery/issues/2917&#34;&gt;some thread locks&lt;/a&gt; caused by &lt;a href=&#34;https://github.com/neo4j/neo4j-python-driver&#34;&gt;neo4j python driver&lt;/a&gt;. And that can
+only be solved completely by changing the way neo4j driver save &amp;amp; fetch data
+to async, which is still &lt;a href=&#34;https://github.com/neo4j/neo4j-python-driver/issues/180&#34;&gt;an open issue&lt;/a&gt; on GitHub. Although people gave
+some temporary solutions to the problem, it&amp;rsquo;s only apply for Python3, and our
+project is still Python2. Hence, a &lt;a href=&#34;https://manhtai.github.io/posts/python-2to3-transition&#34;&gt;transition&lt;/a&gt; from Python2 to Python3 is
+needed.&lt;/p&gt;
 
-&lt;p&gt;After running for some periods, Celery still hung. so it&amp;rsquo;s not due to the leak
-anymore. Forturnately, some guys has encountered this before and share the
-&lt;a href=&#34;https://stackoverflow.com/a/33936673/4400989&#34;&gt;solution&lt;/a&gt; with us. Thumbs up!&lt;/p&gt;
+&lt;p&gt;In the mean time, I set up a cronjob to restart Celery after some times to
+remove the lock.&lt;/p&gt;
 </description>
     </item>
     
