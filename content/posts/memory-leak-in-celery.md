@@ -1,7 +1,7 @@
 ---
 title: "Memory Leak in Celery"
 date: 2018-04-15T10:51:06+07:00
-draft: true
+draft: false
 tags: ["celery", "ecs", "docker"]
 ---
 
@@ -19,17 +19,25 @@ take memory percentage as much as it can and then become inactive, but after
 5 minutes it kills all the tasks to release memory and then back to work
 normally.
 
-I can't say I'm satisfied with this solution, but it works for now. Till next
-time.
+I thought it worked, but it didn't.
 
-**Update**:
+After running for some periods, Celery still hung. So it's not due to the leak
+anymore. Continue digging around, I found out the main reason Celery hangs is
+due to [some thread locks][4] caused by [neo4j python driver][5]. And that can
+only be solved completely by changing the way neo4j driver save & fetch data
+to async, which is still [an open issue][6] on GitHub. Although people gave
+some temporary solutions to the problem, it's only apply for Python3, and our
+project is still Python2. Hence, a [transition][7] from Python2 to Python3 is
+needed.
 
-After running for some periods, Celery still hung. so it's not due to the leak
-anymore. Forturnately, some guys has encountered this before and share the
-[solution][3] with us. Thumbs up!
-
+In the mean time, I set up a cronjob to restart Celery after some times to
+remove the lock.
 
 
 [1]: https://github.com/celery/celery/issues/1427
 [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html
 [3]: https://stackoverflow.com/a/33936673/4400989
+[4]: https://github.com/celery/celery/issues/2917
+[5]: https://github.com/neo4j/neo4j-python-driver
+[6]: https://github.com/neo4j/neo4j-python-driver/issues/180
+[7]: /posts/python-2to3-transition
