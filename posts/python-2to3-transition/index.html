@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Python 2to3 Transition</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="Python 2to3 Transition">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="Python 2to3 Transition">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/python-2to3-transition/">
+	<meta name="og:site_name" content="Python 2to3 Transition">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="python django ">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-52114958-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Python 2to3 Transition <aside><a href="/tags/python/">python</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/django/">django</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>Recently I&rsquo;ve upgraded one of our biggest projects from Python2.7 to Python3.6,
+and the process is quite smooth. It tooks me almost 2 days to complete all
+conversion needed, while other developers were still doing their dail jobs in
+the project.</p>
+
+<p>Steps I made:</p>
+
+<ul>
+<li><p>1, Run <code>2to3</code></p></li>
+
+<li><p>2, Fix the code so that all the tests passes again.</p></li>
+
+<li><p>3, Handle outlier cases &amp; write tests for them. Those cases are somewhat
+related to the diffirences between <code>unicode</code> &amp; <code>str</code>.</p></li>
+</ul>
+
+<p>Some key notes here:</p>
+
+<ul>
+<li><p>1, Having a solid unit tests system is critical.</p></li>
+
+<li><p>2, <code>2to3</code> did all the heavy works, but you need to know the stuffs to get all
+the shit done.</p></li>
+</ul>
+
+</div>
+
+
+
+
+<footer>
+	<p><aside>&copy;2018</aside></a>
+</footer>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+	tex2jax: {
+		inlineMath: [['$','$'], ['\\(','\\)']],
+		displayMath: [['$$','$$'], ['\[','\]']],
+		processEscapes: true,
+		processEnvironments: true,
+		skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+		TeX: { equationNumbers: { autoNumber: "AMS" },
+		extensions: ["AMSmath.js", "AMSsymbols.js"] }
+	}
+});
+</script>
+
+<script type="text/x-mathjax-config">
+	MathJax.Hub.Queue(function() {
+	// Fix <code> tags after MathJax finishes running. This is a
+	// hack to overcome a shortcoming of Markdown. Discussion at
+	// https://github.com/mojombo/jekyll/issues/199
+	var all = MathJax.Hub.getAllJax();
+	for (var i = 0; i = all.length - 1; i += 1) {
+		all[i].SourceElement().parentNode.className += ' has-jax';
+	}
+});
+</script>
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+</body>
+</html>
+

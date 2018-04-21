@@ -6,10 +6,43 @@
     <description>Recent content in Python on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Jan 2018 17:39:26 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 21 Apr 2018 12:05:19 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Python 2to3 Transition</title>
+      <link>https://manhtai.github.io/posts/python-2to3-transition/</link>
+      <pubDate>Sat, 21 Apr 2018 12:05:19 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/python-2to3-transition/</guid>
+      <description>&lt;p&gt;Recently I&amp;rsquo;ve upgraded one of our biggest projects from Python2.7 to Python3.6,
+and the process is quite smooth. It tooks me almost 2 days to complete all
+conversion needed, while other developers were still doing their dail jobs in
+the project.&lt;/p&gt;
+
+&lt;p&gt;Steps I made:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;1, Run &lt;code&gt;2to3&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2, Fix the code so that all the tests passes again.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3, Handle outlier cases &amp;amp; write tests for them. Those cases are somewhat
+related to the diffirences between &lt;code&gt;unicode&lt;/code&gt; &amp;amp; &lt;code&gt;str&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Some key notes here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;1, Having a solid unit tests system is critical.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2, &lt;code&gt;2to3&lt;/code&gt; did all the heavy works, but you need to know the stuffs to get all
+the shit done.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Django transactions</title>
