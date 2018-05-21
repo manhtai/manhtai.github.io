@@ -27,7 +27,7 @@ Firstly, make sure you know what [lifecycle hooks][2] are. Then follow these
 steps:
 
 - 1) Create a lambda function using this [script][3]. It is my fork of AWS
-  sample [script][4], but less sucks.
+  sample [script][4], but sucks less.
 
 - 2) Set role for our lambda function to have these permissions:
 
