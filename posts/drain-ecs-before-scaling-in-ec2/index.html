@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Drain ECS instances before scaling down in EC2</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="Drain ECS instances before scaling down in EC2">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="Drain ECS instances before scaling down in EC2">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/drain-ecs-before-scaling-in-ec2/">
+	<meta name="og:site_name" content="Drain ECS instances before scaling down in EC2">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-52114958-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Drain ECS instances before scaling down in EC2 <aside></aside></h1>
+  <p><strong>Problem</strong>:</p>
+
+<p>We have 2 independent auto scaling systems: EC2 auto scaling groups which
+scales instances number &amp; ECS auto scaling which scales tasks number. This
+setup may work fine when scaling up. Still, if new tasks need more instances
+to start up, it must wait for them, but it&rsquo;s ok to wait a little.</p>
+
+<p>But things soon become disaster when EC2 instances terminates <strong>before</strong>
+ECS tasks draining out.</p>
+
+<p>Actually, ECS instances will not auto drain to be ready for terminating
+instances in EC2, so don&rsquo;t expect anything. We have to set that up manually.</p>
+
+<p><strong>Solution</strong>:</p>
+
+<p>An AWS official <a href="https://aws.amazon.com/blogs/compute/how-to-automate-container-instance-draining-in-amazon-ecs/">blog</a> shows us how to do this, and it has a nice demo for
+newly created EC2 &amp; ECS setup. But what if we just want to set up for our
+running ECS instances? Here it is.</p>
+
+<p>Firstly, make sure you know what <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html">lifecycle hooks</a> are. Then follow these
+steps:</p>
+
+<ul>
+<li><p>1) Create a lambda function using this <a href="https://gist.github.com/manhtai/66dfdae56ebce7b6270788018516a409">script</a>. It is my fork of AWS
+sample <a href="https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py">script</a>, but less sucks.</p></li>
+
+<li><p>2) Set role for our lambda function to have these permissions:</p></li>
+</ul>
+
+<pre><code>- autoscaling:CompleteLifecycleAction
+- logs:CreateLogGroup
+- logs:CreateLogStream
+- logs:PutLogEvents
+- ec2:DescribeInstances
+- ec2:DescribeInstanceAttribute
+- ec2:DescribeInstanceStatus
+- ec2:DescribeHosts
+- ecs:ListContainerInstances
+- ecs:SubmitContainerStateChange
+- ecs:SubmitTaskStateChange
+- ecs:DescribeContainerInstances
+- ecs:UpdateContainerInstancesState
+- ecs:ListTasks
+- ecs:DescribeTasks
+- sns:Publish
+</code></pre>
+
+<ul>
+<li><p>3) Setup an SNS trigger for the function, choose a name for it.</p></li>
+
+<li><p>4) Setup a service role so Auto Scaling Groups can push to SNS, using <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html#sns-notifications">this
+guide</a>. (This is quite interesting because you have to set up a role so
+that a service will have some kind of permission).</p></li>
+
+<li><p>5) Create a lifecycle hook by CLI, since the <strong>GUI is not fully supported
+yet</strong>:</p></li>
+</ul>
+
+<pre><code>aws autoscaling put-lifecycle-hook
+  --lifecycle-hook-name EcsWebScaleDown
+  --auto-scaling-group-name ecs-web
+  --lifecycle-transition autoscaling:EC2_INSTANCE_TERMINATING
+  --heartbeat-timeout 900
+  --notification-target-arn arn:aws:sns:ap-southeast-1:XXXXXXXXXXXX:EcsInstanceDrain
+  --role-arn arn:aws:iam::XXXXXXXXXXXX:role/AutoScalingNotificationRole
+</code></pre>
+
+<p>It should be good now, as advertised :)</p>
+
+</div>
+
+
+
+
+<footer>
+	<p><aside>&copy;2018</aside></a>
+</footer>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+	tex2jax: {
+		inlineMath: [['$','$'], ['\\(','\\)']],
+		displayMath: [['$$','$$'], ['\[','\]']],
+		processEscapes: true,
+		processEnvironments: true,
+		skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+		TeX: { equationNumbers: { autoNumber: "AMS" },
+		extensions: ["AMSmath.js", "AMSsymbols.js"] }
+	}
+});
+</script>
+
+<script type="text/x-mathjax-config">
+	MathJax.Hub.Queue(function() {
+	// Fix <code> tags after MathJax finishes running. This is a
+	// hack to overcome a shortcoming of Markdown. Discussion at
+	// https://github.com/mojombo/jekyll/issues/199
+	var all = MathJax.Hub.getAllJax();
+	for (var i = 0; i = all.length - 1; i += 1) {
+		all[i].SourceElement().parentNode.className += ' has-jax';
+	}
+});
+</script>
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+</body>
+</html>
+
