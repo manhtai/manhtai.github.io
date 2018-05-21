@@ -41,7 +41,7 @@ steps:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;1) Create a lambda function using this &lt;a href=&#34;https://gist.github.com/manhtai/66dfdae56ebce7b6270788018516a409&#34;&gt;script&lt;/a&gt;. It is my fork of AWS
-sample &lt;a href=&#34;https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py&#34;&gt;script&lt;/a&gt;, but less sucks.&lt;/p&gt;&lt;/li&gt;
+sample &lt;a href=&#34;https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py&#34;&gt;script&lt;/a&gt;, but sucks less.&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;2) Set role for our lambda function to have these permissions:&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
