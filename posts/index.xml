@@ -6,10 +6,48 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 May 2018 17:33:18 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 25 May 2018 20:17:49 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>8 weeks Crypto write up</title>
+      <link>https://manhtai.github.io/posts/8-weeks-crypto-write-up/</link>
+      <pubDate>Fri, 25 May 2018 20:17:49 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/8-weeks-crypto-write-up/</guid>
+      <description>&lt;p&gt;After planing for &lt;a href=&#34;https://manhtai.github.io/posts/12-weeks-onto-crypto&#34;&gt;12 weeks onto Crypto&lt;/a&gt;, I&amp;rsquo;ve tried to read &lt;a href=&#34;https://www.amazon.com/exec/obidos/ASIN/0470474246/counterpane/&#34;&gt;the book&lt;/a&gt;,
+but without luck: I don&amp;rsquo;t understand things quite clear, if not nothing at
+all. And then I found &lt;a href=&#34;https://www.youtube.com/channel/UC1usFRN4LCMcfIV7UjHNuQg/videos&#34;&gt;this course&lt;/a&gt; by Christof Paar, in companion with his
+book: &lt;a href=&#34;https://github.com/manhtai/understanding-cryptography&#34;&gt;Understanding Cryptography&lt;/a&gt;. The course &amp;amp; the book are just
+brilliant!&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s very easy to understand hard concepts which are explained by the
+professor. The course includes 24 videos, one for each week of study, but
+I finish it within 8 weeks. It&amp;rsquo;s extremely intense and I can&amp;rsquo;t say my brain
+takes it all, but I&amp;rsquo;ve learned so much, some are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Symmetric cipher: DES, AES&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Three families of asymmetric cryptography: integer factorization (RSA),
+discrete log (DH, Elgamal) &amp;amp; elliptic curves (ECDH)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Digital signatures &amp;amp; Hash functions&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I&amp;rsquo;ve done &lt;a href=&#34;https://github.com/manhtai/understanding-cryptography&#34;&gt;some&lt;/a&gt; of the problems using Go. I&amp;rsquo;ve left out many problems
+which are related to calculating the time neccessary to brute-force a cipher,
+and some more. That is something I am lack of, basic knowledge about
+&lt;strong&gt;Operating System&lt;/strong&gt;. It&amp;rsquo;s not just what parts the computer is built from,
+it&amp;rsquo;s about how it really works.&lt;/p&gt;
+
+&lt;p&gt;So I guess it&amp;rsquo;s 12 weeks more, to dig down in Operating System.&lt;/p&gt;
+
+&lt;p&gt;See you then :)&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Drain ECS instances before scaling down in EC2</title>
