@@ -1,7 +1,7 @@
 ---
 title: "12 weeks onto Crypto"
 date: 2018-03-25T20:51:25+07:00
-draft: False
+draft: false
 tags: ["crypto", "short"]
 ---
 
