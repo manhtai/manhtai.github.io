@@ -30,16 +30,16 @@ page&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Firstly, you must get a library to print arbitrary characters to a thermal
 printer. We used &lt;a href=&#34;https://github.com/rusel1989/react-native-bluetooth-serial&#34;&gt;react-native-bluetooth-serial&lt;/a&gt; for our ERP app.&lt;/p&gt;
 
-&lt;p&gt;It&amp;rsquo;s API for print out a message as simple as this:&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s API for printing out a message as simple as this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;BluetoothSerial.write(Buffer|String data)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Secondly, you must know that a thermal printer will support a kind of
-ESC/POS commands for parameterizing printed characters, like change
-font family, font size, barcode printing, etc. Depend on what thermal printer
-manufacturer you are using, it will have some groups of commands that we can
-use, for example, we can find ECS/POS reference about Epson printer
+&lt;p&gt;Secondly, you must know that a thermal printer will support some kind of
+ESC/POS commands for parameterizing printed characters, like changing
+font family, font size, barcode printing, etc. Depending on what thermal
+printer manufacturer you are using, it will have some groups of commands that
+we can use, for example, we can find ECS/POS reference about Epson printer
 &lt;a href=&#34;http://content.epson.de/fileadmin/content/files/RSD/downloads/escpos.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;So all we need to print out Vietnamese characters is to send out some
