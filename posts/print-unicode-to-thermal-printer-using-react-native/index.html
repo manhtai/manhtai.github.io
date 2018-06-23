@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>How to print Unicode text to a Thermal printer using React Native</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="How to print Unicode text to a Thermal printer using React Native">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="How to print Unicode text to a Thermal printer using React Native">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/">
+	<meta name="og:site_name" content="How to print Unicode text to a Thermal printer using React Native">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-52114958-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>How to print Unicode text to a Thermal printer using React Native <aside></aside></h1>
+  <p>In previous <a href="/posts/building-erp-using-django-react-native">post</a> about using React Native to build our own ERP app, I&rsquo;ve
+mentioned about printing Vietnamese characters to a <a href="https://en.wikipedia.org/wiki/Thermal_printing">thermal printer</a>, in
+this post I will show you how to do it.</p>
+
+<p>Although this post is about printing Vietnamese using React Native, you must
+keep in mind that it is not only apply to Vietnamese and React Native, but
+for any <em>native</em> mobile framework to print Unicode characters to a thermal
+printer. Just make sure your language is supported in thermal printer <a href="https://en.wikipedia.org/wiki/Code_page">code
+page</a>.</p>
+
+<p>Firstly, you must get a library to print arbitrary characters to a thermal
+printer. We used <a href="https://github.com/rusel1989/react-native-bluetooth-serial">react-native-bluetooth-serial</a> for our ERP app.</p>
+
+<p>It&rsquo;s API for print out a message as simple as this:</p>
+
+<pre><code class="language-javascript">BluetoothSerial.write(Buffer|String data)
+</code></pre>
+
+<p>Secondly, you must know that a thermal printer will support a kind of
+ESC/POS commands for parameterizing printed characters, like change
+font family, font size, barcode printing, etc. Depend on what thermal printer
+manufacturer you are using, it will have some groups of commands that we can
+use, for example, we can find ECS/POS reference about Epson printer
+<a href="http://content.epson.de/fileadmin/content/files/RSD/downloads/escpos.pdf">here</a>.</p>
+
+<p>So all we need to print out Vietnamese characters is to send out some
+commands to set up the printer for using Vietnamese font and <a href="https://en.wikipedia.org/wiki/Code_page">code page</a>!</p>
+
+<p>Our thermal printer does support only TCVN3 code page, so we must encode our
+Unicode message to TCVN3, and then just print it out, like this:</p>
+
+<pre><code class="language-javascript">// We use iconv to convert Unicode message to TCVN3
+const TCVN3message = iconv.encode(message, 'tcvn');
+
+// [0x1b, 0x74, 48] is POS command for set up TCVN3 code page
+const TCVN3codepage = new Buffer([0x1b, 0x74, 48]);
+
+// Push write command to Promise array
+const writePromises = [];
+writePromises.push(BluetoothSerial.write(TCVN3codepage));
+writePromises.push(BluetoothSerial.write(TCVN3message));
+
+// Print out messages
+Promise.all(writePromises);
+</code></pre>
+
+<p>That&rsquo;s it!</p>
+
+<p>Using ESC/POS commands, we can customize our printing format even more, like
+font size, font weight, etc. Another longer ESC/POS reference can be found
+<a href="http://www.aures-support.fr/DATA/utility/Commande%20ESCPOS.pdf">here</a>.</p>
+
+<p>A minor thing to note is that some printer will not default to character font
+A for us, so the text might get too little or too large. You can use a command
+to set it to character font A, like this:</p>
+
+<pre><code class="language-javascript">const characterFontA = new Buffer([0x1b, 0x21, 0]);
+</code></pre>
+
+<p>Have fun printing things out!</p>
+
+</div>
+
+
+
+
+<footer>
+	<p><aside>&copy;2018</aside></a>
+</footer>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+	tex2jax: {
+		inlineMath: [['$','$'], ['\\(','\\)']],
+		displayMath: [['$$','$$'], ['\[','\]']],
+		processEscapes: true,
+		processEnvironments: true,
+		skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+		TeX: { equationNumbers: { autoNumber: "AMS" },
+		extensions: ["AMSmath.js", "AMSsymbols.js"] }
+	}
+});
+</script>
+
+<script type="text/x-mathjax-config">
+	MathJax.Hub.Queue(function() {
+	// Fix <code> tags after MathJax finishes running. This is a
+	// hack to overcome a shortcoming of Markdown. Discussion at
+	// https://github.com/mojombo/jekyll/issues/199
+	var all = MathJax.Hub.getAllJax();
+	for (var i = 0; i = all.length - 1; i += 1) {
+		all[i].SourceElement().parentNode.className += ' has-jax';
+	}
+});
+</script>
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+</body>
+</html>
+

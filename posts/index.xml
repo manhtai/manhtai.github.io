@@ -6,10 +6,79 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 May 2018 20:17:49 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 23 Jun 2018 21:17:15 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How to print Unicode text to a Thermal printer using React Native</title>
+      <link>https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/</link>
+      <pubDate>Sat, 23 Jun 2018 21:17:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/</guid>
+      <description>&lt;p&gt;In previous &lt;a href=&#34;https://manhtai.github.io/posts/building-erp-using-django-react-native&#34;&gt;post&lt;/a&gt; about using React Native to build our own ERP app, I&amp;rsquo;ve
+mentioned about printing Vietnamese characters to a &lt;a href=&#34;https://en.wikipedia.org/wiki/Thermal_printing&#34;&gt;thermal printer&lt;/a&gt;, in
+this post I will show you how to do it.&lt;/p&gt;
+
+&lt;p&gt;Although this post is about printing Vietnamese using React Native, you must
+keep in mind that it is not only apply to Vietnamese and React Native, but
+for any &lt;em&gt;native&lt;/em&gt; mobile framework to print Unicode characters to a thermal
+printer. Just make sure your language is supported in thermal printer &lt;a href=&#34;https://en.wikipedia.org/wiki/Code_page&#34;&gt;code
+page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Firstly, you must get a library to print arbitrary characters to a thermal
+printer. We used &lt;a href=&#34;https://github.com/rusel1989/react-native-bluetooth-serial&#34;&gt;react-native-bluetooth-serial&lt;/a&gt; for our ERP app.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s API for print out a message as simple as this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;BluetoothSerial.write(Buffer|String data)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Secondly, you must know that a thermal printer will support a kind of
+ESC/POS commands for parameterizing printed characters, like change
+font family, font size, barcode printing, etc. Depend on what thermal printer
+manufacturer you are using, it will have some groups of commands that we can
+use, for example, we can find ECS/POS reference about Epson printer
+&lt;a href=&#34;http://content.epson.de/fileadmin/content/files/RSD/downloads/escpos.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;So all we need to print out Vietnamese characters is to send out some
+commands to set up the printer for using Vietnamese font and &lt;a href=&#34;https://en.wikipedia.org/wiki/Code_page&#34;&gt;code page&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Our thermal printer does support only TCVN3 code page, so we must encode our
+Unicode message to TCVN3, and then just print it out, like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// We use iconv to convert Unicode message to TCVN3
+const TCVN3message = iconv.encode(message, &#39;tcvn&#39;);
+
+// [0x1b, 0x74, 48] is POS command for set up TCVN3 code page
+const TCVN3codepage = new Buffer([0x1b, 0x74, 48]);
+
+// Push write command to Promise array
+const writePromises = [];
+writePromises.push(BluetoothSerial.write(TCVN3codepage));
+writePromises.push(BluetoothSerial.write(TCVN3message));
+
+// Print out messages
+Promise.all(writePromises);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s it!&lt;/p&gt;
+
+&lt;p&gt;Using ESC/POS commands, we can customize our printing format even more, like
+font size, font weight, etc. Another longer ESC/POS reference can be found
+&lt;a href=&#34;http://www.aures-support.fr/DATA/utility/Commande%20ESCPOS.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;A minor thing to note is that some printer will not default to character font
+A for us, so the text might get too little or too large. You can use a command
+to set it to character font A, like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;const characterFontA = new Buffer([0x1b, 0x21, 0]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Have fun printing things out!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>8 weeks Crypto write up</title>
