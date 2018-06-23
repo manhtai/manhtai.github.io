@@ -1,6 +1,7 @@
 ---
 title: "How to print Unicode text to a Thermal printer using React Native"
 date: 2018-06-23T21:17:15+07:00
+tags: ["thermal printer", "react native"]
 draft: false
 ---
 
