@@ -56,5 +56,12 @@ window.onload = ready;
   <p><small><em>Written on {{ .Date.Format "January 2, 2006"}}. </em></small></p>
 {{ end }}
 
+{{ if isset .Params "commentid" }}
+  {{ partial "comments.html" . }}
+{{ end }}
+
+{{ if isset .Params "mathjax" }}
+  {{ partial "mathjax.html" . }}
+{{ end }}
 
 {{ partial "footer.html" . }}
