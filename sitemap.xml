@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/django-vue-docker/</loc>
+    <lastmod>2018-08-24T22:42:47+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/</loc>
     <lastmod>2018-06-23T21:17:15+07:00</lastmod>
   </url>
@@ -133,13 +138,19 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/django/</loc>
-    <lastmod>2018-04-21T12:05:19+07:00</lastmod>
+    <lastmod>2018-08-24T22:42:47+07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/tags/docker/</loc>
-    <lastmod>2018-04-15T10:51:06+07:00</lastmod>
+    <lastmod>2018-08-24T22:42:47+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/drone.io/</loc>
+    <lastmod>2018-08-24T22:42:47+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -151,7 +162,7 @@
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2018-06-23T21:17:15+07:00</lastmod>
+    <lastmod>2018-08-24T22:42:47+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -187,7 +198,7 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2018-06-23T21:17:15+07:00</lastmod>
+    <lastmod>2018-08-24T22:42:47+07:00</lastmod>
     <priority>0</priority>
   </url>
   

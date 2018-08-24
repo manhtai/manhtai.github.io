@@ -6,10 +6,232 @@
     <description>Recent content in Django on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Apr 2018 12:05:19 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 24 Aug 2018 22:42:47 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/django/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Dockerize Django Vue web app</title>
+      <link>https://manhtai.github.io/posts/django-vue-docker/</link>
+      <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/django-vue-docker/</guid>
+      <description>
+
+&lt;p&gt;Recently I&amp;rsquo;ve fired up multiple Django projects for my company. Most of them
+follow a typical setup with Nginx + Gunicorn + Supervisord in a big Ubuntu
+virtual machine. I must say that the setup works quite well, but sometimes,
+when having not much more work to do, I strike for better by trying to
+dockerize them.&lt;/p&gt;
+
+&lt;h2 id=&#34;1-dockerize-django-vue-app-with-nginx-gunicorn&#34;&gt;1) Dockerize Django-Vue app with Nginx &amp;amp; Gunicorn&lt;/h2&gt;
+
+&lt;p&gt;I want to start with an app that has Vue as frontend. This method works with
+all frontend frameworks, it just happens that we use Vue. The Vue part has a
+separate repo so backend and frontend developers can work simultaneously. But
+to build the docker image in the easiest way I put them into one by using git
+submodule.&lt;/p&gt;
+
+&lt;p&gt;To build frontend part, I use &lt;code&gt;node:8&lt;/code&gt; image:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM node:8 as frontend
+
+RUN mkdir /code
+WORKDIR /code
+ADD ./frontend /code/
+RUN npm install yarn &amp;amp;&amp;amp; yarn &amp;amp;&amp;amp; yarn run build
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I use &lt;code&gt;python:3.7-slim-stretch&lt;/code&gt; to build backend, install &lt;code&gt;nginx&lt;/code&gt;,
+&lt;code&gt;supervisord&lt;/code&gt; to the same image. Note that Nginx and Supervisord
+configuration must be customized to run inside a Docker container.
+You can refer to &lt;a href=&#34;https://github.com/tiangolo/uwsgi-nginx-docker/blob/master/python3.6-alpine3.7/Dockerfile&#34;&gt;uwsgi-nginx-docker&lt;/a&gt; repo for more insights.&lt;/p&gt;
+
+&lt;p&gt;In case you still wonder, I use Supervisord to run Gunicorn and Nginx.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM python:3.7-slim-stretch
+
+# Install wget, gnupg to get nginx
+RUN apt-get update &amp;amp;&amp;amp; apt-get install -y wget gnupg
+
+RUN echo &amp;quot;deb http://nginx.org/packages/mainline/debian/ stretch nginx&amp;quot; &amp;gt;&amp;gt; /etc/apt/sources.list
+RUN wget https://nginx.org/keys/nginx_signing.key -O - | apt-key add - &amp;amp;&amp;amp; \
+  apt-get update &amp;amp;&amp;amp; \
+  apt-get install -y nginx supervisor &amp;amp;&amp;amp; \
+  rm -rf /var/lib/apt/lists/*
+
+# Remove wget, gnupg
+RUN apt-get purge -y --auto-remove wget gnupg
+
+# Add code folder
+RUN mkdir /code
+WORKDIR /code
+ADD . /code/
+
+# Nginx configuration
+RUN echo &amp;quot;daemon off;&amp;quot; &amp;gt;&amp;gt; /etc/nginx/nginx.conf
+RUN rm /etc/nginx/conf.d/default.conf
+COPY deploy/nginx_docker.conf /etc/nginx/conf.d/nginx_docker.conf
+
+# Supervisor configuration
+COPY deploy/supervisor_docker.conf /etc/supervisor/conf.d/supervisor_docker.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I use &lt;a href=&#34;https://pipenv.readthedocs.io/&#34;&gt;pipenv&lt;/a&gt; instead of requirements file to manage dependencies:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Install python lib dep
+RUN pip install pipenv
+RUN pipenv install --system --deploy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After that, collect staticfiles and expose them:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Set env to production
+ENV DJANGO_SETTINGS_MODULE myapp.settings.production
+
+# Collect static files
+RUN (cd myapp; python manage.py collectstatic --noinput)
+
+VOLUME [&amp;quot;/code/myapp/public&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then copy frontend code from frontend build image to our main image:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;COPY --from=frontend /code/dist/ /code/dist/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And lastly, expose port for running:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;EXPOSE 80 443
+
+CMD [&amp;quot;/usr/bin/supervisord&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. We&amp;rsquo;ve had a Dockerfile that contains all frontend, backend and
+a web server ready to use.&lt;/p&gt;
+
+&lt;p&gt;The reality that we can&amp;rsquo;t build our Docker images by hands takes us to a CD
+tool, and which tool should it be?&lt;/p&gt;
+
+&lt;h2 id=&#34;2-cd-pipeline-using-drone-io&#34;&gt;2) CD pipeline using Drone.io&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;ve had some experience in writting Jenkinsfile for CD pipeline. It works
+most of the time when I already had a Jenkins server running. But it costs me
+hours and hours trying to set up a working Jenkins server in AWS, and then
+I just quit. Some googling around, I found &lt;a href=&#34;https://drone.io&#34;&gt;Drone.io&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The setup is dead simple, just one &lt;code&gt;docker-compose.yml&lt;/code&gt; file and you got
+a https CD server ready in minutes. I just fall in love with it immediately.&lt;/p&gt;
+
+&lt;p&gt;My config file is this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;version: &#39;2&#39;
+
+services:
+  drone-server:
+    image: drone/drone:0.8
+
+    ports:
+      - 80:80
+      - 443:443
+      - 9000:9000
+    volumes:
+      - ${HOME}/drone-data:/var/lib/drone/
+    restart: always
+    environment:
+      - DRONE_OPEN=true
+      - DRONE_ORGS=myteam
+      - DRONE_ADMIN=myusername
+      - DRONE_HOST=${DRONE_HOST}
+      - DRONE_BITBUCKET=true
+      - DRONE_BITBUCKET_CLIENT=${DRONE_BITBUCKET_CLIENT}
+      - DRONE_BITBUCKET_SECRET=${DRONE_BITBUCKET_SECRET}
+      - DRONE_SECRET=${DRONE_SECRET}
+      - DRONE_LETS_ENCRYPT=true
+
+  drone-agent:
+    image: drone/agent:0.8
+
+    command: agent
+    restart: always
+    depends_on:
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_SERVER=drone-server:9000
+      - DRONE_SECRET=${DRONE_SECRET}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You don&amp;rsquo;t need nginx or something like just, just &lt;code&gt;docker-compose up -d&lt;/code&gt; and
+it&amp;rsquo;s set. I wish all web applications are just simple as that!&lt;/p&gt;
+
+&lt;p&gt;Now you must define a &lt;code&gt;.drone.yml&lt;/code&gt; file in your web server project, and it is
+dead simple, too.&lt;/p&gt;
+
+&lt;p&gt;Here is the script for building the Docker image and then push it to AWS ECR:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;clone:
+  git:
+    image: plugins/git
+    recursive: true
+    # Override here so you don&#39;t have to edit it in your repo
+    submodule_override:
+      frontend: https://bitbucket.org/myteam/myapp.git
+
+pipeline:
+  ecr:
+    image: plugins/ecr
+    repo: &amp;lt;account-id&amp;gt;.dkr.ecr.ap-southeast-1.amazonaws.com/myapp
+    registry: &amp;lt;account-id&amp;gt;.dkr.ecr.ap-southeast-1.amazonaws.com
+    secrets: [ ecr_access_key, ecr_secret_key ]
+    region: ap-southeast-1
+
+  slack:
+    image: plugins/slack
+    channel: drone
+    secrets: [ slack_webhook ]
+    when:
+      status: [ success, failure ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And now in our server, &lt;code&gt;docker-compose.yml&lt;/code&gt; file is now very simple:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;version: &#39;2&#39;
+
+services:
+  myapp:
+    image: &amp;lt;account-id&amp;gt;.dkr.ecr.ap-southeast-1.amazonaws.com/myapp:latest
+
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that to pull images from ECR, you may need an &lt;a href=&#34;https://github.com/awslabs/amazon-ecr-credential-helper&#34;&gt;ECR credential helper&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;3-conclusion&#34;&gt;3) Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Now to start your server, you just need to run &lt;code&gt;docker-compose up -d&lt;/code&gt; and it&amp;rsquo;s
+set! Our Django app is just like a typical Golang app: one Docker image and
+nothing more.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve crossed out some things here so you can find out for yourself:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;- Add test step to Drone pipeline (if you had some!).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;- Add deploy step to Drone pipeline so it can be complete.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;- Use another container scheduling and management system like &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt;
+instead of Docker compose.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Python 2to3 Transition</title>
