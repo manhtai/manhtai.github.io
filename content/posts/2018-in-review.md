@@ -5,7 +5,7 @@ tags: ["short", "end year"]
 draft: false
 ---
 
-A year has come to an end, and now is the time to throw back.
+A year has come to an end, and now is the time to look back.
 
 This year I've learned a lot, run a lot and fail some.
 
