@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/2018-in-review/</loc>
+    <lastmod>2018-12-30T22:12:09+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/posts/django-vue-docker/</loc>
     <lastmod>2018-08-24T22:42:47+07:00</lastmod>
   </url>
@@ -161,8 +166,14 @@
   </url>
   
   <url>
+    <loc>https://manhtai.github.io/tags/end-year/</loc>
+    <lastmod>2018-12-30T22:12:09+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2018-08-24T22:42:47+07:00</lastmod>
+    <lastmod>2018-12-30T22:12:09+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -198,7 +209,7 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2018-08-24T22:42:47+07:00</lastmod>
+    <lastmod>2018-12-30T22:12:09+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -216,7 +227,7 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/short/</loc>
-    <lastmod>2018-03-25T20:51:25+07:00</lastmod>
+    <lastmod>2018-12-30T22:12:09+07:00</lastmod>
     <priority>0</priority>
   </url>
   

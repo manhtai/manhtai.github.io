@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Short on Go slowly</title>
-    <link>https://manhtai.github.io/tags/short/</link>
-    <description>Recent content in Short on Go slowly</description>
+    <title>End Year on Go slowly</title>
+    <link>https://manhtai.github.io/tags/end-year/</link>
+    <description>Recent content in End Year on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 30 Dec 2018 22:12:09 +0700</lastBuildDate>
     
-        <atom:link href="https://manhtai.github.io/tags/short/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://manhtai.github.io/tags/end-year/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -101,79 +101,6 @@ I will have some things to write in the year end post.&lt;/p&gt;
 
 &lt;p&gt;2018 is a satisfied year for me. More chances in 2019 for me to explore. Can&amp;rsquo;t
 wait!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>12 weeks onto Crypto</title>
-      <link>https://manhtai.github.io/posts/12-weeks-onto-crypto/</link>
-      <pubDate>Sun, 25 Mar 2018 20:51:25 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/12-weeks-onto-crypto/</guid>
-      <description>&lt;p&gt;I now commit 12 weeks to learn about Cryptography. That&amp;rsquo;s minimum time needed to
-prepare for a marathon, and I think it should apply to crypto, too. My plan is
-based on 12 weeks to read &lt;a href=&#34;https://www.amazon.com/exec/obidos/ASIN/0470474246/counterpane/&#34;&gt;Cryptography Engineering&lt;/a&gt; chapter by chapter.&lt;/p&gt;
-
-&lt;p&gt;And after that, who &lt;a href=&#34;https://www.amazon.com/Mastering-Bitcoin-Programming-Open-Blockchain/dp/1491954388/&#34;&gt;knows&lt;/a&gt;?&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Marathon plan</title>
-      <link>https://manhtai.github.io/posts/marathon-12-weeks-plan/</link>
-      <pubDate>Sun, 25 Feb 2018 21:45:30 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/marathon-12-weeks-plan/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve generated a two-12-weeks &lt;a href=&#34;https://docs.google.com/spreadsheets/d/1EGDOGJBFqMY-nIQkyLcGU0YRrwygnGIP-zq_AZjrXNM&#34;&gt;marathon plan&lt;/a&gt; using &lt;a href=&#34;https://runkeeper.com&#34;&gt;Runkeeper&lt;/a&gt; app for
-my race in this summer.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>2018</title>
-      <link>https://manhtai.github.io/posts/2018/</link>
-      <pubDate>Fri, 26 Jan 2018 23:52:49 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/2018/</guid>
-      <description>&lt;p&gt;A new year has come, guess what, I made a new blog. Yay!&lt;/p&gt;
-
-&lt;p&gt;This blog is powered by &lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt; and hosted by &lt;a href=&#34;https://github.com&#34;&gt;GitHub&lt;/a&gt;. I modified the
-&lt;a href=&#34;https://gohugo.io/hosting-and-deployment/hosting-on-github/#github-user-or-organization-pages&#34;&gt;deployment script&lt;/a&gt; a little bit to use 2 braches in 1 repo instead of
-2 repos. It looks like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;#!/bin/bash
-
-# 0. Notify &amp;amp; get message
-echo -e &amp;quot;\033[0;32mDeploying updates to GitHub...\033[0m&amp;quot;
-msg=&amp;quot;Rebuilding site `date`&amp;quot;
-if [ $# -eq 1 ]
-  then msg=&amp;quot;$1&amp;quot;
-fi
-
-# 1. Commit changes to develop first
-git add .
-git commit -m &amp;quot;$msg&amp;quot;
-
-# 2. Build the project in develop
-hugo
-
-# 3. Checkout to master
-git checkout master
-
-# 4. Add changes to master
-cp -r public/* .
-rm -rf public
-git add .
-git commit -m &amp;quot;$msg&amp;quot;
-
-# 5. Push to develop &amp;amp; master
-git push origin master develop
-
-# 6. Come back to develop
-git checkout develop
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can checkout the source code &lt;a href=&#34;https://github.com/manhtai/manhtai.github.io&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     

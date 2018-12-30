@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>2018 in Review</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="2018 in Review">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="2018 in Review">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/2018-in-review/">
+	<meta name="og:site_name" content="2018 in Review">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="short end year ">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-52114958-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>2018 in Review <aside><a href="/tags/short/">short</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/end-year/">end year</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  
+
+<p>A year has come to an end, and now is the time to throw back.</p>
+
+<p>This year I&rsquo;ve learned a lot, run a lot and fail some.</p>
+
+<h2 id="1-coding">1. Coding</h2>
+
+<p>I have found new things to learn through all the year, some of them worth
+mentioning here are:</p>
+
+<h3 id="things-i-ve-learned">Things I&rsquo;ve learned</h3>
+
+<ul>
+<li><p>Go, then build a <a href="https://manhtai.github.io/posts/chat-app-in-golang/">chat app</a></p></li>
+
+<li><p>Cryptography, taught by a brilliant <a href="https://manhtai.github.io/posts/8-weeks-crypto-write-up/">teacher</a></p></li>
+
+<li><p>Google Cloud Platform, for work</p></li>
+
+<li><p>Apache Airflow &amp; Apache Beam for data ingestion (I should write a blog about
+this)</p></li>
+
+<li><p>Design patterns in Java</p></li>
+</ul>
+
+<p>Go and Java are two more programming languages that are in my belt now, love
+to use both of them so far.</p>
+
+<h3 id="things-i-ve-dropped">Things I&rsquo;ve dropped</h3>
+
+<ul>
+<li><p>Operating System class</p></li>
+
+<li><p>Computer Vision class</p></li>
+</ul>
+
+<p>The first one is too hard, the second one is not attracted me anymore, so I&rsquo;ve
+decided to quit early.</p>
+
+<h3 id="things-i-am-going-to-learn">Things I am going to learn</h3>
+
+<ul>
+<li>MOOC: Create a programming course in Vietnamese</li>
+</ul>
+
+<p>As you may know, I&rsquo;m a self-taught developer, hence it will never be enough for
+me to learn how to code. But I think it might come the time that I am
+certified to reteach what I&rsquo;ve learned to those people who just be like me
+when I was started. Hope I will learn new things along the way, too.
+<a href="https://techcamp.vn">techcamp.vn</a> is registered and ready to go live. Wait for it!</p>
+
+<ul>
+<li>Microservices: Building microservices in Go and Java</li>
+</ul>
+
+<p>I&rsquo;ve build many monolith applications and none of microservices, so I will try
+to build one next year.</p>
+
+<h2 id="2-running">2. Running</h2>
+
+<p>I love running. This year I&rsquo;ve completed 2 full marathons, one in Danang and
+another one in Hanoi. I&rsquo;ve trained hard for the first one, not too hard for
+the second, because I found out that Hanoi&rsquo;s air quality is extremely bad for
+your health. Now I only go to run when <a href="http://aqicn.org/city/vietnam/hanoi/us-embassy/">AQI</a> is bad for sensitive people
+group (!?) or lower.</p>
+
+<p>I don&rsquo;t have much hope for improvement of air quality in Hanoi next year, so
+I may not keep the record up. I really feel bad about this.</p>
+
+<h2 id="3-reading">3. Reading</h2>
+
+<p>I read technical books a lot, I&rsquo;ve subscribed to <a href="https://safaribooksonline.com">Safaribooksonline</a> so
+I can read as many books as I want. Video tutorials are quite good, too.</p>
+
+<p>Some none technical books I&rsquo;ve read this year include &ldquo;Sapiens: A Brief
+History of Humankind&rdquo;, &ldquo;Zero to One: Notes on Startups, or How to Build the
+Future&rdquo;, and some that I can&rsquo;t remember.</p>
+
+<p>Next year I will keep track of all none technical books I read in Goodreads so
+I will have some things to write in the year end post.</p>
+
+<p>2018 is a satisfied year for me. More chances in 2019 for me to explore. Can&rsquo;t
+wait!</p>
+
+</div>
+
+
+
+
+
+
+
+<footer>
+	<p><aside>&copy;2018</aside></a>
+</footer>
+</body>
+</html>
+

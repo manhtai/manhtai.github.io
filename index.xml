@@ -6,10 +6,103 @@
     <description>Recent content on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 24 Aug 2018 22:42:47 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 30 Dec 2018 22:12:09 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>2018 in Review</title>
+      <link>https://manhtai.github.io/posts/2018-in-review/</link>
+      <pubDate>Sun, 30 Dec 2018 22:12:09 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/2018-in-review/</guid>
+      <description>
+
+&lt;p&gt;A year has come to an end, and now is the time to throw back.&lt;/p&gt;
+
+&lt;p&gt;This year I&amp;rsquo;ve learned a lot, run a lot and fail some.&lt;/p&gt;
+
+&lt;h2 id=&#34;1-coding&#34;&gt;1. Coding&lt;/h2&gt;
+
+&lt;p&gt;I have found new things to learn through all the year, some of them worth
+mentioning here are:&lt;/p&gt;
+
+&lt;h3 id=&#34;things-i-ve-learned&#34;&gt;Things I&amp;rsquo;ve learned&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Go, then build a &lt;a href=&#34;https://manhtai.github.io/posts/chat-app-in-golang/&#34;&gt;chat app&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Cryptography, taught by a brilliant &lt;a href=&#34;https://manhtai.github.io/posts/8-weeks-crypto-write-up/&#34;&gt;teacher&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Google Cloud Platform, for work&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Apache Airflow &amp;amp; Apache Beam for data ingestion (I should write a blog about
+this)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Design patterns in Java&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Go and Java are two more programming languages that are in my belt now, love
+to use both of them so far.&lt;/p&gt;
+
+&lt;h3 id=&#34;things-i-ve-dropped&#34;&gt;Things I&amp;rsquo;ve dropped&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Operating System class&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Computer Vision class&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The first one is too hard, the second one is not attracted me anymore, so I&amp;rsquo;ve
+decided to quit early.&lt;/p&gt;
+
+&lt;h3 id=&#34;things-i-am-going-to-learn&#34;&gt;Things I am going to learn&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;MOOC: Create a programming course in Vietnamese&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As you may know, I&amp;rsquo;m a self-taught developer, hence it will never be enough for
+me to learn how to code. But I think it might come the time that I am
+certified to reteach what I&amp;rsquo;ve learned to those people who just be like me
+when I was started. Hope I will learn new things along the way, too.
+&lt;a href=&#34;https://techcamp.vn&#34;&gt;techcamp.vn&lt;/a&gt; is registered and ready to go live. Wait for it!&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Microservices: Building microservices in Go and Java&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I&amp;rsquo;ve build many monolith applications and none of microservices, so I will try
+to build one next year.&lt;/p&gt;
+
+&lt;h2 id=&#34;2-running&#34;&gt;2. Running&lt;/h2&gt;
+
+&lt;p&gt;I love running. This year I&amp;rsquo;ve completed 2 full marathons, one in Danang and
+another one in Hanoi. I&amp;rsquo;ve trained hard for the first one, not too hard for
+the second, because I found out that Hanoi&amp;rsquo;s air quality is extremely bad for
+your health. Now I only go to run when &lt;a href=&#34;http://aqicn.org/city/vietnam/hanoi/us-embassy/&#34;&gt;AQI&lt;/a&gt; is bad for sensitive people
+group (!?) or lower.&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t have much hope for improvement of air quality in Hanoi next year, so
+I may not keep the record up. I really feel bad about this.&lt;/p&gt;
+
+&lt;h2 id=&#34;3-reading&#34;&gt;3. Reading&lt;/h2&gt;
+
+&lt;p&gt;I read technical books a lot, I&amp;rsquo;ve subscribed to &lt;a href=&#34;https://safaribooksonline.com&#34;&gt;Safaribooksonline&lt;/a&gt; so
+I can read as many books as I want. Video tutorials are quite good, too.&lt;/p&gt;
+
+&lt;p&gt;Some none technical books I&amp;rsquo;ve read this year include &amp;ldquo;Sapiens: A Brief
+History of Humankind&amp;rdquo;, &amp;ldquo;Zero to One: Notes on Startups, or How to Build the
+Future&amp;rdquo;, and some that I can&amp;rsquo;t remember.&lt;/p&gt;
+
+&lt;p&gt;Next year I will keep track of all none technical books I read in Goodreads so
+I will have some things to write in the year end post.&lt;/p&gt;
+
+&lt;p&gt;2018 is a satisfied year for me. More chances in 2019 for me to explore. Can&amp;rsquo;t
+wait!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Dockerize Django Vue web app</title>
