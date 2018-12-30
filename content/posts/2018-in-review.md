@@ -14,34 +14,34 @@ This year I've learned a lot, run a lot and fail some.
 I have found new things to learn through all the year, some of them worth
 mentioning here are:
 
-### Things I've learned
+**Things I've learned:**
 
-- Go, then build a [chat app][1]
+- \- *Go*, then build a [chat app][1]
 
-- Cryptography, taught by a brilliant [teacher][2]
+- \- *Cryptography*, taught by a brilliant [teacher][2]
 
-- Google Cloud Platform, for work
+- \- *Google Cloud Platform*, for work
 
-- Apache Airflow & Apache Beam for data ingestion (I should write a blog about
-  this)
+- \- *Apache Airflow & Apache Beam* for data ingestion (I should write a blog
+about these)
 
-- Design patterns in Java
+- \- *Design patterns* in Java
 
 Go and Java are two more programming languages that are in my belt now, love
 to use both of them so far.
 
-### Things I've dropped
+**Things I've dropped:**
 
-- Operating System class
+- \- *Operating System* class
 
-- Computer Vision class
+- \- *Computer Vision* class
 
 The first one is too hard, the second one is not attracted me anymore, so I've
 decided to quit early.
 
-### Things I am going to learn
+**Things I am going to learn:**
 
-- MOOC: Create a programming course in Vietnamese
+- \- *MOOC*: Create a programming course in Vietnamese
 
 As you may know, I'm a self-taught developer, hence it will never be enough for
 me to learn how to code. But I think it might come the time that I am
@@ -49,7 +49,7 @@ certified to reteach what I've learned to those people who just be like me
 when I was started. Hope I will learn new things along the way, too.
 [techcamp.vn][4] is registered and ready to go live. Wait for it!
 
-- Microservices: Building microservices in Go and Java
+- \- *Microservices*: Building microservices in Go and Java
 
 I've build many monolith applications and none of microservices, so I will try
 to build one next year.
