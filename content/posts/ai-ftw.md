@@ -5,6 +5,10 @@ tags: ["short", "ai"]
 draft: true
 ---
 
+> The future is already here - it's just not very evenly distributed.
+
+~ William Gibson
+
 I have come to coding for almost 4 years now. From the beginning, I was
 learning to code for analytics purpose only. I imagined myself become an
 analyst that so good at bringing insight about anything which have data.
