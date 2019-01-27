@@ -28,9 +28,15 @@ some role I wished I could do their work. I had to talk with myself that they
 were better than me to do the job, and in the mean time, I got better pay for
 the job I was doing, so complain no more!
 
-Now is the chance for me to do that. This year, fear no more, I will be back
-for [the AI class][2] and finish it one last time. My goal is by next year,
-I will become an AI engineer, as advertised.
+I have two different options now: one is to become a System Engineer, who will
+work with systems and make them to work together, and two is to be a Data
+Engineer, who will do all the things data related. I prefer the second, but
+I did not meet my deep internal expectation in the past, and now is the chance
+for me to do that.
+
+So, this year, fear no more, I will be back for [the AI class][2] and finish
+it one last time. My goal is by next year, I will become an AI engineer, as
+advertised.
 
 Wish me luck!
 
