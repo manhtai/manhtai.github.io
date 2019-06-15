@@ -48,6 +48,15 @@
     </item>
     
     <item>
+      <title>Debezium</title>
+      <link>https://manhtai.github.io/tags/debezium/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/debezium/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Django</title>
       <link>https://manhtai.github.io/tags/django/</link>
       <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
@@ -102,6 +111,24 @@
     </item>
     
     <item>
+      <title>Kafka Connect</title>
+      <link>https://manhtai.github.io/tags/kafka-connect/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/kafka-connect/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://manhtai.github.io/tags/kubernetes/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Marathon</title>
       <link>https://manhtai.github.io/tags/marathon/</link>
       <pubDate>Sun, 25 Feb 2018 21:45:30 +0700</pubDate>
@@ -116,6 +143,15 @@
       <pubDate>Mon, 12 Feb 2018 22:04:15 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/metabase/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mysql Cdc</title>
+      <link>https://manhtai.github.io/tags/mysql-cdc/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/mysql-cdc/</guid>
       <description></description>
     </item>
     

@@ -6,10 +6,136 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 30 Dec 2018 22:12:09 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 15 Jun 2019 18:53:01 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Debezium Kafka Connect on Kubernetes</title>
+      <link>https://manhtai.github.io/posts/debezium-kafka-connect-kubernetes/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/debezium-kafka-connect-kubernetes/</guid>
+      <description>&lt;p&gt;In recent projects we had an usecase about streaming data from MySQL to
+Kafka, and from that it can go wherever we want. We choose &lt;a href=&#34;https://debezium.io/docs/connectors/mysql/&#34;&gt;Debezium&lt;/a&gt;
+as a MySQL source connector for &lt;a href=&#34;https://docs.confluent.io/current/connect/index.html&#34;&gt;Kafka Connect&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;From Debezium website, we could easily find out what it does:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Debezium&amp;rsquo;s MySQL Connector can monitor and record all of the row-level
+changes in the databases on a MySQL server or HA MySQL cluster. The
+first time it connects to a MySQL server/cluster, it reads a consistent
+snapshot of all of the databases. When that snapshot is complete, the
+connector continuously reads the changes that were committed to MySQL
+and generates corresponding insert, update and delete events. All of
+the events for each table are recorded in a separate Kafka topic, where
+they can be easily consumed by applications and services.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Now to deploy Debezium connector to Kubernetes, there are 3 things we need to
+keep in mind:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;1) Kafka Connect container must join your Kafka cluster to do the work.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2) We can pre-build Debezium connector in Kafka Connect image (or vice
+versa), but we have to manually create new Kafka Connect source using REST
+API.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3) We can do the 2nd thing automatically when deploying to K8s.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Let&amp;rsquo;t get started!&lt;/p&gt;
+
+&lt;p&gt;This is the Dockerfile for Kafka Connect with Debezium MySQL connector:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM debezium/connect-base:0.9
+
+ENV DEBEZIUM_VERSION=&amp;quot;0.9.5.Final&amp;quot; \
+    MAVEN_REPO_CORE=&amp;quot;https://repo1.maven.org/maven2&amp;quot; \
+    MAVEN_DEP_DESTINATION=$KAFKA_CONNECT_PLUGINS_DIR \
+    MYSQL_MD5=720b1396358fbdc59bce953f47d3c53f
+
+RUN docker-maven-download debezium mysql &amp;quot;$DEBEZIUM_VERSION&amp;quot; &amp;quot;$MYSQL_MD5&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you want to use connector with other databases such as MongoDB, Postgresql,
+Sqlserver, Oracle,&amp;hellip; find the Dockerfile in &lt;a href=&#34;https://github.com/debezium/docker-images/blob/master/connect/0.9/Dockerfile&#34;&gt;Debezium docker images repo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now a sample MySQL source configuration file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# File: mysql-source.json
+{
+  &amp;quot;name&amp;quot;: &amp;quot;inventory-connector&amp;quot;,
+  &amp;quot;config&amp;quot;: {
+    &amp;quot;connector.class&amp;quot;: &amp;quot;io.debezium.connector.mysql.MySqlConnector&amp;quot;,
+    &amp;quot;database.hostname&amp;quot;: &amp;quot;192.168.99.100&amp;quot;,
+    &amp;quot;database.port&amp;quot;: &amp;quot;3306&amp;quot;,
+    &amp;quot;database.user&amp;quot;: &amp;quot;debezium&amp;quot;,
+    &amp;quot;database.password&amp;quot;: &amp;quot;dbz&amp;quot;,
+    &amp;quot;database.server.id&amp;quot;: &amp;quot;184054&amp;quot;,
+    &amp;quot;database.server.name&amp;quot;: &amp;quot;fullfillment&amp;quot;,
+    &amp;quot;database.whitelist&amp;quot;: &amp;quot;inventory&amp;quot;,
+    &amp;quot;database.history.kafka.bootstrap.servers&amp;quot;: &amp;quot;kafka:9092&amp;quot;,
+    &amp;quot;database.history.kafka.topic&amp;quot;: &amp;quot;dbhistory.fullfillment&amp;quot;,
+    &amp;quot;include.schema.changes&amp;quot;: &amp;quot;true&amp;quot;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To automatically create a new source after starting new K8s pod, we must add
+a new init script to our docker image which will wait for our Kafka Connect
+service go online before excecuting a &lt;code&gt;curl&lt;/code&gt; request to create a new source:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# File: init.sh
+echo &amp;quot;Wait for kafka connect...&amp;quot;
+until $(curl --output /dev/null --silent --head --fail http://172.17.0.1:8083); do
+    printf &#39;.&#39;
+    sleep 5
+done
+
+echo &amp;quot;Install connector...&amp;quot;
+curl -i -X POST -H &amp;quot;Accept:application/json&amp;quot; -H  &amp;quot;Content-Type:application/json&amp;quot; http://172.17.0.1:8083/connectors/ -d @/kafka/init/mysql-source.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here, &lt;code&gt;172.17.0.1&lt;/code&gt; is default localhost IP address for Docker guest container,
+&lt;code&gt;8083&lt;/code&gt; is the listening port of Kafka Connect.&lt;/p&gt;
+
+&lt;p&gt;We create a new entry point file for our image to run the &lt;code&gt;init.sh&lt;/code&gt; script in
+the background and waiting for Kafka Connect to go online.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# File: entrypoint.sh
+/kafka/init/init.sh &amp;amp;
+exec /docker-entrypoint.sh start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;/docker-entrypoint.sh&lt;/code&gt; is the default entrypoint of Debezium connect image.&lt;/p&gt;
+
+&lt;p&gt;Now all are good, we have the final Dockerfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM debezium/connect-base:0.9
+
+ENV DEBEZIUM_VERSION=&amp;quot;0.9.5.Final&amp;quot; \
+    MAVEN_REPO_CORE=&amp;quot;https://repo1.maven.org/maven2&amp;quot; \
+    MAVEN_DEP_DESTINATION=$KAFKA_CONNECT_PLUGINS_DIR \
+    MYSQL_MD5=720b1396358fbdc59bce953f47d3c53f
+
+RUN docker-maven-download debezium mysql &amp;quot;$DEBEZIUM_VERSION&amp;quot; &amp;quot;$MYSQL_MD5&amp;quot;
+
+# Init script to create mysql source after starting container
+RUN mkdir -p /kafka/init
+COPY init.sh /kafka/init/
+COPY mysql-source.json /kafka/init/
+
+ENTRYPOINT [&amp;quot;/kafka/init/entrypoint.sh&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. Write up your k8s config and deploy the Kafka Connect pod to your
+cluster!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>2018 in Review</title>
