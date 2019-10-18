@@ -107,7 +107,10 @@ public class MyPlatformServiceClient {
 }
 ```
 
+You can read more about Spring Security Webflux Oauth2 [here][2].
+
 Enjoy the magic of Spring!
 
 
 [1]: https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/reactive/function/client/WebClient.html
+[2]: https://docs.spring.io/spring-security/site/docs/current/reference/html/webflux-oauth2.html
