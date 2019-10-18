@@ -114,6 +114,8 @@ public class MyPlatformServiceClient {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;You can read more about Spring Security Webflux Oauth2 &lt;a href=&#34;https://docs.spring.io/spring-security/site/docs/current/reference/html/webflux-oauth2.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
 &lt;p&gt;Enjoy the magic of Spring!&lt;/p&gt;
 </description>
     </item>
