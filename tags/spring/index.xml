@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring on Go slowly</title>
+    <link>https://manhtai.github.io/tags/spring/</link>
+    <description>Recent content in Spring on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 18 Oct 2019 20:16:17 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spring WebClient Oauth2 with Client Credentials</title>
+      <link>https://manhtai.github.io/posts/spring-webclient-oauth2-client-credentials/</link>
+      <pubDate>Fri, 18 Oct 2019 20:16:17 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/spring-webclient-oauth2-client-credentials/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/reactive/function/client/WebClient.html&#34;&gt;Spring 5 WebClient&lt;/a&gt; is an excellent web client for Spring that can do
+reactive API request. Combining with Spring Security Oauth2 Client we can
+handle the heavy jobs (ie. request access token, check expiry time, re-request
+access token, etc) to Spring Security Oauth2 Client and still had all the
+benefits of the reactive web client.&lt;/p&gt;
+
+&lt;p&gt;First thing first, we need to include the libraries:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;spring-boot-starter-webflux&amp;lt;/artifactId&amp;gt;
+&amp;lt;/dependency&amp;gt;
+
+&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.springframework.security&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;spring-security-oauth2-client&amp;lt;/artifactId&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then define the beans to use:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Configuration
+public class Oauth2ClientConfig {
+
+    @Bean
+    ReactiveClientRegistrationRepository getRegistration(
+            @Value(&amp;quot;${spring.security.oauth2.client.provider.my-platform.token-uri}&amp;quot;) String tokenUri,
+            @Value(&amp;quot;${spring.security.oauth2.client.registration.my-platform.client-id}&amp;quot;) String clientId,
+            @Value(&amp;quot;${spring.security.oauth2.client.registration.my-platform.client-secret}&amp;quot;) String clientSecret,
+            @Value(&amp;quot;${spring.security.oauth2.client.registration.my-platform.scopes}&amp;quot;) String scope
+    ) {
+        ClientRegistration registration = ClientRegistration
+                .withRegistrationId(&amp;quot;my-platform&amp;quot;)
+                .tokenUri(tokenUri)
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .scope(scope)
+                .build();
+        return new InMemoryReactiveClientRegistrationRepository(registration);
+    }
+
+    @Bean(name = &amp;quot;my-platform&amp;quot;)
+    WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations) {
+        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
+                clientRegistrations, new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
+        oauth.setDefaultClientRegistrationId(&amp;quot;my-platform&amp;quot;);
+        return WebClient.builder()
+                .filter(oauth)
+                .build();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Some things worth noting here are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;1) The parameters in &lt;code&gt;@Value&lt;/code&gt; are default configurations for Spring Security
+Oauth2 Client to work (ie. autowiring), so with some luck you can make it work
+without define a bean for &lt;code&gt;ReactiveClientRegistrationRepository&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2) &lt;code&gt;WebClient&lt;/code&gt; bean is qualified with &lt;code&gt;&amp;quot;my-platform&amp;quot;&lt;/code&gt; so it will not conflict
+with other web clients that you may use in your project.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3) I used &lt;code&gt;AuthorizationGrantType.CLIENT_CREDENTIALS&lt;/code&gt; here, but it should
+work with any authorization grant types.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;4) I use &lt;strong&gt;constructor injection&lt;/strong&gt; instead of &lt;strong&gt;field injection&lt;/strong&gt; and it
+is considered better practice, you should read more about that.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now we can use the WebClient as we are used to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Service
+public class MyPlatformServiceClient {
+
+    private WebClient webClient;
+    private String resourceUri;
+
+    @Autowired
+    PlatformServiceClientImpl(@Qualifier(&amp;quot;my-platform&amp;quot;) WebClient webClient,
+                              String resourceUri) {
+        this.webClient = webClient;
+        this.resourceUri = resourceUri;
+    }
+
+    public CompletableFuture&amp;lt;MyResourceModel&amp;gt; getResource(String resourceId) {
+        return webClient.get().uri(resourceUri)
+                .header(&amp;quot;X-Resource-ID&amp;quot;, resourceId)
+                .header(&amp;quot;Content-Type&amp;quot;, &amp;quot;application/json&amp;quot;)
+                .retrieve()
+                .bodyToMono(MyResourceModel.class)
+                .toFuture();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Enjoy the magic of Spring!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

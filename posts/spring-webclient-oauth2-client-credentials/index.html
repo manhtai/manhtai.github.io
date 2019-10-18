@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Spring WebClient Oauth2 with Client Credentials</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="Spring WebClient Oauth2 with Client Credentials">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="Spring WebClient Oauth2 with Client Credentials">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/spring-webclient-oauth2-client-credentials/">
+	<meta name="og:site_name" content="Spring WebClient Oauth2 with Client Credentials">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="spring oauth2 java ">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-52114958-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Spring WebClient Oauth2 with Client Credentials <aside><a href="/tags/spring/">spring</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/oauth2/">oauth2</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/java/">java</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p><a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/reactive/function/client/WebClient.html">Spring 5 WebClient</a> is an excellent web client for Spring that can do
+reactive API request. Combining with Spring Security Oauth2 Client we can
+handle the heavy jobs (ie. request access token, check expiry time, re-request
+access token, etc) to Spring Security Oauth2 Client and still had all the
+benefits of the reactive web client.</p>
+
+<p>First thing first, we need to include the libraries:</p>
+
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-webflux&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-security-oauth2-client&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>Then define the beans to use:</p>
+
+<pre><code class="language-java">@Configuration
+public class Oauth2ClientConfig {
+
+    @Bean
+    ReactiveClientRegistrationRepository getRegistration(
+            @Value(&quot;${spring.security.oauth2.client.provider.my-platform.token-uri}&quot;) String tokenUri,
+            @Value(&quot;${spring.security.oauth2.client.registration.my-platform.client-id}&quot;) String clientId,
+            @Value(&quot;${spring.security.oauth2.client.registration.my-platform.client-secret}&quot;) String clientSecret,
+            @Value(&quot;${spring.security.oauth2.client.registration.my-platform.scopes}&quot;) String scope
+    ) {
+        ClientRegistration registration = ClientRegistration
+                .withRegistrationId(&quot;my-platform&quot;)
+                .tokenUri(tokenUri)
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .scope(scope)
+                .build();
+        return new InMemoryReactiveClientRegistrationRepository(registration);
+    }
+
+    @Bean(name = &quot;my-platform&quot;)
+    WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations) {
+        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
+                clientRegistrations, new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
+        oauth.setDefaultClientRegistrationId(&quot;my-platform&quot;);
+        return WebClient.builder()
+                .filter(oauth)
+                .build();
+    }
+}
+</code></pre>
+
+<p>Some things worth noting here are:</p>
+
+<ul>
+<li><p>1) The parameters in <code>@Value</code> are default configurations for Spring Security
+Oauth2 Client to work (ie. autowiring), so with some luck you can make it work
+without define a bean for <code>ReactiveClientRegistrationRepository</code>.</p></li>
+
+<li><p>2) <code>WebClient</code> bean is qualified with <code>&quot;my-platform&quot;</code> so it will not conflict
+with other web clients that you may use in your project.</p></li>
+
+<li><p>3) I used <code>AuthorizationGrantType.CLIENT_CREDENTIALS</code> here, but it should
+work with any authorization grant types.</p></li>
+
+<li><p>4) I use <strong>constructor injection</strong> instead of <strong>field injection</strong> and it
+is considered better practice, you should read more about that.</p></li>
+</ul>
+
+<p>Now we can use the WebClient as we are used to:</p>
+
+<pre><code class="language-java">@Service
+public class MyPlatformServiceClient {
+
+    private WebClient webClient;
+    private String resourceUri;
+
+    @Autowired
+    PlatformServiceClientImpl(@Qualifier(&quot;my-platform&quot;) WebClient webClient,
+                              String resourceUri) {
+        this.webClient = webClient;
+        this.resourceUri = resourceUri;
+    }
+
+    public CompletableFuture&lt;MyResourceModel&gt; getResource(String resourceId) {
+        return webClient.get().uri(resourceUri)
+                .header(&quot;X-Resource-ID&quot;, resourceId)
+                .header(&quot;Content-Type&quot;, &quot;application/json&quot;)
+                .retrieve()
+                .bodyToMono(MyResourceModel.class)
+                .toFuture();
+    }
+}
+</code></pre>
+
+<p>Enjoy the magic of Spring!</p>
+
+</div>
+
+
+
+
+
+
+
+<footer>
+	<p><aside>&copy;2018</aside></a>
+</footer>
+</body>
+</html>
+

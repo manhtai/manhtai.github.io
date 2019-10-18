@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/spring-webclient-oauth2-client-credentials/</loc>
+    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/posts/debezium-kafka-connect-kubernetes/</loc>
     <lastmod>2019-06-15T18:53:01+07:00</lastmod>
   </url>
@@ -184,13 +189,19 @@
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2019-06-15T18:53:01+07:00</lastmod>
+    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/tags/golang/</loc>
     <lastmod>2018-01-29T21:19:23+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/java/</loc>
+    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -231,6 +242,12 @@
   </url>
   
   <url>
+    <loc>https://manhtai.github.io/tags/oauth2/</loc>
+    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/tags/os/</loc>
     <lastmod>2018-05-25T20:17:49+07:00</lastmod>
     <priority>0</priority>
@@ -238,7 +255,7 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2019-06-15T18:53:01+07:00</lastmod>
+    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -263,6 +280,12 @@
   <url>
     <loc>https://manhtai.github.io/tags/slack/</loc>
     <lastmod>2018-02-12T22:04:15+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/spring/</loc>
+    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
     <priority>0</priority>
   </url>
   
