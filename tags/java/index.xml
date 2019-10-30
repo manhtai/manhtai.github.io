@@ -6,10 +6,74 @@
     <description>Recent content in Java on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Oct 2019 20:16:17 +0700</lastBuildDate>
+    <lastBuildDate>Wed, 30 Oct 2019 22:32:20 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring Websocket Server</title>
+      <link>https://manhtai.github.io/posts/spring-websocket-server/</link>
+      <pubDate>Wed, 30 Oct 2019 22:32:20 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/spring-websocket-server/</guid>
+      <description>&lt;p&gt;To include a WebSocket endpoint to our Spring Boot application, first you need
+to include the starter package:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;spring-boot-starter-websocket&amp;lt;/artifactId&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To configure WebSocket server, we need to define a configuration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint(&amp;quot;/websocket&amp;quot;)
+                .addInterceptors(new HandshakeInterceptor())
+                .setAllowedOrigins(&amp;quot;*&amp;quot;)
+                .withSockJS();
+    }
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker(&amp;quot;/channel&amp;quot;);
+    }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new ChannelInterceptor());
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;registerStompEndpoints()&lt;/strong&gt; is the method to register endpoints for our
+WebSocket server, in which the first HTTP handshake happens. Here we can use
+a &lt;code&gt;HanshakeInterceptor()&lt;/code&gt; to insert some custom attributes for using when
+first WebSocket interaction initializes, for example the WebSocket endpoint
+path.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;configureMessageBroker()&lt;/strong&gt; is used to add channel paths, so our WebSocket
+clients can subscribe to.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;configureClientInboundChannel()&lt;/strong&gt; is where WebSocket connection make first
+CONNECT request, then SUBSCRIBE to a channel, etc. &lt;code&gt;ChannelInterceptor()&lt;/code&gt; is
+the place for authorization &amp;amp; authentication our users before sending and
+receiving messages. In here we can get the attributes we&amp;rsquo;ve set before in
+&lt;code&gt;HandshakeInterceptor()&lt;/code&gt; instance. Bear in mind that because we do auth in
+first CONNECT request of WebSocket connection, we have to make the WebSocket
+endpoints whitelisted in any auth required matchers (Spring Security matchers
+for instance).&lt;/p&gt;
+
+&lt;p&gt;Believe or not, that is all we need to setup a WebSocket server, you now can
+setup a WebSocket handler and enjoy the magic of Spring.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Spring WebClient Oauth2 with Client Credentials</title>

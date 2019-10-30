@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Spring Websocket Server</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="Spring Websocket Server">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="Spring Websocket Server">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/spring-websocket-server/">
+	<meta name="og:site_name" content="Spring Websocket Server">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="spring websocket java ">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-52114958-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Spring Websocket Server <aside><a href="/tags/spring/">spring</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/websocket/">websocket</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/java/">java</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>To include a WebSocket endpoint to our Spring Boot application, first you need
+to include the starter package:</p>
+
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-websocket&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>To configure WebSocket server, we need to define a configuration:</p>
+
+<pre><code class="language-java">@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint(&quot;/websocket&quot;)
+                .addInterceptors(new HandshakeInterceptor())
+                .setAllowedOrigins(&quot;*&quot;)
+                .withSockJS();
+    }
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker(&quot;/channel&quot;);
+    }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new ChannelInterceptor());
+    }
+}
+</code></pre>
+
+<p><strong>registerStompEndpoints()</strong> is the method to register endpoints for our
+WebSocket server, in which the first HTTP handshake happens. Here we can use
+a <code>HanshakeInterceptor()</code> to insert some custom attributes for using when
+first WebSocket interaction initializes, for example the WebSocket endpoint
+path.</p>
+
+<p><strong>configureMessageBroker()</strong> is used to add channel paths, so our WebSocket
+clients can subscribe to.</p>
+
+<p><strong>configureClientInboundChannel()</strong> is where WebSocket connection make first
+CONNECT request, then SUBSCRIBE to a channel, etc. <code>ChannelInterceptor()</code> is
+the place for authorization &amp; authentication our users before sending and
+receiving messages. In here we can get the attributes we&rsquo;ve set before in
+<code>HandshakeInterceptor()</code> instance. Bear in mind that because we do auth in
+first CONNECT request of WebSocket connection, we have to make the WebSocket
+endpoints whitelisted in any auth required matchers (Spring Security matchers
+for instance).</p>
+
+<p>Believe or not, that is all we need to setup a WebSocket server, you now can
+setup a WebSocket handler and enjoy the magic of Spring.</p>
+
+</div>
+
+
+
+
+
+
+
+<footer>
+	<p><aside>&copy;2018</aside></a>
+</footer>
+</body>
+</html>
+

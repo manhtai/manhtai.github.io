@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/spring-websocket-server/</loc>
+    <lastmod>2019-10-30T22:32:20+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/posts/spring-webclient-oauth2-client-credentials/</loc>
     <lastmod>2019-10-18T20:16:17+07:00</lastmod>
   </url>
@@ -189,7 +194,7 @@
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
+    <lastmod>2019-10-30T22:32:20+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -201,7 +206,7 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/java/</loc>
-    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
+    <lastmod>2019-10-30T22:32:20+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -255,7 +260,7 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
+    <lastmod>2019-10-30T22:32:20+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -285,7 +290,7 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/spring/</loc>
-    <lastmod>2019-10-18T20:16:17+07:00</lastmod>
+    <lastmod>2019-10-30T22:32:20+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -304,6 +309,12 @@
   <url>
     <loc>https://manhtai.github.io/tags/webpack/</loc>
     <lastmod>2018-02-01T19:17:48+07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/websocket/</loc>
+    <lastmod>2019-10-30T22:32:20+07:00</lastmod>
     <priority>0</priority>
   </url>
   
