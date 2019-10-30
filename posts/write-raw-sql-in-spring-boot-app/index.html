@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Why I love writing SQL in Spring Boot apps</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="Why I love writing SQL in Spring Boot apps">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="Why I love writing SQL in Spring Boot apps">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/write-raw-sql-in-spring-boot-app/">
+	<meta name="og:site_name" content="Why I love writing SQL in Spring Boot apps">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="spring jpa sql java ">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-52114958-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Why I love writing SQL in Spring Boot apps <aside><a href="/tags/spring/">spring</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/jpa/">jpa</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/sql/">sql</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/java/">java</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>Why do we have to write raw SQL in the ORM world? Because it&rsquo;s efficient,
+elegant and type safety. Who wouldn&rsquo;t want that? Efficient, you may nod
+slightly, but elegant and type safety, aren&rsquo;t it? Yes it is, if you use
+<a href="https://en.wikipedia.org/wiki/Java_Persistence_Query_Language">JPQL</a> in combination with <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions">SpEL</a>.</p>
+
+<p>JPQL uses the entity object models instead of database tables to define a
+query. It is not really raw SQL you might say, but it got all the syntax of
+a raw SQL query. And because it is based on entity models, it is strong type
+and it ensure type safety for us (i.e it won&rsquo;t start application if we use
+wrong type in our query).</p>
+
+<p>In addition to that, we can use SpEL to write expressions directly in queries
+using a subset of Java code. Let&rsquo;s take a look at an example:</p>
+
+<pre><code class="language-java">@Repository
+public interface NotificationRepository extends JpaRepository&lt;Notification, Long&gt; {
+    @Query(
+            &quot; SELECT new NotificationResponse(&quot; +
+                    &quot;   n.id, n.title,&quot; +
+                    &quot;   CASE&quot; +
+                    &quot;     WHEN (u.id IS NULL) THEN FALSE&quot; +
+                    &quot;     ELSE u.isRead END,&quot; +
+                    &quot;   n.createTime) &quot; +
+                    &quot; FROM Notification n &quot; +
+                    &quot; LEFT JOIN UserNotification u ON &quot; +
+                    &quot;   u.notificationId = n.id&quot; +
+                    &quot;   AND u.userId = :#{#filter.userId}&quot; +
+                    &quot;   AND u.userType = :#{#filter.receiverType}&quot; +
+                    &quot; WHERE &quot; +
+                    &quot;   n.receiverType = :#{#filter.receiverType}&quot; +
+                    &quot; GROUP BY n.id&quot; +
+                    &quot; ORDER BY n.createTime DESC&quot;
+    )
+    Page&lt;NotificationResponse&gt; getNotifications(NotificationFilter filter, Pageable pageable);
+}
+</code></pre>
+
+<p>Here <strong>Notification</strong> and <strong>UserNotification</strong> are two entity models
+corresponding to two tables in database and we can join them using ON
+condition as in raw SQL. All statements may look familiar to you, except some
+weird <code>:#{#filter.fieldName}</code> annotations. They are SpEL expressions that use
+Java reflection to inject field values of notification filter into the query.
+You can use either private field names or public get methods to get the values
+out of filter param.</p>
+
+<p>Something else worth noting here is we don&rsquo;t need to specify <code>COUNT</code> query,
+JPA will do that for us, but we can customize it of course, and sometime it is
+a must.</p>
+
+<p>The last parameter of <code>getNotifications()</code> method is a Pageable instance, JPA
+will automatically using <code>LIMIT</code> and <code>OFFSET</code> to do pagination for us, hence
+the returning type of the query is <code>Page&lt;NotificationResponse&gt;</code>.</p>
+
+<p>I am very comfortable with writing queries in SQL so I am very happy with this
+setup, and I hope you will enjoy it too: the magic of Spring (and JPA)!</p>
+
+</div>
+
+
+
+
+
+
+
+<footer>
+	<p><aside>&copy;2018</aside></a>
+</footer>
+</body>
+</html>
+
