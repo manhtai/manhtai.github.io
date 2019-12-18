@@ -6,10 +6,78 @@
     <description>Recent content in End Year on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 30 Dec 2018 22:12:09 +0700</lastBuildDate>
+    <lastBuildDate>Wed, 18 Dec 2019 22:04:55 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/end-year/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>2019 in Review</title>
+      <link>https://manhtai.github.io/posts/2019-in-review/</link>
+      <pubDate>Wed, 18 Dec 2019 22:04:55 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/2019-in-review/</guid>
+      <description>
+
+&lt;p&gt;Another year comes to an end. It will finish the race in about 2 weeks, but I
+feel that I can wrap up the year today. 2019 isn&amp;rsquo;t really a step up for me but
+I can say that it is full of joys and I&amp;rsquo;ve learnt so much.&lt;/p&gt;
+
+&lt;h2 id=&#34;1-coding&#34;&gt;1. Coding&lt;/h2&gt;
+
+&lt;p&gt;Java is the main theme of this year. I started the year with some Java basis
+in Data Engineer and now I&amp;rsquo;m confident with Java at work as a Java Backend
+Engineer.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve learn so much things about how to structure a Spring Boot project, how
+to do JWT authentication, wire beans, how to write unit tests and integration
+tests using &lt;a href=&#34;https://site.mockito.org/&#34;&gt;Mockito&lt;/a&gt;, &lt;a href=&#34;https://www.h2database.com&#34;&gt;H2&lt;/a&gt; and &lt;a href=&#34;https://flywaydb.org/&#34;&gt;Flyway&lt;/a&gt;, how to optimize query using
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Java_Persistence_Query_Language&#34;&gt;JPQL&lt;/a&gt; in combination with &lt;a href=&#34;https://docs.spring.io/spring-integration/docs/current/reference/html/spel.html&#34;&gt;SPEL&lt;/a&gt;, write &lt;a href=&#34;https://docs.gitlab.com/ee/ci/&#34;&gt;Gitlab CI&lt;/a&gt; config to deploy
+Spring boot app to K8s cluster, oh and foremost, write a formal
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Software_architecture#Design&#34;&gt;Software Architecture Design&lt;/a&gt; document and request its approval,&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;All of it happens too fast that I have to try hard to ingest all Java
+things and still have time to learn some Rust, Angular and React Hooks on
+the side.&lt;/p&gt;
+
+&lt;p&gt;Now I can say that I&amp;rsquo;m fluent in Java, Python and Javascript, and that should
+keep me quite competitive in the IT market for a while.&lt;/p&gt;
+
+&lt;p&gt;Next year maybe, I will learn some Kotlin and do some native works on Android.
+I&amp;rsquo;ve done some React Native &lt;a href=&#34;https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/&#34;&gt;before&lt;/a&gt; but it&amp;rsquo;s just a hybrid stuff, so I
+think I can get the real deal this time.&lt;/p&gt;
+
+&lt;p&gt;ML and AI will be on my top choices for things to start again in 2020 and we
+will see.&lt;/p&gt;
+
+&lt;h2 id=&#34;2-running&#34;&gt;2. Running&lt;/h2&gt;
+
+&lt;p&gt;Not so much this year, because of extremely bad air quality in Hanoi. I&amp;rsquo;m
+disappointed about the authorities but I can&amp;rsquo;t do anything about it. (We will
+talk about this later.)&lt;/p&gt;
+
+&lt;h2 id=&#34;3-reading&#34;&gt;3. Reading&lt;/h2&gt;
+
+&lt;p&gt;Mostly technical books, as I can&amp;rsquo;t learn new things in tech without tech
+books. I&amp;rsquo;ve read some non-fictions of course. The most interesting books
+I find so far is two books of Mark Manson about not giving a fuck and
+happiness. They inspire me so much about life and love. That you should only
+care about what you love, and happy is just a state of mind. You want to find
+the gold buried, keep up the dig.&lt;/p&gt;
+
+&lt;p&gt;Another book about life meaning is Man&amp;rsquo;s Search for Meaning, which is good
+and teach you to have at least one big goal in your life all the time, so you
+don&amp;rsquo;t die (i.e. give up) till you achieve it.&lt;/p&gt;
+
+&lt;p&gt;I read some business books, too. Shoe Dog, McDonald&amp;rsquo;s: Behind The Arches, they
+tell us the way Americans build their dreams.&lt;/p&gt;
+
+&lt;p&gt;It is the 5th year in coding career for me, now the limit is only what I can
+dream of.&lt;/p&gt;
+
+&lt;p&gt;Hope for a meaningful 2020 to come!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>2018 in Review</title>

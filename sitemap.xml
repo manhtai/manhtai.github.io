@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/2019-in-review/</loc>
+    <lastmod>2019-12-18T22:04:55+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/posts/write-raw-sql-in-spring-boot-app/</loc>
     <lastmod>2019-10-30T23:03:19+07:00</lastmod>
   </url>
@@ -193,13 +198,13 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/end-year/</loc>
-    <lastmod>2018-12-30T22:12:09+07:00</lastmod>
+    <lastmod>2019-12-18T22:04:55+07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2019-10-30T23:03:19+07:00</lastmod>
+    <lastmod>2019-12-18T22:04:55+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -271,7 +276,7 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2019-10-30T23:03:19+07:00</lastmod>
+    <lastmod>2019-12-18T22:04:55+07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -289,7 +294,7 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/short/</loc>
-    <lastmod>2018-12-30T22:12:09+07:00</lastmod>
+    <lastmod>2019-12-18T22:04:55+07:00</lastmod>
     <priority>0</priority>
   </url>
   
