@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Inputstream on Go slowly</title>
+    <link>https://manhtai.github.io/tags/inputstream/</link>
+    <description>Recent content in Inputstream on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 11 Apr 2020 10:08:00 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/inputstream/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Flux&lt;Databuffer&gt; to InputStream</title>
+      <link>https://manhtai.github.io/posts/flux-databuffer-to-inputstream/</link>
+      <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/flux-databuffer-to-inputstream/</guid>
+      <description>&lt;p&gt;How can we convert a &lt;code&gt;Flux&amp;lt;DataBuffer&amp;gt;&lt;/code&gt;, say, in a Spring&amp;rsquo;s &lt;code&gt;FilePart.content()&lt;/code&gt;
+when uploading data, into a &lt;code&gt;InputStream&lt;/code&gt; for consuming?&lt;/p&gt;
+
+&lt;p&gt;By using pipes!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;InputStream getInputStreamFromFluxDataBuffer(Flux&amp;lt;DataBuffer&amp;gt; data) throws IOException {
+    PipedOutputStream osPipe = new PipedOutputStream();
+    PipedInputStream isPipe = new PipedInputStream(osPipe);
+
+    DataBufferUtils.write(data, osPipe)
+            .subscribeOn(Schedulers.elastic())
+            .doOnComplete(() -&amp;gt; {
+                try {
+                    osPipe.close();
+                } catch (IOException ignored) {
+                }
+            })
+            .subscribe(DataBufferUtils.releaseConsumer());
+    return isPipe;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The code is quite trivial, but some notes worth mentioning here:&lt;/p&gt;
+
+&lt;p&gt;1) We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
+avoid blocking.&lt;/p&gt;
+
+&lt;p&gt;2) We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
+subscriber will know when to stop.&lt;/p&gt;
+
+&lt;p&gt;3) &lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
+stream is subscribed to, so we use &lt;code&gt;DataBufferUtils.releaseConsumer()&lt;/code&gt; to
+start the writing immediately.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

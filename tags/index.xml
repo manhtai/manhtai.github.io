@@ -48,6 +48,15 @@
     </item>
     
     <item>
+      <title>Databuffer</title>
+      <link>https://manhtai.github.io/tags/databuffer/</link>
+      <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/databuffer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Debezium</title>
       <link>https://manhtai.github.io/tags/debezium/</link>
       <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
@@ -102,11 +111,29 @@
     </item>
     
     <item>
+      <title>Flux</title>
+      <link>https://manhtai.github.io/tags/flux/</link>
+      <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/flux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Golang</title>
       <link>https://manhtai.github.io/tags/golang/</link>
       <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Inputstream</title>
+      <link>https://manhtai.github.io/tags/inputstream/</link>
+      <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/inputstream/</guid>
       <description></description>
     </item>
     
@@ -239,7 +266,7 @@
     <item>
       <title>Spring</title>
       <link>https://manhtai.github.io/tags/spring/</link>
-      <pubDate>Wed, 30 Oct 2019 23:03:19 +0700</pubDate>
+      <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/spring/</guid>
       <description></description>
