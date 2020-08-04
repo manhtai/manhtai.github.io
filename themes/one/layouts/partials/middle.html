@@ -3,7 +3,7 @@
 
 <div class="content">
     <h1>{{ title .Data.Term  }} posts</h1>
-    {{ range first 8 .Pages }}
+    {{ range first 8 .Site.RegularPages }}
     {{ if eq .Type "posts"}}
         <p>
         <aside>{{ .Date.Format "January 2, 2006"}}</aside>
