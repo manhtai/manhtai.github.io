@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Jpa on Go slowly</title>
+    <title>jpa on Go slowly</title>
     <link>https://manhtai.github.io/tags/jpa/</link>
-    <description>Recent content in Jpa on Go slowly</description>
+    <description>Recent content in jpa on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 30 Oct 2019 23:03:19 +0700</lastBuildDate>
@@ -21,55 +20,47 @@
 elegant and type safety. Who wouldn&amp;rsquo;t want that? Efficient, you may nod
 slightly, but elegant and type safety, aren&amp;rsquo;t it? Yes it is, if you use
 &lt;a href=&#34;https://en.wikipedia.org/wiki/Java_Persistence_Query_Language&#34;&gt;JPQL&lt;/a&gt; in combination with &lt;a href=&#34;https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions&#34;&gt;SpEL&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;JPQL uses the entity object models instead of database tables to define a
 query. It is not really raw SQL you might say, but it got all the syntax of
 a raw SQL query. And because it is based on entity models, it is strong type
 and it ensure type safety for us (i.e it won&amp;rsquo;t start application if we use
 wrong type in our query).&lt;/p&gt;
-
 &lt;p&gt;In addition to that, we can use SpEL to write expressions directly in queries
 using a subset of Java code. Let&amp;rsquo;s take a look at an example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Repository
-public interface NotificationRepository extends JpaRepository&amp;lt;Notification, Long&amp;gt; {
-    @Query(
-            &amp;quot; SELECT new NotificationResponse(&amp;quot; +
-                    &amp;quot;   n.id, n.title,&amp;quot; +
-                    &amp;quot;   CASE&amp;quot; +
-                    &amp;quot;     WHEN (u.id IS NULL) THEN FALSE&amp;quot; +
-                    &amp;quot;     ELSE u.isRead END,&amp;quot; +
-                    &amp;quot;   n.createTime) &amp;quot; +
-                    &amp;quot; FROM Notification n &amp;quot; +
-                    &amp;quot; LEFT JOIN UserNotification u ON &amp;quot; +
-                    &amp;quot;   u.notificationId = n.id&amp;quot; +
-                    &amp;quot;   AND u.userId = :#{#filter.userId}&amp;quot; +
-                    &amp;quot;   AND u.userType = :#{#filter.receiverType}&amp;quot; +
-                    &amp;quot; WHERE &amp;quot; +
-                    &amp;quot;   n.receiverType = :#{#filter.receiverType}&amp;quot; +
-                    &amp;quot; GROUP BY n.id&amp;quot; +
-                    &amp;quot; ORDER BY n.createTime DESC&amp;quot;
-    )
-    Page&amp;lt;NotificationResponse&amp;gt; getNotifications(NotificationFilter filter, Pageable pageable);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here &lt;strong&gt;Notification&lt;/strong&gt; and &lt;strong&gt;UserNotification&lt;/strong&gt; are two entity models
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Repository&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NotificationRepository&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;extends&lt;/span&gt; JpaRepository&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Notification&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; Long&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Query&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; SELECT new NotificationResponse(&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   n.id, n.title,&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   CASE&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;     WHEN (u.id IS NULL) THEN FALSE&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;     ELSE u.isRead END,&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   n.createTime) &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; FROM Notification n &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; LEFT JOIN UserNotification u ON &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   u.notificationId = n.id&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   AND u.userId = :#{#filter.userId}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   AND u.userType = :#{#filter.receiverType}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; WHERE &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   n.receiverType = :#{#filter.receiverType}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; GROUP BY n.id&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; ORDER BY n.createTime DESC&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Page&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;NotificationResponse&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getNotifications&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;NotificationFilter filter&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; Pageable pageable&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here &lt;strong&gt;Notification&lt;/strong&gt; and &lt;strong&gt;UserNotification&lt;/strong&gt; are two entity models
 corresponding to two tables in database and we can join them using ON
 condition as in raw SQL. All statements may look familiar to you, except some
 weird &lt;code&gt;:#{#filter.fieldName}&lt;/code&gt; annotations. They are SpEL expressions that use
 Java reflection to inject field values of notification filter into the query.
 You can use either private field names or public get methods to get the values
 out of filter param.&lt;/p&gt;
-
 &lt;p&gt;Something else worth noting here is we don&amp;rsquo;t need to specify &lt;code&gt;COUNT&lt;/code&gt; query,
 JPA will do that for us, but we can customize it of course, and sometime it is
 a must.&lt;/p&gt;
-
 &lt;p&gt;The last parameter of &lt;code&gt;getNotifications()&lt;/code&gt; method is a Pageable instance, JPA
 will automatically using &lt;code&gt;LIMIT&lt;/code&gt; and &lt;code&gt;OFFSET&lt;/code&gt; to do pagination for us, hence
 the returning type of the query is &lt;code&gt;Page&amp;lt;NotificationResponse&amp;gt;&lt;/code&gt;.&lt;/p&gt;
-
 &lt;p&gt;I am very comfortable with writing queries in SQL so I am very happy with this
 setup, and I hope you will enjoy it too: the magic of Spring (and JPA)!&lt;/p&gt;
 </description>

@@ -110,100 +110,100 @@ reactive API request. Combining with Spring Security Oauth2 Client we can
 handle the heavy jobs (ie. request access token, check expiry time, re-request
 access token, etc) to Spring Security Oauth2 Client and still had all the
 benefits of the reactive web client.</p>
-
 <p>First thing first, we need to include the libraries:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.boot<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>spring-boot-starter-webflux<span style="color:#f92672">&lt;/artifactId&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
 
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-webflux&lt;/artifactId&gt;
-&lt;/dependency&gt;
+<span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.security<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>spring-security-oauth2-client<span style="color:#f92672">&lt;/artifactId&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><p>Then define the beans to use:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Configuration</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Oauth2ClientConfig</span> <span style="color:#f92672">{</span>
 
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-security-oauth2-client&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
+    <span style="color:#a6e22e">@Bean</span>
+    ReactiveClientRegistrationRepository <span style="color:#a6e22e">getRegistration</span><span style="color:#f92672">(</span>
+            <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${spring.security.oauth2.client.provider.my-platform.token-uri}&#34;</span><span style="color:#f92672">)</span> String tokenUri<span style="color:#f92672">,</span>
+            <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${spring.security.oauth2.client.registration.my-platform.client-id}&#34;</span><span style="color:#f92672">)</span> String clientId<span style="color:#f92672">,</span>
+            <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${spring.security.oauth2.client.registration.my-platform.client-secret}&#34;</span><span style="color:#f92672">)</span> String clientSecret<span style="color:#f92672">,</span>
+            <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${spring.security.oauth2.client.registration.my-platform.scopes}&#34;</span><span style="color:#f92672">)</span> String scope
+    <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        ClientRegistration registration <span style="color:#f92672">=</span> ClientRegistration
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">withRegistrationId</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;my-platform&#34;</span><span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">tokenUri</span><span style="color:#f92672">(</span>tokenUri<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">clientId</span><span style="color:#f92672">(</span>clientId<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">clientSecret</span><span style="color:#f92672">(</span>clientSecret<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">authorizationGrantType</span><span style="color:#f92672">(</span>AuthorizationGrantType<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIENT_CREDENTIALS</span><span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">scope</span><span style="color:#f92672">(</span>scope<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> InMemoryReactiveClientRegistrationRepository<span style="color:#f92672">(</span>registration<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
 
-<p>Then define the beans to use:</p>
-
-<pre><code class="language-java">@Configuration
-public class Oauth2ClientConfig {
-
-    @Bean
-    ReactiveClientRegistrationRepository getRegistration(
-            @Value(&quot;${spring.security.oauth2.client.provider.my-platform.token-uri}&quot;) String tokenUri,
-            @Value(&quot;${spring.security.oauth2.client.registration.my-platform.client-id}&quot;) String clientId,
-            @Value(&quot;${spring.security.oauth2.client.registration.my-platform.client-secret}&quot;) String clientSecret,
-            @Value(&quot;${spring.security.oauth2.client.registration.my-platform.scopes}&quot;) String scope
-    ) {
-        ClientRegistration registration = ClientRegistration
-                .withRegistrationId(&quot;my-platform&quot;)
-                .tokenUri(tokenUri)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .scope(scope)
-                .build();
-        return new InMemoryReactiveClientRegistrationRepository(registration);
-    }
-
-    @Bean(name = &quot;my-platform&quot;)
-    WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations) {
-        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
-                clientRegistrations, new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
-        oauth.setDefaultClientRegistrationId(&quot;my-platform&quot;);
-        return WebClient.builder()
-                .filter(oauth)
-                .build();
-    }
-}
-</code></pre>
-
-<p>Some things worth noting here are:</p>
-
+    <span style="color:#a6e22e">@Bean</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;my-platform&#34;</span><span style="color:#f92672">)</span>
+    WebClient <span style="color:#a6e22e">webClient</span><span style="color:#f92672">(</span>ReactiveClientRegistrationRepository clientRegistrations<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ServerOAuth2AuthorizedClientExchangeFilterFunction<span style="color:#f92672">(</span>
+                clientRegistrations<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> UnAuthenticatedServerOAuth2AuthorizedClientRepository<span style="color:#f92672">());</span>
+        oauth<span style="color:#f92672">.</span><span style="color:#a6e22e">setDefaultClientRegistrationId</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;my-platform&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> WebClient<span style="color:#f92672">.</span><span style="color:#a6e22e">builder</span><span style="color:#f92672">()</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>oauth<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>Some things worth noting here are:</p>
 <ul>
-<li><p>1) The parameters in <code>@Value</code> are default configurations for Spring Security
+<li>
+<ol>
+<li>The parameters in <code>@Value</code> are default configurations for Spring Security
 Oauth2 Client to work (ie. autowiring), so with some luck you can make it work
-without define a bean for <code>ReactiveClientRegistrationRepository</code>.</p></li>
-
-<li><p>2) <code>WebClient</code> bean is qualified with <code>&quot;my-platform&quot;</code> so it will not conflict
-with other web clients that you may use in your project.</p></li>
-
-<li><p>3) I used <code>AuthorizationGrantType.CLIENT_CREDENTIALS</code> here, but it should
-work with any authorization grant types.</p></li>
-
-<li><p>4) I use <strong>constructor injection</strong> instead of <strong>field injection</strong> and it
-is considered better practice, you should read more about that.</p></li>
+without define a bean for <code>ReactiveClientRegistrationRepository</code>.</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li><code>WebClient</code> bean is qualified with <code>&quot;my-platform&quot;</code> so it will not conflict
+with other web clients that you may use in your project.</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>I used <code>AuthorizationGrantType.CLIENT_CREDENTIALS</code> here, but it should
+work with any authorization grant types.</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>I use <strong>constructor injection</strong> instead of <strong>field injection</strong> and it
+is considered better practice, you should read more about that.</li>
+</ol>
+</li>
 </ul>
-
 <p>Now we can use the WebClient as we are used to:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Service</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyPlatformServiceClient</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">@Service
-public class MyPlatformServiceClient {
+    <span style="color:#66d9ef">private</span> WebClient webClient<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> String resourceUri<span style="color:#f92672">;</span>
 
-    private WebClient webClient;
-    private String resourceUri;
+    <span style="color:#a6e22e">@Autowired</span>
+    PlatformServiceClientImpl<span style="color:#f92672">(</span><span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;my-platform&#34;</span><span style="color:#f92672">)</span> WebClient webClient<span style="color:#f92672">,</span>
+                              String resourceUri<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">webClient</span> <span style="color:#f92672">=</span> webClient<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">resourceUri</span> <span style="color:#f92672">=</span> resourceUri<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    @Autowired
-    PlatformServiceClientImpl(@Qualifier(&quot;my-platform&quot;) WebClient webClient,
-                              String resourceUri) {
-        this.webClient = webClient;
-        this.resourceUri = resourceUri;
-    }
-
-    public CompletableFuture&lt;MyResourceModel&gt; getResource(String resourceId) {
-        return webClient.get().uri(resourceUri)
-                .header(&quot;X-Resource-ID&quot;, resourceId)
-                .header(&quot;Content-Type&quot;, &quot;application/json&quot;)
-                .retrieve()
-                .bodyToMono(MyResourceModel.class)
-                .toFuture();
-    }
-}
-</code></pre>
-
-<p>You can read more about Spring Security Webflux Oauth2 <a href="https://docs.spring.io/spring-security/site/docs/current/reference/html/webflux-oauth2.html">here</a>.</p>
-
+    <span style="color:#66d9ef">public</span> CompletableFuture<span style="color:#f92672">&lt;</span>MyResourceModel<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getResource</span><span style="color:#f92672">(</span>String resourceId<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> webClient<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">().</span><span style="color:#a6e22e">uri</span><span style="color:#f92672">(</span>resourceUri<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">header</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;X-Resource-ID&#34;</span><span style="color:#f92672">,</span> resourceId<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">header</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Content-Type&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;application/json&#34;</span><span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">retrieve</span><span style="color:#f92672">()</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">bodyToMono</span><span style="color:#f92672">(</span>MyResourceModel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">toFuture</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>You can read more about Spring Security Webflux Oauth2 <a href="https://docs.spring.io/spring-security/site/docs/current/reference/html/webflux-oauth2.html">here</a>.</p>
 <p>Enjoy the magic of Spring!</p>
 
 </div>

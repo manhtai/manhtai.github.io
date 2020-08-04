@@ -109,20 +109,27 @@ window.onload = ready;
 messages, data is saved to MongoDB. It&rsquo;s quite a fun learning experience,
 but when you want a chat app at scale, you need more. Yes I am looking at
 you: <strong>microservices</strong>.</p>
-
 <p>Now I know one thing or two about microservices and distributed systems,
 I think at least these three are in need:</p>
-
 <ul>
-<li>1. A service for saving messages to DB</li>
-<li>2. A service for handling messages from clients</li>
-<li>3. A proper message queue, for the talkings between services</li>
+<li>
+<ol>
+<li>A service for saving messages to DB</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>A service for handling messages from clients</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>A proper message queue, for the talkings between services</li>
+</ol>
+</li>
 </ul>
-
 <p>Now we&rsquo;ll start to build one.</p>
-
 <p>(Some time after&hellip;)</p>
-
 <p>It&rsquo;s on <a href="https://github.com/manhtai/golang-nsq-chat">GitHub</a> now. The README should be enough to explain the idea.</p>
 
 </div>

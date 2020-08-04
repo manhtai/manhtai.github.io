@@ -106,44 +106,40 @@ window.onload = ready;
 <div class="content">
   <h1>2018 <aside><a href="/tags/short/">short</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/new-year/">new year</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
   <p>A new year has come, guess what, I made a new blog. Yay!</p>
-
 <p>This blog is powered by <a href="https://gohugo.io">Hugo</a> and hosted by <a href="https://github.com">GitHub</a>. I modified the
 <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/#github-user-or-organization-pages">deployment script</a> a little bit to use 2 braches in 1 repo instead of
 2 repos. It looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># 0. Notify &amp; get message</span>
+echo -e <span style="color:#e6db74">&#34;\033[0;32mDeploying updates to GitHub...\033[0m&#34;</span>
+msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Rebuilding site `date`&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $# -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>
+  <span style="color:#66d9ef">then</span> msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">fi</span>
 
-<pre><code class="language-sh">#!/bin/bash
-
-# 0. Notify &amp; get message
-echo -e &quot;\033[0;32mDeploying updates to GitHub...\033[0m&quot;
-msg=&quot;Rebuilding site `date`&quot;
-if [ $# -eq 1 ]
-  then msg=&quot;$1&quot;
-fi
-
-# 1. Commit changes to develop first
+<span style="color:#75715e"># 1. Commit changes to develop first</span>
 git add .
-git commit -m &quot;$msg&quot;
+git commit -m <span style="color:#e6db74">&#34;</span>$msg<span style="color:#e6db74">&#34;</span>
 
-# 2. Build the project in develop
+<span style="color:#75715e"># 2. Build the project in develop</span>
 hugo
 
-# 3. Checkout to master
+<span style="color:#75715e"># 3. Checkout to master</span>
 git checkout master
 
-# 4. Add changes to master
+<span style="color:#75715e"># 4. Add changes to master</span>
 cp -r public/* .
 rm -rf public
 git add .
-git commit -m &quot;$msg&quot;
+git commit -m <span style="color:#e6db74">&#34;</span>$msg<span style="color:#e6db74">&#34;</span>
 
-# 5. Push to develop &amp; master
+<span style="color:#75715e"># 5. Push to develop &amp; master</span>
 git push origin master develop
 
-# 6. Come back to develop
+<span style="color:#75715e"># 6. Come back to develop</span>
 git checkout develop
-</code></pre>
-
-<p>You can checkout the source code <a href="https://github.com/manhtai/manhtai.github.io">here</a>.</p>
+</code></pre></div><p>You can checkout the source code <a href="https://github.com/manhtai/manhtai.github.io">here</a>.</p>
 
 </div>
 

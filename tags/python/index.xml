@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Python on Go slowly</title>
+    <title>python on Go slowly</title>
     <link>https://manhtai.github.io/tags/python/</link>
-    <description>Recent content in Python on Go slowly</description>
+    <description>Recent content in python on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 21 Apr 2018 12:05:19 +0700</lastBuildDate>
@@ -21,25 +20,28 @@
 and the process is quite smooth. It tooks me almost 2 days to complete all
 conversion needed, while other developers were still doing their dail jobs in
 the project.&lt;/p&gt;
-
 &lt;p&gt;Steps I made:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;1, Run &lt;code&gt;2to3&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;2, Fix the code so that all the tests passes again.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;3, Handle outlier cases &amp;amp; write tests for them. Those cases are somewhat
-related to the diffirences between &lt;code&gt;unicode&lt;/code&gt; &amp;amp; &lt;code&gt;str&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;1, Run &lt;code&gt;2to3&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;2, Fix the code so that all the tests passes again.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;3, Handle outlier cases &amp;amp; write tests for them. Those cases are somewhat
+related to the diffirences between &lt;code&gt;unicode&lt;/code&gt; &amp;amp; &lt;code&gt;str&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Some key notes here:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;1, Having a solid unit tests system is critical.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;2, &lt;code&gt;2to3&lt;/code&gt; did all the heavy works, but you need to know the stuffs to get all
-the shit done.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;1, Having a solid unit tests system is critical.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;2, &lt;code&gt;2to3&lt;/code&gt; did all the heavy works, but you need to know the stuffs to get all
+the shit done.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -51,35 +53,25 @@ the shit done.&lt;/p&gt;&lt;/li&gt;
       
       <guid>https://manhtai.github.io/posts/django-transactions/</guid>
       <description>&lt;p&gt;Django &lt;a href=&#34;https://docs.djangoproject.com/en/dev/topics/db/transactions/&#34;&gt;documentation&lt;/a&gt; about transaction points out:&lt;/p&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;Django uses transactions or savepoints automatically to guarantee the integrity
 of ORM operations that require multiple queries, especially &lt;code&gt;delete()&lt;/code&gt; and
 &lt;code&gt;update()&lt;/code&gt; queries.&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;This means whenever we call &lt;code&gt;save()&lt;/code&gt; or &lt;code&gt;create()&lt;/code&gt;, it&amp;rsquo;s already wrapped in
 a transaction. And usually new data is not in the database yet when we try to
 get that again somewhere after.&lt;/p&gt;
-
 &lt;p&gt;To make sure it&amp;rsquo;s commited, we have to use &lt;code&gt;transaction.on_commit()&lt;/code&gt;.&lt;/p&gt;
-
 &lt;p&gt;There are 2 popular cases I find that we must use &lt;code&gt;on_commit()&lt;/code&gt; function.&lt;/p&gt;
-
 &lt;p&gt;&lt;em&gt;The first one&lt;/em&gt; is when we send task to a Celery queue. The error we usually made
 here is to put that on a &lt;code&gt;post_save&lt;/code&gt; signal and hope for the best. Remember that
 &lt;code&gt;post_save&lt;/code&gt; is in the same transaction with &lt;code&gt;save()&lt;/code&gt;, so there is no guarantee
 that new data will be in the database when Celery task get it from there.&lt;/p&gt;
-
 &lt;p&gt;We must use put the task to &lt;code&gt;on_commit()&lt;/code&gt; function like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;transaction.on_commit(lambda: celery_task_with_id(id))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;The second case&lt;/em&gt; is when we want to do something after all inline forms in
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;transaction&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;on_commit(&lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt;: celery_task_with_id(id))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;The second case&lt;/em&gt; is when we want to do something after all inline forms in
 admin page is saved. But the thing we actually want is data is commited to
 database. You already know how to do it, just like the case above.&lt;/p&gt;
-
 &lt;p&gt;The catch here is we can put &lt;code&gt;on_commit()&lt;/code&gt; function in many places, as long as
 it&amp;rsquo;s in the transaction. I usually put that on &lt;code&gt;save_model()&lt;/code&gt; or &lt;code&gt;save_related()&lt;/code&gt;,
 depend on what extra infomation I need for further processing.&lt;/p&gt;

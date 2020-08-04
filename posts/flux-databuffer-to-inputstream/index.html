@@ -107,37 +107,38 @@ window.onload = ready;
   <h1>Flux&lt;Databuffer&gt; to InputStream <aside><a href="/tags/spring/">spring</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/databuffer/">databuffer</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/flux/">flux</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/inputstream/">inputstream</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
   <p>How can we convert a <code>Flux&lt;DataBuffer&gt;</code>, say, in a Spring&rsquo;s <code>FilePart.content()</code>
 when uploading data, into a <code>InputStream</code> for consuming?</p>
-
 <p>By using pipes!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">InputStream <span style="color:#a6e22e">getInputStreamFromFluxDataBuffer</span><span style="color:#f92672">(</span>Flux<span style="color:#f92672">&lt;</span>DataBuffer<span style="color:#f92672">&gt;</span> data<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+    PipedOutputStream osPipe <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PipedOutputStream<span style="color:#f92672">();</span>
+    PipedInputStream isPipe <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PipedInputStream<span style="color:#f92672">(</span>osPipe<span style="color:#f92672">);</span>
 
-<pre><code class="language-java">InputStream getInputStreamFromFluxDataBuffer(Flux&lt;DataBuffer&gt; data) throws IOException {
-    PipedOutputStream osPipe = new PipedOutputStream();
-    PipedInputStream isPipe = new PipedInputStream(osPipe);
-
-    DataBufferUtils.write(data, osPipe)
-            .subscribeOn(Schedulers.elastic())
-            .doOnComplete(() -&gt; {
-                try {
-                    osPipe.close();
-                } catch (IOException ignored) {
-                }
-            })
-            .subscribe(DataBufferUtils.releaseConsumer());
-    return isPipe;
-}
-</code></pre>
-
-<p>The code is quite trivial, but some notes worth mentioning here:</p>
-
-<p>1) We need to subscribe on another Thread by using <code>Schedulers.elastic()</code> to
+    DataBufferUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>data<span style="color:#f92672">,</span> osPipe<span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">subscribeOn</span><span style="color:#f92672">(</span>Schedulers<span style="color:#f92672">.</span><span style="color:#a6e22e">elastic</span><span style="color:#f92672">())</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">doOnComplete</span><span style="color:#f92672">(()</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                    osPipe<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+                <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ignored<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">})</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">subscribe</span><span style="color:#f92672">(</span>DataBufferUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">releaseConsumer</span><span style="color:#f92672">());</span>
+    <span style="color:#66d9ef">return</span> isPipe<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>The code is quite trivial, but some notes worth mentioning here:</p>
+<ol>
+<li>
+<p>We need to subscribe on another Thread by using <code>Schedulers.elastic()</code> to
 avoid blocking.</p>
-
-<p>2) We need to close the <code>PipedOutputStream</code> when we finished, so downstream
+</li>
+<li>
+<p>We need to close the <code>PipedOutputStream</code> when we finished, so downstream
 subscriber will know when to stop.</p>
-
-<p>3) <code>DataBufferUtils.write()</code> start writing as soon as the Flux from output
+</li>
+<li>
+<p><code>DataBufferUtils.write()</code> start writing as soon as the Flux from output
 stream is subscribed to, so we use <code>DataBufferUtils.releaseConsumer()</code> to
 start the writing immediately.</p>
+</li>
+</ol>
 
 </div>
 

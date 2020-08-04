@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>New Year on Go slowly</title>
+    <title>new year on Go slowly</title>
     <link>https://manhtai.github.io/tags/new-year/</link>
-    <description>Recent content in New Year on Go slowly</description>
+    <description>Recent content in new year on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 16 Feb 2018 18:56:22 +0700</lastBuildDate>
@@ -19,12 +18,10 @@
       <guid>https://manhtai.github.io/posts/happy-lunnar-new-year/</guid>
       <description>&lt;p&gt;Today is the first day of Vietnamese lunar new year. It is national holiday in
 Vietnam and is used for marking the start of another spring season.&lt;/p&gt;
-
 &lt;p&gt;Last year was such a year for me, professionally. This year I&amp;rsquo;ve got some plans
 in mind and will try my best to achieve them. Two most challenging things are
 to rebuild a big monolith system to microservices and to run a full marathon
 in the summer. I&amp;rsquo;m expecting an interesting journey in the end of the year, too.&lt;/p&gt;
-
 &lt;p&gt;Wish you all have a successful year ahead!&lt;/p&gt;
 </description>
     </item>
@@ -36,44 +33,40 @@ in the summer. I&amp;rsquo;m expecting an interesting journey in the end of the 
       
       <guid>https://manhtai.github.io/posts/2018/</guid>
       <description>&lt;p&gt;A new year has come, guess what, I made a new blog. Yay!&lt;/p&gt;
-
 &lt;p&gt;This blog is powered by &lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt; and hosted by &lt;a href=&#34;https://github.com&#34;&gt;GitHub&lt;/a&gt;. I modified the
 &lt;a href=&#34;https://gohugo.io/hosting-and-deployment/hosting-on-github/#github-user-or-organization-pages&#34;&gt;deployment script&lt;/a&gt; a little bit to use 2 braches in 1 repo instead of
 2 repos. It looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 0. Notify &amp;amp; get message&lt;/span&gt;
+echo -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\033[0;32mDeploying updates to GitHub...\033[0m&amp;#34;&lt;/span&gt;
+msg&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Rebuilding site `date`&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; $# -eq &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; msg&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$1&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;#!/bin/bash
-
-# 0. Notify &amp;amp; get message
-echo -e &amp;quot;\033[0;32mDeploying updates to GitHub...\033[0m&amp;quot;
-msg=&amp;quot;Rebuilding site `date`&amp;quot;
-if [ $# -eq 1 ]
-  then msg=&amp;quot;$1&amp;quot;
-fi
-
-# 1. Commit changes to develop first
+&lt;span style=&#34;color:#75715e&#34;&gt;# 1. Commit changes to develop first&lt;/span&gt;
 git add .
-git commit -m &amp;quot;$msg&amp;quot;
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$msg&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
 
-# 2. Build the project in develop
+&lt;span style=&#34;color:#75715e&#34;&gt;# 2. Build the project in develop&lt;/span&gt;
 hugo
 
-# 3. Checkout to master
+&lt;span style=&#34;color:#75715e&#34;&gt;# 3. Checkout to master&lt;/span&gt;
 git checkout master
 
-# 4. Add changes to master
+&lt;span style=&#34;color:#75715e&#34;&gt;# 4. Add changes to master&lt;/span&gt;
 cp -r public/* .
 rm -rf public
 git add .
-git commit -m &amp;quot;$msg&amp;quot;
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$msg&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
 
-# 5. Push to develop &amp;amp; master
+&lt;span style=&#34;color:#75715e&#34;&gt;# 5. Push to develop &amp;amp; master&lt;/span&gt;
 git push origin master develop
 
-# 6. Come back to develop
+&lt;span style=&#34;color:#75715e&#34;&gt;# 6. Come back to develop&lt;/span&gt;
 git checkout develop
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can checkout the source code &lt;a href=&#34;https://github.com/manhtai/manhtai.github.io&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can checkout the source code &lt;a href=&#34;https://github.com/manhtai/manhtai.github.io&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     

@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Thermal Printer on Go slowly</title>
+    <title>thermal printer on Go slowly</title>
     <link>https://manhtai.github.io/tags/thermal-printer/</link>
-    <description>Recent content in Thermal Printer on Go slowly</description>
+    <description>Recent content in thermal printer on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 23 Jun 2018 21:17:15 +0700</lastBuildDate>
@@ -20,63 +19,47 @@
       <description>&lt;p&gt;In previous &lt;a href=&#34;https://manhtai.github.io/posts/building-erp-using-django-react-native&#34;&gt;post&lt;/a&gt; about using React Native to build our own ERP app, I&amp;rsquo;ve
 mentioned about printing Vietnamese characters to a &lt;a href=&#34;https://en.wikipedia.org/wiki/Thermal_printing&#34;&gt;thermal printer&lt;/a&gt;, in
 this post I will show you how to do it.&lt;/p&gt;
-
 &lt;p&gt;Although this post is about printing Vietnamese using React Native, you must
 keep in mind that it is not only apply to Vietnamese and React Native, but
 for any &lt;em&gt;native&lt;/em&gt; mobile framework to print Unicode characters to a thermal
 printer. Just make sure your language is supported in thermal printer &lt;a href=&#34;https://en.wikipedia.org/wiki/Code_page&#34;&gt;code
 page&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;Firstly, you must get a library to print arbitrary characters to a thermal
 printer. We used &lt;a href=&#34;https://github.com/rusel1989/react-native-bluetooth-serial&#34;&gt;react-native-bluetooth-serial&lt;/a&gt; for our ERP app.&lt;/p&gt;
-
 &lt;p&gt;It&amp;rsquo;s API for printing out a message as simple as this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;BluetoothSerial.write(Buffer|String data)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Secondly, you must know that a thermal printer will support some kind of
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;BluetoothSerial&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;write&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;Buffer&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;String &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Secondly, you must know that a thermal printer will support some kind of
 ESC/POS commands for parameterizing printed characters, like changing
 font family, font size, barcode printing, etc. Depending on what thermal
 printer manufacturer you are using, it will have some groups of commands that
 we can use, for example, we can find ECS/POS reference about Epson printer
 &lt;a href=&#34;http://content.epson.de/fileadmin/content/files/RSD/downloads/escpos.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;So all we need to print out Vietnamese characters is to send out some
 commands to set up the printer for using Vietnamese font and &lt;a href=&#34;https://en.wikipedia.org/wiki/Code_page&#34;&gt;code page&lt;/a&gt;!&lt;/p&gt;
-
 &lt;p&gt;Our thermal printer does support only TCVN3 code page, so we must encode our
 Unicode message to TCVN3, and then just print it out, like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// We use iconv to convert Unicode message to TCVN3
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;TCVN3message&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;iconv&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;encode&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;message&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;tcvn&amp;#39;&lt;/span&gt;);
 
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// We use iconv to convert Unicode message to TCVN3
-const TCVN3message = iconv.encode(message, &#39;tcvn&#39;);
+&lt;span style=&#34;color:#75715e&#34;&gt;// [0x1b, 0x74, 48] is POS command for set up TCVN3 code page
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;TCVN3codepage&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Buffer&lt;/span&gt;([&lt;span style=&#34;color:#ae81ff&#34;&gt;0x1b&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x74&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;48&lt;/span&gt;]);
 
-// [0x1b, 0x74, 48] is POS command for set up TCVN3 code page
-const TCVN3codepage = new Buffer([0x1b, 0x74, 48]);
+&lt;span style=&#34;color:#75715e&#34;&gt;// Push write command to Promise array
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;writePromises&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+&lt;span style=&#34;color:#a6e22e&#34;&gt;writePromises&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;BluetoothSerial&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;write&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;TCVN3codepage&lt;/span&gt;));
+&lt;span style=&#34;color:#a6e22e&#34;&gt;writePromises&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;BluetoothSerial&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;write&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;TCVN3message&lt;/span&gt;));
 
-// Push write command to Promise array
-const writePromises = [];
-writePromises.push(BluetoothSerial.write(TCVN3codepage));
-writePromises.push(BluetoothSerial.write(TCVN3message));
-
-// Print out messages
-Promise.all(writePromises);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s it!&lt;/p&gt;
-
+&lt;span style=&#34;color:#75715e&#34;&gt;// Print out messages
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;Promise.&lt;span style=&#34;color:#a6e22e&#34;&gt;all&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;writePromises&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s it!&lt;/p&gt;
 &lt;p&gt;Using ESC/POS commands, we can customize our printing format even more, like
 font size, font weight, etc. Another longer ESC/POS reference can be found
 &lt;a href=&#34;http://www.aures-support.fr/DATA/utility/Commande%20ESCPOS.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;A minor thing to note is that some printer will not default to character font
 A for us, so the text might get too little or too large. You can use a command
 to set it to character font A, like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;const characterFontA = new Buffer([0x1b, 0x21, 0]);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Have fun printing things out!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;characterFontA&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Buffer&lt;/span&gt;([&lt;span style=&#34;color:#ae81ff&#34;&gt;0x1b&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x21&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Have fun printing things out!&lt;/p&gt;
 </description>
     </item>
     

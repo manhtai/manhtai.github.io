@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Spring on Go slowly</title>
+    <title>spring on Go slowly</title>
     <link>https://manhtai.github.io/tags/spring/</link>
-    <description>Recent content in Spring on Go slowly</description>
+    <description>Recent content in spring on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 11 Apr 2020 10:08:00 +0700</lastBuildDate>
@@ -19,37 +18,38 @@
       <guid>https://manhtai.github.io/posts/flux-databuffer-to-inputstream/</guid>
       <description>&lt;p&gt;How can we convert a &lt;code&gt;Flux&amp;lt;DataBuffer&amp;gt;&lt;/code&gt;, say, in a Spring&amp;rsquo;s &lt;code&gt;FilePart.content()&lt;/code&gt;
 when uploading data, into a &lt;code&gt;InputStream&lt;/code&gt; for consuming?&lt;/p&gt;
-
 &lt;p&gt;By using pipes!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;InputStream &lt;span style=&#34;color:#a6e22e&#34;&gt;getInputStreamFromFluxDataBuffer&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Flux&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;DataBuffer&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;throws&lt;/span&gt; IOException &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    PipedOutputStream osPipe &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; PipedOutputStream&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    PipedInputStream isPipe &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; PipedInputStream&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;osPipe&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;InputStream getInputStreamFromFluxDataBuffer(Flux&amp;lt;DataBuffer&amp;gt; data) throws IOException {
-    PipedOutputStream osPipe = new PipedOutputStream();
-    PipedInputStream isPipe = new PipedInputStream(osPipe);
-
-    DataBufferUtils.write(data, osPipe)
-            .subscribeOn(Schedulers.elastic())
-            .doOnComplete(() -&amp;gt; {
-                try {
-                    osPipe.close();
-                } catch (IOException ignored) {
-                }
-            })
-            .subscribe(DataBufferUtils.releaseConsumer());
-    return isPipe;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The code is quite trivial, but some notes worth mentioning here:&lt;/p&gt;
-
-&lt;p&gt;1) We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
+    DataBufferUtils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;write&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;data&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; osPipe&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;subscribeOn&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Schedulers&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elastic&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;())&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;doOnComplete&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                    osPipe&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;close&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;IOException ignored&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;})&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;DataBufferUtils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;releaseConsumer&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;());&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; isPipe&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The code is quite trivial, but some notes worth mentioning here:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
 avoid blocking.&lt;/p&gt;
-
-&lt;p&gt;2) We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
 subscriber will know when to stop.&lt;/p&gt;
-
-&lt;p&gt;3) &lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
 stream is subscribed to, so we use &lt;code&gt;DataBufferUtils.releaseConsumer()&lt;/code&gt; to
 start the writing immediately.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
@@ -63,55 +63,47 @@ start the writing immediately.&lt;/p&gt;
 elegant and type safety. Who wouldn&amp;rsquo;t want that? Efficient, you may nod
 slightly, but elegant and type safety, aren&amp;rsquo;t it? Yes it is, if you use
 &lt;a href=&#34;https://en.wikipedia.org/wiki/Java_Persistence_Query_Language&#34;&gt;JPQL&lt;/a&gt; in combination with &lt;a href=&#34;https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions&#34;&gt;SpEL&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;JPQL uses the entity object models instead of database tables to define a
 query. It is not really raw SQL you might say, but it got all the syntax of
 a raw SQL query. And because it is based on entity models, it is strong type
 and it ensure type safety for us (i.e it won&amp;rsquo;t start application if we use
 wrong type in our query).&lt;/p&gt;
-
 &lt;p&gt;In addition to that, we can use SpEL to write expressions directly in queries
 using a subset of Java code. Let&amp;rsquo;s take a look at an example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Repository
-public interface NotificationRepository extends JpaRepository&amp;lt;Notification, Long&amp;gt; {
-    @Query(
-            &amp;quot; SELECT new NotificationResponse(&amp;quot; +
-                    &amp;quot;   n.id, n.title,&amp;quot; +
-                    &amp;quot;   CASE&amp;quot; +
-                    &amp;quot;     WHEN (u.id IS NULL) THEN FALSE&amp;quot; +
-                    &amp;quot;     ELSE u.isRead END,&amp;quot; +
-                    &amp;quot;   n.createTime) &amp;quot; +
-                    &amp;quot; FROM Notification n &amp;quot; +
-                    &amp;quot; LEFT JOIN UserNotification u ON &amp;quot; +
-                    &amp;quot;   u.notificationId = n.id&amp;quot; +
-                    &amp;quot;   AND u.userId = :#{#filter.userId}&amp;quot; +
-                    &amp;quot;   AND u.userType = :#{#filter.receiverType}&amp;quot; +
-                    &amp;quot; WHERE &amp;quot; +
-                    &amp;quot;   n.receiverType = :#{#filter.receiverType}&amp;quot; +
-                    &amp;quot; GROUP BY n.id&amp;quot; +
-                    &amp;quot; ORDER BY n.createTime DESC&amp;quot;
-    )
-    Page&amp;lt;NotificationResponse&amp;gt; getNotifications(NotificationFilter filter, Pageable pageable);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here &lt;strong&gt;Notification&lt;/strong&gt; and &lt;strong&gt;UserNotification&lt;/strong&gt; are two entity models
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Repository&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NotificationRepository&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;extends&lt;/span&gt; JpaRepository&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Notification&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; Long&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Query&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; SELECT new NotificationResponse(&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   n.id, n.title,&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   CASE&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;     WHEN (u.id IS NULL) THEN FALSE&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;     ELSE u.isRead END,&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   n.createTime) &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; FROM Notification n &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; LEFT JOIN UserNotification u ON &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   u.notificationId = n.id&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   AND u.userId = :#{#filter.userId}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   AND u.userType = :#{#filter.receiverType}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; WHERE &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;   n.receiverType = :#{#filter.receiverType}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; GROUP BY n.id&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; ORDER BY n.createTime DESC&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Page&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;NotificationResponse&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getNotifications&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;NotificationFilter filter&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; Pageable pageable&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here &lt;strong&gt;Notification&lt;/strong&gt; and &lt;strong&gt;UserNotification&lt;/strong&gt; are two entity models
 corresponding to two tables in database and we can join them using ON
 condition as in raw SQL. All statements may look familiar to you, except some
 weird &lt;code&gt;:#{#filter.fieldName}&lt;/code&gt; annotations. They are SpEL expressions that use
 Java reflection to inject field values of notification filter into the query.
 You can use either private field names or public get methods to get the values
 out of filter param.&lt;/p&gt;
-
 &lt;p&gt;Something else worth noting here is we don&amp;rsquo;t need to specify &lt;code&gt;COUNT&lt;/code&gt; query,
 JPA will do that for us, but we can customize it of course, and sometime it is
 a must.&lt;/p&gt;
-
 &lt;p&gt;The last parameter of &lt;code&gt;getNotifications()&lt;/code&gt; method is a Pageable instance, JPA
 will automatically using &lt;code&gt;LIMIT&lt;/code&gt; and &lt;code&gt;OFFSET&lt;/code&gt; to do pagination for us, hence
 the returning type of the query is &lt;code&gt;Page&amp;lt;NotificationResponse&amp;gt;&lt;/code&gt;.&lt;/p&gt;
-
 &lt;p&gt;I am very comfortable with writing queries in SQL so I am very happy with this
 setup, and I hope you will enjoy it too: the magic of Spring (and JPA)!&lt;/p&gt;
 </description>
@@ -125,48 +117,40 @@ setup, and I hope you will enjoy it too: the magic of Spring (and JPA)!&lt;/p&gt
       <guid>https://manhtai.github.io/posts/spring-websocket-server/</guid>
       <description>&lt;p&gt;To include a WebSocket endpoint to our Spring Boot application, first you need
 to include the starter package:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-websocket&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To configure WebSocket server, we need to define a configuration:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;@EnableWebSocketMessageBroker&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;WebSocketConfig&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;implements&lt;/span&gt; WebSocketMessageBrokerConfigurer &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
-    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
-    &amp;lt;artifactId&amp;gt;spring-boot-starter-websocket&amp;lt;/artifactId&amp;gt;
-&amp;lt;/dependency&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Override&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;registerStompEndpoints&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;StompEndpointRegistry registry&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        registry&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;addEndpoint&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/websocket&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;addInterceptors&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; HandshakeInterceptor&lt;span style=&#34;color:#f92672&#34;&gt;())&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;setAllowedOrigins&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;withSockJS&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 
-&lt;p&gt;To configure WebSocket server, we need to define a configuration:&lt;/p&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Override&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;configureMessageBroker&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;MessageBrokerRegistry config&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        config&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;enableSimpleBroker&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/channel&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(&amp;quot;/websocket&amp;quot;)
-                .addInterceptors(new HandshakeInterceptor())
-                .setAllowedOrigins(&amp;quot;*&amp;quot;)
-                .withSockJS();
-    }
-
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker(&amp;quot;/channel&amp;quot;);
-    }
-
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor());
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;registerStompEndpoints()&lt;/strong&gt; is the method to register endpoints for our
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Override&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;configureClientInboundChannel&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ChannelRegistration registration&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        registration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;interceptors&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ChannelInterceptor&lt;span style=&#34;color:#f92672&#34;&gt;());&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;registerStompEndpoints()&lt;/strong&gt; is the method to register endpoints for our
 WebSocket server, in which the first HTTP handshake happens. Here we can use
 a &lt;code&gt;HanshakeInterceptor()&lt;/code&gt; to insert some custom attributes for using when
 first WebSocket interaction initializes, for example the WebSocket endpoint
 path.&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;configureMessageBroker()&lt;/strong&gt; is used to add channel paths, so our WebSocket
 clients can subscribe to.&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;configureClientInboundChannel()&lt;/strong&gt; is where WebSocket connection make first
 CONNECT request, then SUBSCRIBE to a channel, etc. &lt;code&gt;ChannelInterceptor()&lt;/code&gt; is
 the place for authorization &amp;amp; authentication our users before sending and
@@ -175,7 +159,6 @@ receiving messages. In here we can get the attributes we&amp;rsquo;ve set before
 first CONNECT request of WebSocket connection, we have to make the WebSocket
 endpoints whitelisted in any auth required matchers (Spring Security matchers
 for instance).&lt;/p&gt;
-
 &lt;p&gt;Believe or not, that is all we need to setup a WebSocket server, you now can
 setup a WebSocket handler and enjoy the magic of Spring.&lt;/p&gt;
 </description>
@@ -192,100 +175,100 @@ reactive API request. Combining with Spring Security Oauth2 Client we can
 handle the heavy jobs (ie. request access token, check expiry time, re-request
 access token, etc) to Spring Security Oauth2 Client and still had all the
 benefits of the reactive web client.&lt;/p&gt;
-
 &lt;p&gt;First thing first, we need to include the libraries:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-webflux&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
-    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
-    &amp;lt;artifactId&amp;gt;spring-boot-starter-webflux&amp;lt;/artifactId&amp;gt;
-&amp;lt;/dependency&amp;gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.security&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-security-oauth2-client&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then define the beans to use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Oauth2ClientConfig&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
 
-&amp;lt;dependency&amp;gt;
-    &amp;lt;groupId&amp;gt;org.springframework.security&amp;lt;/groupId&amp;gt;
-    &amp;lt;artifactId&amp;gt;spring-security-oauth2-client&amp;lt;/artifactId&amp;gt;
-&amp;lt;/dependency&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Bean&lt;/span&gt;
+    ReactiveClientRegistrationRepository &lt;span style=&#34;color:#a6e22e&#34;&gt;getRegistration&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;@Value&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;${spring.security.oauth2.client.provider.my-platform.token-uri}&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; String tokenUri&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;@Value&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;${spring.security.oauth2.client.registration.my-platform.client-id}&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; String clientId&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;@Value&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;${spring.security.oauth2.client.registration.my-platform.client-secret}&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; String clientSecret&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;@Value&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;${spring.security.oauth2.client.registration.my-platform.scopes}&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; String scope
+    &lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        ClientRegistration registration &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ClientRegistration
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;withRegistrationId&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;my-platform&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;tokenUri&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;tokenUri&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;clientId&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;clientId&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;clientSecret&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;clientSecret&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;authorizationGrantType&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;AuthorizationGrantType&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;CLIENT_CREDENTIALS&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;scope&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;scope&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;build&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; InMemoryReactiveClientRegistrationRepository&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;registration&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 
-&lt;p&gt;Then define the beans to use:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Configuration
-public class Oauth2ClientConfig {
-
-    @Bean
-    ReactiveClientRegistrationRepository getRegistration(
-            @Value(&amp;quot;${spring.security.oauth2.client.provider.my-platform.token-uri}&amp;quot;) String tokenUri,
-            @Value(&amp;quot;${spring.security.oauth2.client.registration.my-platform.client-id}&amp;quot;) String clientId,
-            @Value(&amp;quot;${spring.security.oauth2.client.registration.my-platform.client-secret}&amp;quot;) String clientSecret,
-            @Value(&amp;quot;${spring.security.oauth2.client.registration.my-platform.scopes}&amp;quot;) String scope
-    ) {
-        ClientRegistration registration = ClientRegistration
-                .withRegistrationId(&amp;quot;my-platform&amp;quot;)
-                .tokenUri(tokenUri)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .scope(scope)
-                .build();
-        return new InMemoryReactiveClientRegistrationRepository(registration);
-    }
-
-    @Bean(name = &amp;quot;my-platform&amp;quot;)
-    WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations) {
-        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
-                clientRegistrations, new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
-        oauth.setDefaultClientRegistrationId(&amp;quot;my-platform&amp;quot;);
-        return WebClient.builder()
-                .filter(oauth)
-                .build();
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Some things worth noting here are:&lt;/p&gt;
-
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Bean&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;my-platform&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    WebClient &lt;span style=&#34;color:#a6e22e&#34;&gt;webClient&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ReactiveClientRegistrationRepository clientRegistrations&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ServerOAuth2AuthorizedClientExchangeFilterFunction&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+                clientRegistrations&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; UnAuthenticatedServerOAuth2AuthorizedClientRepository&lt;span style=&#34;color:#f92672&#34;&gt;());&lt;/span&gt;
+        oauth&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;setDefaultClientRegistrationId&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;my-platform&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; WebClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;builder&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;filter&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;oauth&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;build&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Some things worth noting here are:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;1) The parameters in &lt;code&gt;@Value&lt;/code&gt; are default configurations for Spring Security
+&lt;li&gt;
+&lt;ol&gt;
+&lt;li&gt;The parameters in &lt;code&gt;@Value&lt;/code&gt; are default configurations for Spring Security
 Oauth2 Client to work (ie. autowiring), so with some luck you can make it work
-without define a bean for &lt;code&gt;ReactiveClientRegistrationRepository&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;2) &lt;code&gt;WebClient&lt;/code&gt; bean is qualified with &lt;code&gt;&amp;quot;my-platform&amp;quot;&lt;/code&gt; so it will not conflict
-with other web clients that you may use in your project.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;3) I used &lt;code&gt;AuthorizationGrantType.CLIENT_CREDENTIALS&lt;/code&gt; here, but it should
-work with any authorization grant types.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;4) I use &lt;strong&gt;constructor injection&lt;/strong&gt; instead of &lt;strong&gt;field injection&lt;/strong&gt; and it
-is considered better practice, you should read more about that.&lt;/p&gt;&lt;/li&gt;
+without define a bean for &lt;code&gt;ReactiveClientRegistrationRepository&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;WebClient&lt;/code&gt; bean is qualified with &lt;code&gt;&amp;quot;my-platform&amp;quot;&lt;/code&gt; so it will not conflict
+with other web clients that you may use in your project.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;I used &lt;code&gt;AuthorizationGrantType.CLIENT_CREDENTIALS&lt;/code&gt; here, but it should
+work with any authorization grant types.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;I use &lt;strong&gt;constructor injection&lt;/strong&gt; instead of &lt;strong&gt;field injection&lt;/strong&gt; and it
+is considered better practice, you should read more about that.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Now we can use the WebClient as we are used to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Service&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;MyPlatformServiceClient&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Service
-public class MyPlatformServiceClient {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; WebClient webClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; String resourceUri&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 
-    private WebClient webClient;
-    private String resourceUri;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Autowired&lt;/span&gt;
+    PlatformServiceClientImpl&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;my-platform&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; WebClient webClient&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+                              String resourceUri&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;webClient&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; webClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;resourceUri&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; resourceUri&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 
-    @Autowired
-    PlatformServiceClientImpl(@Qualifier(&amp;quot;my-platform&amp;quot;) WebClient webClient,
-                              String resourceUri) {
-        this.webClient = webClient;
-        this.resourceUri = resourceUri;
-    }
-
-    public CompletableFuture&amp;lt;MyResourceModel&amp;gt; getResource(String resourceId) {
-        return webClient.get().uri(resourceUri)
-                .header(&amp;quot;X-Resource-ID&amp;quot;, resourceId)
-                .header(&amp;quot;Content-Type&amp;quot;, &amp;quot;application/json&amp;quot;)
-                .retrieve()
-                .bodyToMono(MyResourceModel.class)
-                .toFuture();
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can read more about Spring Security Webflux Oauth2 &lt;a href=&#34;https://docs.spring.io/spring-security/site/docs/current/reference/html/webflux-oauth2.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; CompletableFuture&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;MyResourceModel&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getResource&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String resourceId&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; webClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;resourceUri&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;header&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X-Resource-ID&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; resourceId&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;header&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;retrieve&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bodyToMono&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;MyResourceModel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;toFuture&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can read more about Spring Security Webflux Oauth2 &lt;a href=&#34;https://docs.spring.io/spring-security/site/docs/current/reference/html/webflux-oauth2.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Enjoy the magic of Spring!&lt;/p&gt;
 </description>
     </item>

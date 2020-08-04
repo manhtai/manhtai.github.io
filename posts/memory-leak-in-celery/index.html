@@ -108,19 +108,15 @@ window.onload = ready;
   <p>Turn out Celery has <a href="https://github.com/celery/celery/issues/1427">some memory leaks</a>. We don&rsquo;t know that beforehand.
 After deploying some Celery servers using AWS ECS we notice that all Celery
 tasks will consume most of the server memory and then become idle.</p>
-
 <p>My first attempt was set <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html">hard limit</a> for container memory to 1GiB. And
 guess what? Celery will consume 99.9% of that limit then become idle after
 some times. It&rsquo;s good for the server but doesn&rsquo;t solve our problem.</p>
-
 <p>My second attempt was set <code>CELERYD_TASK_TIME_LIMIT</code> to 300, so celery tasks
 will be killed after 5 minutes no matter what. This time Celery continue to
 take memory percentage as much as it can and then become inactive, but after
 5 minutes it kills all the tasks to release memory and then back to work
 normally.</p>
-
 <p>I thought it worked, but it didn&rsquo;t.</p>
-
 <p>After running for some periods, Celery still hung. So it&rsquo;s not due to the leak
 anymore. Continue digging around, I found out the main reason Celery hangs is
 due to <a href="https://github.com/celery/celery/issues/2917">some thread locks</a> caused by <a href="https://github.com/neo4j/neo4j-python-driver">neo4j python driver</a>. And that can
@@ -129,7 +125,6 @@ to async, which is still <a href="https://github.com/neo4j/neo4j-python-driver/i
 some temporary solutions to the problem, it&rsquo;s only apply for Python3, and our
 project is still Python2. Hence, a <a href="/posts/python-2to3-transition">transition</a> from Python2 to Python3 is
 needed.</p>
-
 <p>In the mean time, I set up a cronjob to restart Celery after some times to
 remove the lock.</p>
 

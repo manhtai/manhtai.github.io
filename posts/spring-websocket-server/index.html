@@ -107,48 +107,40 @@ window.onload = ready;
   <h1>Spring Websocket Server <aside><a href="/tags/spring/">spring</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/websocket/">websocket</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/java/">java</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
   <p>To include a WebSocket endpoint to our Spring Boot application, first you need
 to include the starter package:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.boot<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>spring-boot-starter-websocket<span style="color:#f92672">&lt;/artifactId&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><p>To configure WebSocket server, we need to define a configuration:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Configuration</span>
+<span style="color:#a6e22e">@EnableWebSocketMessageBroker</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebSocketConfig</span> <span style="color:#66d9ef">implements</span> WebSocketMessageBrokerConfigurer <span style="color:#f92672">{</span>
 
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-websocket&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">registerStompEndpoints</span><span style="color:#f92672">(</span>StompEndpointRegistry registry<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        registry<span style="color:#f92672">.</span><span style="color:#a6e22e">addEndpoint</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/websocket&#34;</span><span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">addInterceptors</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> HandshakeInterceptor<span style="color:#f92672">())</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">setAllowedOrigins</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;*&#34;</span><span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">withSockJS</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
 
-<p>To configure WebSocket server, we need to define a configuration:</p>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">configureMessageBroker</span><span style="color:#f92672">(</span>MessageBrokerRegistry config<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        config<span style="color:#f92672">.</span><span style="color:#a6e22e">enableSimpleBroker</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/channel&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">@Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(&quot;/websocket&quot;)
-                .addInterceptors(new HandshakeInterceptor())
-                .setAllowedOrigins(&quot;*&quot;)
-                .withSockJS();
-    }
-
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker(&quot;/channel&quot;);
-    }
-
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor());
-    }
-}
-</code></pre>
-
-<p><strong>registerStompEndpoints()</strong> is the method to register endpoints for our
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">configureClientInboundChannel</span><span style="color:#f92672">(</span>ChannelRegistration registration<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        registration<span style="color:#f92672">.</span><span style="color:#a6e22e">interceptors</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ChannelInterceptor<span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><strong>registerStompEndpoints()</strong> is the method to register endpoints for our
 WebSocket server, in which the first HTTP handshake happens. Here we can use
 a <code>HanshakeInterceptor()</code> to insert some custom attributes for using when
 first WebSocket interaction initializes, for example the WebSocket endpoint
 path.</p>
-
 <p><strong>configureMessageBroker()</strong> is used to add channel paths, so our WebSocket
 clients can subscribe to.</p>
-
 <p><strong>configureClientInboundChannel()</strong> is where WebSocket connection make first
 CONNECT request, then SUBSCRIBE to a channel, etc. <code>ChannelInterceptor()</code> is
 the place for authorization &amp; authentication our users before sending and
@@ -157,7 +149,6 @@ receiving messages. In here we can get the attributes we&rsquo;ve set before in
 first CONNECT request of WebSocket connection, we have to make the WebSocket
 endpoints whitelisted in any auth required matchers (Spring Security matchers
 for instance).</p>
-
 <p>Believe or not, that is all we need to setup a WebSocket server, you now can
 setup a WebSocket handler and enjoy the magic of Spring.</p>
 

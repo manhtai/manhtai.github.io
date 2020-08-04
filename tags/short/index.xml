@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Short on Go slowly</title>
+    <title>short on Go slowly</title>
     <link>https://manhtai.github.io/tags/short/</link>
-    <description>Recent content in Short on Go slowly</description>
+    <description>Recent content in short on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 18 Dec 2019 22:04:55 +0700</lastBuildDate>
@@ -17,64 +16,47 @@
       <pubDate>Wed, 18 Dec 2019 22:04:55 +0700</pubDate>
       
       <guid>https://manhtai.github.io/posts/2019-in-review/</guid>
-      <description>
-
-&lt;p&gt;Another year comes to an end. It will finish the race in about 2 weeks, but I
+      <description>&lt;p&gt;Another year comes to an end. It will finish the race in about 2 weeks, but I
 feel that I can wrap up the year today. 2019 isn&amp;rsquo;t really a step up for me but
 I can say that it is full of joys and I&amp;rsquo;ve learnt so much.&lt;/p&gt;
-
 &lt;h2 id=&#34;1-coding&#34;&gt;1. Coding&lt;/h2&gt;
-
 &lt;p&gt;Java is the main theme of this year. I started the year with some Java basis
 in Data Engineer and now I&amp;rsquo;m confident with Java at work as a Java Backend
 Engineer.&lt;/p&gt;
-
 &lt;p&gt;I&amp;rsquo;ve learn so much things about how to structure a Spring Boot project, how
 to do JWT authentication, wire beans, how to write unit tests and integration
 tests using &lt;a href=&#34;https://site.mockito.org/&#34;&gt;Mockito&lt;/a&gt;, &lt;a href=&#34;https://www.h2database.com&#34;&gt;H2&lt;/a&gt; and &lt;a href=&#34;https://flywaydb.org/&#34;&gt;Flyway&lt;/a&gt;, how to optimize query using
 &lt;a href=&#34;https://en.wikipedia.org/wiki/Java_Persistence_Query_Language&#34;&gt;JPQL&lt;/a&gt; in combination with &lt;a href=&#34;https://docs.spring.io/spring-integration/docs/current/reference/html/spel.html&#34;&gt;SPEL&lt;/a&gt;, write &lt;a href=&#34;https://docs.gitlab.com/ee/ci/&#34;&gt;Gitlab CI&lt;/a&gt; config to deploy
 Spring boot app to K8s cluster, oh and foremost, write a formal
 &lt;a href=&#34;https://en.wikipedia.org/wiki/Software_architecture#Design&#34;&gt;Software Architecture Design&lt;/a&gt; document and request its approval,&amp;hellip;&lt;/p&gt;
-
 &lt;p&gt;All of it happens too fast that I have to try hard to ingest all Java
 things and still have time to learn some Rust, Angular and React Hooks on
 the side.&lt;/p&gt;
-
 &lt;p&gt;Now I can say that I&amp;rsquo;m fluent in Java, Python and Javascript, and that should
 keep me quite competitive in the IT market for a while.&lt;/p&gt;
-
 &lt;p&gt;Next year maybe, I will learn some Kotlin and do some native works on Android.
 I&amp;rsquo;ve done some React Native &lt;a href=&#34;https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/&#34;&gt;before&lt;/a&gt; but it&amp;rsquo;s just a hybrid stuff, so I
 think I can get the real deal this time.&lt;/p&gt;
-
 &lt;p&gt;ML and AI will be on my top choices for things to start again in 2020 and we
 will see.&lt;/p&gt;
-
 &lt;h2 id=&#34;2-running&#34;&gt;2. Running&lt;/h2&gt;
-
 &lt;p&gt;Not so much this year, because of extremely bad air quality in Hanoi. I&amp;rsquo;m
 disappointed about the authorities but I can&amp;rsquo;t do anything about it. (We will
 talk about this later.)&lt;/p&gt;
-
 &lt;h2 id=&#34;3-reading&#34;&gt;3. Reading&lt;/h2&gt;
-
 &lt;p&gt;Mostly technical books, as I can&amp;rsquo;t learn new things in tech without tech
 books. I&amp;rsquo;ve read some non-fictions of course. The most interesting books
 I find so far is two books of Mark Manson about not giving a fuck and
 happiness. They inspire me so much about life and love. That you should only
 care about what you love, and happy is just a state of mind. You want to find
 the gold buried, keep up the dig.&lt;/p&gt;
-
 &lt;p&gt;Another book about life meaning is Man&amp;rsquo;s Search for Meaning, which is good
 and teach you to have at least one big goal in your life all the time, so you
 don&amp;rsquo;t die (i.e. give up) till you achieve it.&lt;/p&gt;
-
 &lt;p&gt;I read some business books, too. Shoe Dog, McDonald&amp;rsquo;s: Behind The Arches, they
 tell us the way Americans build their dreams.&lt;/p&gt;
-
 &lt;p&gt;It is the 5th year in coding career for me, now the limit is only what I can
 dream of.&lt;/p&gt;
-
 &lt;p&gt;Hope for a meaningful 2020 to come!&lt;/p&gt;
 </description>
     </item>
@@ -85,88 +67,73 @@ dream of.&lt;/p&gt;
       <pubDate>Sun, 30 Dec 2018 22:12:09 +0700</pubDate>
       
       <guid>https://manhtai.github.io/posts/2018-in-review/</guid>
-      <description>
-
-&lt;p&gt;A year has come to an end, and now is the time to look back.&lt;/p&gt;
-
+      <description>&lt;p&gt;A year has come to an end, and now is the time to look back.&lt;/p&gt;
 &lt;p&gt;This year I&amp;rsquo;ve learned and run a lot, fail some.&lt;/p&gt;
-
 &lt;h2 id=&#34;1-coding&#34;&gt;1. Coding&lt;/h2&gt;
-
 &lt;p&gt;I have found new things to learn through all the year, some of them worth
 mentioning here are:&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;Things I&amp;rsquo;ve learned:&lt;/strong&gt;&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;- &lt;em&gt;Go&lt;/em&gt;, then build a &lt;a href=&#34;https://manhtai.github.io/posts/chat-app-in-golang/&#34;&gt;chat app&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;- &lt;em&gt;Cryptography&lt;/em&gt;, taught by a brilliant &lt;a href=&#34;https://manhtai.github.io/posts/8-weeks-crypto-write-up/&#34;&gt;teacher&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;- &lt;em&gt;Google Cloud Platform&lt;/em&gt;, for work&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;- &lt;em&gt;Apache Airflow &amp;amp; Apache Beam&lt;/em&gt; for data ingestion (I should write a blog
-about these)&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;- &lt;em&gt;Design patterns&lt;/em&gt; in Java&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- &lt;em&gt;Go&lt;/em&gt;, then build a &lt;a href=&#34;https://manhtai.github.io/posts/chat-app-in-golang/&#34;&gt;chat app&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- &lt;em&gt;Cryptography&lt;/em&gt;, taught by a brilliant &lt;a href=&#34;https://manhtai.github.io/posts/8-weeks-crypto-write-up/&#34;&gt;teacher&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- &lt;em&gt;Google Cloud Platform&lt;/em&gt;, for work&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- &lt;em&gt;Apache Airflow &amp;amp; Apache Beam&lt;/em&gt; for data ingestion (I should write a blog
+about these)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- &lt;em&gt;Design patterns&lt;/em&gt; in Java&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Go and Java are two more programming languages that are in my belt now, love
 to use both of them so far.&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;Things I&amp;rsquo;ve dropped:&lt;/strong&gt;&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;- &lt;em&gt;Operating System&lt;/em&gt; class&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;- &lt;em&gt;Computer Vision&lt;/em&gt; class&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- &lt;em&gt;Operating System&lt;/em&gt; class&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- &lt;em&gt;Computer Vision&lt;/em&gt; class&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;The first one is too hard, the second one is not attracted to me anymore, so I
 decided to quit early.&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;Things I am going to learn:&lt;/strong&gt;&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;- &lt;em&gt;MOOC&lt;/em&gt;: Create a programming course in Vietnamese&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;As you may know, I&amp;rsquo;m a self-taught developer, hence it will never be enough for
 me to learn how to code. But I think it might come the time that I am
 certified to reteach what I&amp;rsquo;ve learned to those people who just be like me
 when I started. Hope I will learn new things along the way, too.
 &lt;a href=&#34;https://techcamp.vn&#34;&gt;techcamp.vn&lt;/a&gt; is registered and ready to go live. Stay tuned!&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;- &lt;em&gt;Microservices&lt;/em&gt;: Building microservices in Go and Java&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;I&amp;rsquo;ve built many monolith applications and none of microservices, so I will try
 to build one next year.&lt;/p&gt;
-
 &lt;h2 id=&#34;2-running&#34;&gt;2. Running&lt;/h2&gt;
-
 &lt;p&gt;I love running. This year I completed 2 full marathons, one in Danang and
 another one in Hanoi. I trained hard for the first one, not too hard for
 the second, because I found out that Hanoi&amp;rsquo;s air quality is extremely bad for
 your health. Now I only go to run when &lt;a href=&#34;http://aqicn.org/city/vietnam/hanoi/us-embassy/&#34;&gt;AQI&lt;/a&gt; is bad for sensitive people
 group (!?) or lower.&lt;/p&gt;
-
 &lt;p&gt;I don&amp;rsquo;t have much hope for the improvement of air quality in Hanoi next year,
 so I may not keep the record up. I really feel bad about this.&lt;/p&gt;
-
 &lt;h2 id=&#34;3-reading&#34;&gt;3. Reading&lt;/h2&gt;
-
 &lt;p&gt;I read technical books a lot, I&amp;rsquo;ve subscribed to &lt;a href=&#34;https://safaribooksonline.com&#34;&gt;Safaribooksonline&lt;/a&gt; so
 I can read as many books as I want. Video tutorials are quite good, too.&lt;/p&gt;
-
 &lt;p&gt;Some non-technical books I&amp;rsquo;ve read this year include &amp;ldquo;Sapiens: A Brief
 History of Humankind&amp;rdquo;, &amp;ldquo;Zero to One: Notes on Startups, or How to Build the
 Future&amp;rdquo;, and some that I can&amp;rsquo;t remember.&lt;/p&gt;
-
 &lt;p&gt;Next year I will keep track of all non-technical books I read in Goodreads so
 I will have some things to write in the year end post.&lt;/p&gt;
-
 &lt;p&gt;2018 is a satisfied year for me. More chances in 2019 for me to explore. Can&amp;rsquo;t
 wait!&lt;/p&gt;
 </description>
@@ -181,7 +148,6 @@ wait!&lt;/p&gt;
       <description>&lt;p&gt;I now commit 12 weeks to learn about Cryptography. That&amp;rsquo;s minimum time needed to
 prepare for a marathon, and I think it should apply to crypto, too. My plan is
 based on 12 weeks to read &lt;a href=&#34;https://www.amazon.com/exec/obidos/ASIN/0470474246/counterpane/&#34;&gt;Cryptography Engineering&lt;/a&gt; chapter by chapter.&lt;/p&gt;
-
 &lt;p&gt;And after that, who &lt;a href=&#34;https://www.amazon.com/Mastering-Bitcoin-Programming-Open-Blockchain/dp/1491954388/&#34;&gt;knows&lt;/a&gt;?&lt;/p&gt;
 </description>
     </item>
@@ -204,44 +170,40 @@ my race in this summer.&lt;/p&gt;
       
       <guid>https://manhtai.github.io/posts/2018/</guid>
       <description>&lt;p&gt;A new year has come, guess what, I made a new blog. Yay!&lt;/p&gt;
-
 &lt;p&gt;This blog is powered by &lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt; and hosted by &lt;a href=&#34;https://github.com&#34;&gt;GitHub&lt;/a&gt;. I modified the
 &lt;a href=&#34;https://gohugo.io/hosting-and-deployment/hosting-on-github/#github-user-or-organization-pages&#34;&gt;deployment script&lt;/a&gt; a little bit to use 2 braches in 1 repo instead of
 2 repos. It looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 0. Notify &amp;amp; get message&lt;/span&gt;
+echo -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\033[0;32mDeploying updates to GitHub...\033[0m&amp;#34;&lt;/span&gt;
+msg&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Rebuilding site `date`&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; $# -eq &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; msg&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$1&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;#!/bin/bash
-
-# 0. Notify &amp;amp; get message
-echo -e &amp;quot;\033[0;32mDeploying updates to GitHub...\033[0m&amp;quot;
-msg=&amp;quot;Rebuilding site `date`&amp;quot;
-if [ $# -eq 1 ]
-  then msg=&amp;quot;$1&amp;quot;
-fi
-
-# 1. Commit changes to develop first
+&lt;span style=&#34;color:#75715e&#34;&gt;# 1. Commit changes to develop first&lt;/span&gt;
 git add .
-git commit -m &amp;quot;$msg&amp;quot;
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$msg&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
 
-# 2. Build the project in develop
+&lt;span style=&#34;color:#75715e&#34;&gt;# 2. Build the project in develop&lt;/span&gt;
 hugo
 
-# 3. Checkout to master
+&lt;span style=&#34;color:#75715e&#34;&gt;# 3. Checkout to master&lt;/span&gt;
 git checkout master
 
-# 4. Add changes to master
+&lt;span style=&#34;color:#75715e&#34;&gt;# 4. Add changes to master&lt;/span&gt;
 cp -r public/* .
 rm -rf public
 git add .
-git commit -m &amp;quot;$msg&amp;quot;
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$msg&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
 
-# 5. Push to develop &amp;amp; master
+&lt;span style=&#34;color:#75715e&#34;&gt;# 5. Push to develop &amp;amp; master&lt;/span&gt;
 git push origin master develop
 
-# 6. Come back to develop
+&lt;span style=&#34;color:#75715e&#34;&gt;# 6. Come back to develop&lt;/span&gt;
 git checkout develop
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can checkout the source code &lt;a href=&#34;https://github.com/manhtai/manhtai.github.io&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can checkout the source code &lt;a href=&#34;https://github.com/manhtai/manhtai.github.io&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     

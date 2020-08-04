@@ -4,23 +4,23 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
-	<title>Wish our colleagues a happy birthday</title>
+	<title>Reset Css Animation</title>
 	
 	<meta name="description" content="">
 	<meta name="image" content="">
 	
-	<meta itemprop="name" content="Wish our colleagues a happy birthday">
+	<meta itemprop="name" content="Reset Css Animation">
 	<meta itemprop="description" content="">
 	<meta itemprop="image" content="">
 	
-	<meta name="og:title" content="Wish our colleagues a happy birthday">
+	<meta name="og:title" content="Reset Css Animation">
 	<meta name="og:description" content="">
 	
-	<meta name="og:url" content="https://manhtai.github.io/posts/wish-our-colleagues-a-happy-birthday/">
-	<meta name="og:site_name" content="Wish our colleagues a happy birthday">
+	<meta name="og:url" content="https://manhtai.github.io/posts/reset-css-animation/">
+	<meta name="og:site_name" content="Reset Css Animation">
 	<meta name="og:type" content="article">
 	
-	<meta name="article:tag" content="bot metabase slack ">
+	<meta name="article:tag" content="css ">
 	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
 	
 	
@@ -104,31 +104,30 @@ window.onload = ready;
 </script>
 
 <div class="content">
-  <h1>Wish our colleagues a happy birthday <aside><a href="/tags/bot/">bot</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/metabase/">metabase</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/slack/">slack</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
-  <p>We build an intranet app using Django to help HR manage people at work. And
-since we use Metabase for all our analysis tasks, we got the HR database to
-query all the things about our colleagues (not the salary though, it&rsquo;s
-accounting&rsquo;s matter).</p>
-<p>I&rsquo;m not interested in my colleagues&rsquo; days of leave, but I wish they got a happy
-birthday, so why don&rsquo;t we send out a wish, automatically?</p>
-<p>I write a question in SQL, it&rsquo;s just as simple as list out all people who
-have date and month equal to today&rsquo;s date and month. And use a <a href="/posts/metabase-alerts">bot</a> to
-check the question everyday at 10am, then send out a wish if the question is
-not empty.</p>
-<p>The tricky part is we don&rsquo;t know firsthand what should be included in the
-message, like our colleagues&rsquo; name, slack id, etc. So I have to evaluate them
-at running time. The solution is to pass a string to alert message and then
-convert it to string interpolation later. Like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// When creating alert
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">originalMessage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Happy birthday to ${rows.join(&#34;</span>, <span style="color:#e6db74">&#34;)}!&#34;</span>;
-
-<span style="color:#75715e">// At running time
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">rows</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;some&#34;</span>, <span style="color:#e6db74">&#34;data&#34;</span>];
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">theMessage</span> <span style="color:#f92672">=</span> eval(<span style="color:#e6db74">&#39;`&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">originalMessage</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;`&#39;</span>);
-<span style="color:#a6e22e">sendMessageToSlack</span>(<span style="color:#a6e22e">theMessage</span>);
-</code></pre></div><p>I know it&rsquo;s extremely risky to use <code>eval()</code> anywhere, so I use <a href="https://github.com/hacksparrow/safe-eval">safe-eval</a>
-instead. Although at the moment it has a security <a href="https://github.com/hacksparrow/safe-eval/issues/5">bug</a>, it should be fine
-for our internal use, at least for now.</p>
+  <h1>Reset Css Animation <aside><a href="/tags/css/">css</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>There is no easy way to reset CSS animation when it starts playing, we have at
+least 2 &ldquo;hacky&rdquo; ways though.</p>
+<ul>
+<li>1, Nested <code>requestAnimationFrame()</code>:</li>
+</ul>
+<p>This is the tip from <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Tips">Mozilla</a>, use a nested <code>requestAnimationFrame()</code> to
+trigger re-render animation</p>
+<pre><code>function play() {
+  document.querySelector(&quot;.box&quot;).className = &quot;box&quot;;
+  window.requestAnimationFrame(function(time) {
+    window.requestAnimationFrame(function(time) {
+      document.querySelector(&quot;.box&quot;).className = &quot;box changing&quot;;
+    });
+  });
+}
+</code></pre><ul>
+<li>2, Trigger reflow using Element APIs et al:</li>
+</ul>
+<pre><code>var el = document.querySelector(&quot;.box&quot;)
+el.className = &quot;box&quot;;
+el.focus() // Or el.offsetLeft, el.offsetRight, etc
+el.className = &quot;box changing&quot;;
+</code></pre><p>Have fun with CSS animation!</p>
 
 </div>
 

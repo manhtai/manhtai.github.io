@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Marathon on Go slowly</title>
+    <title>marathon on Go slowly</title>
     <link>https://manhtai.github.io/tags/marathon/</link>
-    <description>Recent content in Marathon on Go slowly</description>
+    <description>Recent content in marathon on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 25 Feb 2018 21:45:30 +0700</lastBuildDate>

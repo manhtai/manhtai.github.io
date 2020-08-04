@@ -1,0 +1,46 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>css on Go slowly</title>
+    <link>https://manhtai.github.io/tags/css/</link>
+    <description>Recent content in css on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2020 16:46:11 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/css/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Reset Css Animation</title>
+      <link>https://manhtai.github.io/posts/reset-css-animation/</link>
+      <pubDate>Tue, 04 Aug 2020 16:46:11 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/reset-css-animation/</guid>
+      <description>&lt;p&gt;There is no easy way to reset CSS animation when it starts playing, we have at
+least 2 &amp;ldquo;hacky&amp;rdquo; ways though.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1, Nested &lt;code&gt;requestAnimationFrame()&lt;/code&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is the tip from &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Tips&#34;&gt;Mozilla&lt;/a&gt;, use a nested &lt;code&gt;requestAnimationFrame()&lt;/code&gt; to
+trigger re-render animation&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;function play() {
+  document.querySelector(&amp;quot;.box&amp;quot;).className = &amp;quot;box&amp;quot;;
+  window.requestAnimationFrame(function(time) {
+    window.requestAnimationFrame(function(time) {
+      document.querySelector(&amp;quot;.box&amp;quot;).className = &amp;quot;box changing&amp;quot;;
+    });
+  });
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;2, Trigger reflow using Element APIs et al:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;var el = document.querySelector(&amp;quot;.box&amp;quot;)
+el.className = &amp;quot;box&amp;quot;;
+el.focus() // Or el.offsetLeft, el.offsetRight, etc
+el.className = &amp;quot;box changing&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Have fun with CSS animation!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

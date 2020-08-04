@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Go slowly</title>
@@ -6,49 +5,22 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 12 Feb 2018 22:04:15 +0700</lastBuildDate>
+    <lastBuildDate>Tue, 04 Aug 2020 16:46:11 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Bot</title>
-      <link>https://manhtai.github.io/tags/bot/</link>
-      <pubDate>Mon, 12 Feb 2018 22:04:15 +0700</pubDate>
+      <title>css</title>
+      <link>https://manhtai.github.io/tags/css/</link>
+      <pubDate>Tue, 04 Aug 2020 16:46:11 +0700</pubDate>
       
-      <guid>https://manhtai.github.io/tags/bot/</guid>
+      <guid>https://manhtai.github.io/tags/css/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Celery</title>
-      <link>https://manhtai.github.io/tags/celery/</link>
-      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/celery/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Chat</title>
-      <link>https://manhtai.github.io/tags/chat/</link>
-      <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/chat/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Crypto</title>
-      <link>https://manhtai.github.io/tags/crypto/</link>
-      <pubDate>Fri, 25 May 2018 20:17:49 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/crypto/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Databuffer</title>
+      <title>databuffer</title>
       <link>https://manhtai.github.io/tags/databuffer/</link>
       <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
       
@@ -57,61 +29,7 @@
     </item>
     
     <item>
-      <title>Debezium</title>
-      <link>https://manhtai.github.io/tags/debezium/</link>
-      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/debezium/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Django</title>
-      <link>https://manhtai.github.io/tags/django/</link>
-      <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/django/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Docker</title>
-      <link>https://manhtai.github.io/tags/docker/</link>
-      <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/docker/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Drone.io</title>
-      <link>https://manhtai.github.io/tags/drone.io/</link>
-      <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/drone.io/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ecs</title>
-      <link>https://manhtai.github.io/tags/ecs/</link>
-      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/ecs/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>End Year</title>
-      <link>https://manhtai.github.io/tags/end-year/</link>
-      <pubDate>Wed, 18 Dec 2019 22:04:55 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/end-year/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Flux</title>
+      <title>flux</title>
       <link>https://manhtai.github.io/tags/flux/</link>
       <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
       
@@ -120,16 +38,7 @@
     </item>
     
     <item>
-      <title>Golang</title>
-      <link>https://manhtai.github.io/tags/golang/</link>
-      <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/golang/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Inputstream</title>
+      <title>inputstream</title>
       <link>https://manhtai.github.io/tags/inputstream/</link>
       <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
       
@@ -138,133 +47,7 @@
     </item>
     
     <item>
-      <title>Java</title>
-      <link>https://manhtai.github.io/tags/java/</link>
-      <pubDate>Wed, 30 Oct 2019 23:03:19 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/java/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Jpa</title>
-      <link>https://manhtai.github.io/tags/jpa/</link>
-      <pubDate>Wed, 30 Oct 2019 23:03:19 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/jpa/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kafka Connect</title>
-      <link>https://manhtai.github.io/tags/kafka-connect/</link>
-      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/kafka-connect/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubernetes</title>
-      <link>https://manhtai.github.io/tags/kubernetes/</link>
-      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/kubernetes/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Marathon</title>
-      <link>https://manhtai.github.io/tags/marathon/</link>
-      <pubDate>Sun, 25 Feb 2018 21:45:30 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/marathon/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Metabase</title>
-      <link>https://manhtai.github.io/tags/metabase/</link>
-      <pubDate>Mon, 12 Feb 2018 22:04:15 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/metabase/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Mysql Cdc</title>
-      <link>https://manhtai.github.io/tags/mysql-cdc/</link>
-      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/mysql-cdc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>New Year</title>
-      <link>https://manhtai.github.io/tags/new-year/</link>
-      <pubDate>Fri, 16 Feb 2018 18:56:22 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/new-year/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Oauth2</title>
-      <link>https://manhtai.github.io/tags/oauth2/</link>
-      <pubDate>Fri, 18 Oct 2019 20:16:17 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/oauth2/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Os</title>
-      <link>https://manhtai.github.io/tags/os/</link>
-      <pubDate>Fri, 25 May 2018 20:17:49 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/os/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Python</title>
-      <link>https://manhtai.github.io/tags/python/</link>
-      <pubDate>Sat, 21 Apr 2018 12:05:19 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/python/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>React Native</title>
-      <link>https://manhtai.github.io/tags/react-native/</link>
-      <pubDate>Sat, 23 Jun 2018 21:17:15 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/react-native/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Short</title>
-      <link>https://manhtai.github.io/tags/short/</link>
-      <pubDate>Wed, 18 Dec 2019 22:04:55 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/short/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Slack</title>
-      <link>https://manhtai.github.io/tags/slack/</link>
-      <pubDate>Mon, 12 Feb 2018 22:04:15 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/slack/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Spring</title>
+      <title>spring</title>
       <link>https://manhtai.github.io/tags/spring/</link>
       <pubDate>Sat, 11 Apr 2020 10:08:00 +0700</pubDate>
       
@@ -273,7 +56,43 @@
     </item>
     
     <item>
-      <title>Sql</title>
+      <title>end year</title>
+      <link>https://manhtai.github.io/tags/end-year/</link>
+      <pubDate>Wed, 18 Dec 2019 22:04:55 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/end-year/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>short</title>
+      <link>https://manhtai.github.io/tags/short/</link>
+      <pubDate>Wed, 18 Dec 2019 22:04:55 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/short/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>java</title>
+      <link>https://manhtai.github.io/tags/java/</link>
+      <pubDate>Wed, 30 Oct 2019 23:03:19 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/java/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>jpa</title>
+      <link>https://manhtai.github.io/tags/jpa/</link>
+      <pubDate>Wed, 30 Oct 2019 23:03:19 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/jpa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sql</title>
       <link>https://manhtai.github.io/tags/sql/</link>
       <pubDate>Wed, 30 Oct 2019 23:03:19 +0700</pubDate>
       
@@ -282,7 +101,97 @@
     </item>
     
     <item>
-      <title>Thermal Printer</title>
+      <title>websocket</title>
+      <link>https://manhtai.github.io/tags/websocket/</link>
+      <pubDate>Wed, 30 Oct 2019 22:32:20 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/websocket/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>oauth2</title>
+      <link>https://manhtai.github.io/tags/oauth2/</link>
+      <pubDate>Fri, 18 Oct 2019 20:16:17 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/oauth2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>debezium</title>
+      <link>https://manhtai.github.io/tags/debezium/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/debezium/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kafka-connect</title>
+      <link>https://manhtai.github.io/tags/kafka-connect/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/kafka-connect/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubernetes</title>
+      <link>https://manhtai.github.io/tags/kubernetes/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql-cdc</title>
+      <link>https://manhtai.github.io/tags/mysql-cdc/</link>
+      <pubDate>Sat, 15 Jun 2019 18:53:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/mysql-cdc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>django</title>
+      <link>https://manhtai.github.io/tags/django/</link>
+      <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/django/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>https://manhtai.github.io/tags/docker/</link>
+      <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>drone.io</title>
+      <link>https://manhtai.github.io/tags/drone.io/</link>
+      <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/drone.io/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>react native</title>
+      <link>https://manhtai.github.io/tags/react-native/</link>
+      <pubDate>Sat, 23 Jun 2018 21:17:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/react-native/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>thermal printer</title>
       <link>https://manhtai.github.io/tags/thermal-printer/</link>
       <pubDate>Sat, 23 Jun 2018 21:17:15 +0700</pubDate>
       
@@ -291,7 +200,97 @@
     </item>
     
     <item>
-      <title>Webpack</title>
+      <title>crypto</title>
+      <link>https://manhtai.github.io/tags/crypto/</link>
+      <pubDate>Fri, 25 May 2018 20:17:49 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/crypto/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>os</title>
+      <link>https://manhtai.github.io/tags/os/</link>
+      <pubDate>Fri, 25 May 2018 20:17:49 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/os/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>https://manhtai.github.io/tags/python/</link>
+      <pubDate>Sat, 21 Apr 2018 12:05:19 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>celery</title>
+      <link>https://manhtai.github.io/tags/celery/</link>
+      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/celery/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ecs</title>
+      <link>https://manhtai.github.io/tags/ecs/</link>
+      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/ecs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>marathon</title>
+      <link>https://manhtai.github.io/tags/marathon/</link>
+      <pubDate>Sun, 25 Feb 2018 21:45:30 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/marathon/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>new year</title>
+      <link>https://manhtai.github.io/tags/new-year/</link>
+      <pubDate>Fri, 16 Feb 2018 18:56:22 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/new-year/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bot</title>
+      <link>https://manhtai.github.io/tags/bot/</link>
+      <pubDate>Mon, 12 Feb 2018 22:04:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/bot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>metabase</title>
+      <link>https://manhtai.github.io/tags/metabase/</link>
+      <pubDate>Mon, 12 Feb 2018 22:04:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/metabase/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>slack</title>
+      <link>https://manhtai.github.io/tags/slack/</link>
+      <pubDate>Mon, 12 Feb 2018 22:04:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/slack/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>webpack</title>
       <link>https://manhtai.github.io/tags/webpack/</link>
       <pubDate>Thu, 01 Feb 2018 19:17:48 +0700</pubDate>
       
@@ -300,11 +299,20 @@
     </item>
     
     <item>
-      <title>Websocket</title>
-      <link>https://manhtai.github.io/tags/websocket/</link>
-      <pubDate>Wed, 30 Oct 2019 22:32:20 +0700</pubDate>
+      <title>chat</title>
+      <link>https://manhtai.github.io/tags/chat/</link>
+      <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
       
-      <guid>https://manhtai.github.io/tags/websocket/</guid>
+      <guid>https://manhtai.github.io/tags/chat/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>golang</title>
+      <link>https://manhtai.github.io/tags/golang/</link>
+      <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/golang/</guid>
       <description></description>
     </item>
     

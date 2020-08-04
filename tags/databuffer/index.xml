@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Databuffer on Go slowly</title>
+    <title>databuffer on Go slowly</title>
     <link>https://manhtai.github.io/tags/databuffer/</link>
-    <description>Recent content in Databuffer on Go slowly</description>
+    <description>Recent content in databuffer on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 11 Apr 2020 10:08:00 +0700</lastBuildDate>
@@ -19,37 +18,38 @@
       <guid>https://manhtai.github.io/posts/flux-databuffer-to-inputstream/</guid>
       <description>&lt;p&gt;How can we convert a &lt;code&gt;Flux&amp;lt;DataBuffer&amp;gt;&lt;/code&gt;, say, in a Spring&amp;rsquo;s &lt;code&gt;FilePart.content()&lt;/code&gt;
 when uploading data, into a &lt;code&gt;InputStream&lt;/code&gt; for consuming?&lt;/p&gt;
-
 &lt;p&gt;By using pipes!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;InputStream &lt;span style=&#34;color:#a6e22e&#34;&gt;getInputStreamFromFluxDataBuffer&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Flux&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;DataBuffer&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;throws&lt;/span&gt; IOException &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    PipedOutputStream osPipe &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; PipedOutputStream&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+    PipedInputStream isPipe &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; PipedInputStream&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;osPipe&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;InputStream getInputStreamFromFluxDataBuffer(Flux&amp;lt;DataBuffer&amp;gt; data) throws IOException {
-    PipedOutputStream osPipe = new PipedOutputStream();
-    PipedInputStream isPipe = new PipedInputStream(osPipe);
-
-    DataBufferUtils.write(data, osPipe)
-            .subscribeOn(Schedulers.elastic())
-            .doOnComplete(() -&amp;gt; {
-                try {
-                    osPipe.close();
-                } catch (IOException ignored) {
-                }
-            })
-            .subscribe(DataBufferUtils.releaseConsumer());
-    return isPipe;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The code is quite trivial, but some notes worth mentioning here:&lt;/p&gt;
-
-&lt;p&gt;1) We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
+    DataBufferUtils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;write&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;data&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; osPipe&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;subscribeOn&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Schedulers&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elastic&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;())&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;doOnComplete&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                    osPipe&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;close&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;IOException ignored&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;})&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;DataBufferUtils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;releaseConsumer&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;());&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; isPipe&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The code is quite trivial, but some notes worth mentioning here:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
 avoid blocking.&lt;/p&gt;
-
-&lt;p&gt;2) We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
 subscriber will know when to stop.&lt;/p&gt;
-
-&lt;p&gt;3) &lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
 stream is subscribed to, so we use &lt;code&gt;DataBufferUtils.releaseConsumer()&lt;/code&gt; to
 start the writing immediately.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     

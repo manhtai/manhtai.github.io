@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Django on Go slowly</title>
+    <title>django on Go slowly</title>
     <link>https://manhtai.github.io/tags/django/</link>
-    <description>Recent content in Django on Go slowly</description>
+    <description>Recent content in django on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 24 Aug 2018 22:42:47 +0700</lastBuildDate>
@@ -17,39 +16,29 @@
       <pubDate>Fri, 24 Aug 2018 22:42:47 +0700</pubDate>
       
       <guid>https://manhtai.github.io/posts/django-vue-docker/</guid>
-      <description>
-
-&lt;p&gt;Recently I&amp;rsquo;ve fired up multiple Django projects for my company. Most of them
+      <description>&lt;p&gt;Recently I&amp;rsquo;ve fired up multiple Django projects for my company. Most of them
 follow a typical setup with Nginx + Gunicorn + Supervisord in a big Ubuntu
 virtual machine. I must say that the setup works quite well, but sometimes,
 when having not much more work to do, I strike for better by trying to
 dockerize them.&lt;/p&gt;
-
-&lt;h2 id=&#34;1-dockerize-django-vue-app-with-nginx-gunicorn&#34;&gt;1) Dockerize Django-Vue app with Nginx &amp;amp; Gunicorn&lt;/h2&gt;
-
+&lt;h2 id=&#34;1-dockerize-django-vue-app-with-nginx--gunicorn&#34;&gt;1) Dockerize Django-Vue app with Nginx &amp;amp; Gunicorn&lt;/h2&gt;
 &lt;p&gt;I want to start with an app that has Vue as frontend. This method works with
 all frontend frameworks, it just happens that we use Vue. The Vue part has a
 separate repo so backend and frontend developers can work simultaneously. But
 to build the docker image in the easiest way I put them into one by using git
 submodule.&lt;/p&gt;
-
 &lt;p&gt;To build frontend part, I use &lt;code&gt;node:8&lt;/code&gt; image:&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;FROM node:8 as frontend
 
 RUN mkdir /code
 WORKDIR /code
 ADD ./frontend /code/
 RUN npm install yarn &amp;amp;&amp;amp; yarn &amp;amp;&amp;amp; yarn run build
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I use &lt;code&gt;python:3.7-slim-stretch&lt;/code&gt; to build backend, install &lt;code&gt;nginx&lt;/code&gt;,
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I use &lt;code&gt;python:3.7-slim-stretch&lt;/code&gt; to build backend, install &lt;code&gt;nginx&lt;/code&gt;,
 &lt;code&gt;supervisord&lt;/code&gt; to the same image. Note that Nginx and Supervisord
 configuration must be customized to run inside a Docker container.
 You can refer to &lt;a href=&#34;https://github.com/tiangolo/uwsgi-nginx-docker/blob/master/python3.6-alpine3.7/Dockerfile&#34;&gt;uwsgi-nginx-docker&lt;/a&gt; repo for more insights.&lt;/p&gt;
-
 &lt;p&gt;In case you still wonder, I use Supervisord to run Gunicorn and Nginx.&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;FROM python:3.7-slim-stretch
 
 # Install wget, gnupg to get nginx
@@ -76,17 +65,11 @@ COPY deploy/nginx_docker.conf /etc/nginx/conf.d/nginx_docker.conf
 
 # Supervisor configuration
 COPY deploy/supervisor_docker.conf /etc/supervisor/conf.d/supervisor_docker.conf
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I use &lt;a href=&#34;https://pipenv.readthedocs.io/&#34;&gt;pipenv&lt;/a&gt; instead of requirements file to manage dependencies:&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I use &lt;a href=&#34;https://pipenv.readthedocs.io/&#34;&gt;pipenv&lt;/a&gt; instead of requirements file to manage dependencies:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;# Install python lib dep
 RUN pip install pipenv
 RUN pipenv install --system --deploy
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;After that, collect staticfiles and expose them:&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;After that, collect staticfiles and expose them:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;# Set env to production
 ENV DJANGO_SETTINGS_MODULE myapp.settings.production
 
@@ -94,38 +77,24 @@ ENV DJANGO_SETTINGS_MODULE myapp.settings.production
 RUN (cd myapp; python manage.py collectstatic --noinput)
 
 VOLUME [&amp;quot;/code/myapp/public&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then copy frontend code from frontend build image to our main image:&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then copy frontend code from frontend build image to our main image:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;COPY --from=frontend /code/dist/ /code/dist/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And lastly, expose port for running:&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And lastly, expose port for running:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;EXPOSE 80 443
 
 CMD [&amp;quot;/usr/bin/supervisord&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s it. We&amp;rsquo;ve had a Dockerfile that contains all frontend, backend and
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That&amp;rsquo;s it. We&amp;rsquo;ve had a Dockerfile that contains all frontend, backend and
 a web server ready to use.&lt;/p&gt;
-
 &lt;p&gt;The reality that we can&amp;rsquo;t build our Docker images by hands takes us to a CD
 tool, and which tool should it be?&lt;/p&gt;
-
-&lt;h2 id=&#34;2-cd-pipeline-using-drone-io&#34;&gt;2) CD pipeline using Drone.io&lt;/h2&gt;
-
+&lt;h2 id=&#34;2-cd-pipeline-using-droneio&#34;&gt;2) CD pipeline using Drone.io&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ve had some experience in writting Jenkinsfile for CD pipeline. It works
 most of the time when I already had a Jenkins server running. But it costs me
 hours and hours trying to set up a working Jenkins server in AWS, and then
 I just quit. Some googling around, I found &lt;a href=&#34;https://drone.io&#34;&gt;Drone.io&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;The setup is dead simple, just one &lt;code&gt;docker-compose.yml&lt;/code&gt; file and you got
 a https CD server ready in minutes. I just fall in love with it immediately.&lt;/p&gt;
-
 &lt;p&gt;My config file is this:&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;version: &#39;2&#39;
 
 services:
@@ -162,16 +131,11 @@ services:
     environment:
       - DRONE_SERVER=drone-server:9000
       - DRONE_SECRET=${DRONE_SECRET}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You don&amp;rsquo;t need nginx or something like just, just &lt;code&gt;docker-compose up -d&lt;/code&gt; and
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You don&amp;rsquo;t need nginx or something like just, just &lt;code&gt;docker-compose up -d&lt;/code&gt; and
 it&amp;rsquo;s set. I wish all web applications are just simple as that!&lt;/p&gt;
-
 &lt;p&gt;Now you must define a &lt;code&gt;.drone.yml&lt;/code&gt; file in your web server project, and it is
 dead simple, too.&lt;/p&gt;
-
 &lt;p&gt;Here is the script for building the Docker image and then push it to AWS ECR:&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;clone:
   git:
     image: plugins/git
@@ -194,10 +158,7 @@ pipeline:
     secrets: [ slack_webhook ]
     when:
       status: [ success, failure ]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And now in our server, &lt;code&gt;docker-compose.yml&lt;/code&gt; file is now very simple:&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And now in our server, &lt;code&gt;docker-compose.yml&lt;/code&gt; file is now very simple:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;version: &#39;2&#39;
 
 services:
@@ -210,25 +171,23 @@ services:
     restart: always
     environment:
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that to pull images from ECR, you may need an &lt;a href=&#34;https://github.com/awslabs/amazon-ecr-credential-helper&#34;&gt;ECR credential helper&lt;/a&gt;.&lt;/p&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note that to pull images from ECR, you may need an &lt;a href=&#34;https://github.com/awslabs/amazon-ecr-credential-helper&#34;&gt;ECR credential helper&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;3-conclusion&#34;&gt;3) Conclusion&lt;/h2&gt;
-
 &lt;p&gt;Now to start your server, you just need to run &lt;code&gt;docker-compose up -d&lt;/code&gt; and it&amp;rsquo;s
 set! Our Django app is just like a typical Golang app: one Docker image and
 nothing more.&lt;/p&gt;
-
 &lt;p&gt;I&amp;rsquo;ve crossed out some things here so you can find out for yourself:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;- Add test step to Drone pipeline (if you had some!).&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;- Add deploy step to Drone pipeline so it can be complete.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;- Use another container scheduling and management system like &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt;
-instead of Docker compose.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- Add test step to Drone pipeline (if you had some!).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- Add deploy step to Drone pipeline so it can be complete.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;- Use another container scheduling and management system like &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt;
+instead of Docker compose.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -243,25 +202,28 @@ instead of Docker compose.&lt;/p&gt;&lt;/li&gt;
 and the process is quite smooth. It tooks me almost 2 days to complete all
 conversion needed, while other developers were still doing their dail jobs in
 the project.&lt;/p&gt;
-
 &lt;p&gt;Steps I made:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;1, Run &lt;code&gt;2to3&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;2, Fix the code so that all the tests passes again.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;3, Handle outlier cases &amp;amp; write tests for them. Those cases are somewhat
-related to the diffirences between &lt;code&gt;unicode&lt;/code&gt; &amp;amp; &lt;code&gt;str&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;1, Run &lt;code&gt;2to3&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;2, Fix the code so that all the tests passes again.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;3, Handle outlier cases &amp;amp; write tests for them. Those cases are somewhat
+related to the diffirences between &lt;code&gt;unicode&lt;/code&gt; &amp;amp; &lt;code&gt;str&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Some key notes here:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;1, Having a solid unit tests system is critical.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;2, &lt;code&gt;2to3&lt;/code&gt; did all the heavy works, but you need to know the stuffs to get all
-the shit done.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;1, Having a solid unit tests system is critical.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;2, &lt;code&gt;2to3&lt;/code&gt; did all the heavy works, but you need to know the stuffs to get all
+the shit done.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -274,76 +236,53 @@ the shit done.&lt;/p&gt;&lt;/li&gt;
       <guid>https://manhtai.github.io/posts/django-rate-limit/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;https://github.com/jsocol/django-ratelimit&#34;&gt;Django Ratelimit&lt;/a&gt; is a good rate limiter for Django. It has a convenient
 decorator for views, so we can do this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;@ratelimit(key=&#39;post:username&#39;, rate=&#39;5/m&#39;)
-def login(request):
-    return HttpResponse()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;to limit the times we can try to login with one specific username to
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@ratelimit&lt;/span&gt;(key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;post:username&amp;#39;&lt;/span&gt;, rate&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;5/m&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;login&lt;/span&gt;(request):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; HttpResponse()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;to limit the times we can try to login with one specific username to
 5 requests per minute.&lt;/p&gt;
-
 &lt;p&gt;The decorator can be used with function-based views and class-based views, but
 if we want to use it with built-in views, e.g. admin login view, we have to
 monkey patch them.&lt;/p&gt;
-
 &lt;p&gt;Django allows us to patch any function from any module when init app.
 I usually do this in &lt;code&gt;AppConfig&lt;/code&gt; class, like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;MyAppConfig&lt;/span&gt;(AppConfig):
+    name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;my_app&amp;#39;&lt;/span&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyAppConfig(AppConfig):
-    name = &#39;my_app&#39;
-
-    def ready(self):
-        from my_app.monkey_patching import patch
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ready&lt;/span&gt;(self):
+        &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; my_app.monkey_patching &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; patch
         patch()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And this is the &lt;code&gt;patch()&lt;/code&gt; function, for admin login view:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def patch():
-    from django.contrib.admin.sites import AdminSite
-    AdminSite.login = new_login
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Where &lt;code&gt;new_login()&lt;/code&gt; is our patched function and &lt;code&gt;login()&lt;/code&gt; is original function
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And this is the &lt;code&gt;patch()&lt;/code&gt; function, for admin login view:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;patch&lt;/span&gt;():
+    &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; django.contrib.admin.sites &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; AdminSite
+    AdminSite&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;login &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; new_login
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Where &lt;code&gt;new_login()&lt;/code&gt; is our patched function and &lt;code&gt;login()&lt;/code&gt; is original function
 that handles requests for logging user in.&lt;/p&gt;
-
 &lt;p&gt;The thing is we don&amp;rsquo;t want to rewrite &lt;code&gt;new_login()&lt;/code&gt; to be exactly like the old
 &lt;code&gt;login()&lt;/code&gt; function with the &lt;code&gt;ratelimit&lt;/code&gt; decorator. We only want to &amp;ldquo;magically&amp;rdquo;
 attach the decorator to the original function. How can we do that?&lt;/p&gt;
-
 &lt;p&gt;One idea is to write a function to input function &lt;code&gt;login()&lt;/code&gt; and return function
 &lt;code&gt;new_login()&lt;/code&gt; with &lt;code&gt;ratelimit&lt;/code&gt; decorator, like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;limit_login&lt;/span&gt;(login):
 
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def limit_login(login):
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@ratelimit&lt;/span&gt;(key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;post:username&amp;#39;&lt;/span&gt;, rate&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;10/m&amp;#39;&lt;/span&gt;, method&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;, block&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;True)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;new_login&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;args, &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;kwargs):
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; login(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;args, &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;kwargs)
 
-    @ratelimit(key=&#39;post:username&#39;, rate=&#39;10/m&#39;, method=&#39;POST&#39;, block=True)
-    def new_login(*args, **kwargs):
-        return login(*args, **kwargs)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; new_login
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now we can do this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;patch&lt;/span&gt;():
+    &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; django.contrib.admin.sites &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; AdminSite
+    AdminSite&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;login &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; limit_login(AdminSite&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;login)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can make &lt;code&gt;limit_login()&lt;/code&gt; function even more generic, with some defaults:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;limit_rate&lt;/span&gt;(func, group&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;None, key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;post:username&amp;#39;&lt;/span&gt;, rate&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;10/m&amp;#39;&lt;/span&gt;, method&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;, block&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;True):
 
-    return new_login
-&lt;/code&gt;&lt;/pre&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@ratelimit&lt;/span&gt;(group&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;group, key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;key, rate&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;rate, method&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;method, block&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;block)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;new_func&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;args, &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;kwargs):
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; func(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;args, &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;kwargs)
 
-&lt;p&gt;So now we can do this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def patch():
-    from django.contrib.admin.sites import AdminSite
-    AdminSite.login = limit_login(AdminSite.login)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can make &lt;code&gt;limit_login()&lt;/code&gt; function even more generic, with some defaults:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def limit_rate(func, group=None, key=&#39;post:username&#39;, rate=&#39;10/m&#39;, method=&#39;POST&#39;, block=True):
-
-    @ratelimit(group=group, key=key, rate=rate, method=method, block=block)
-    def new_func(*args, **kwargs):
-        return func(*args, **kwargs)
-
-    return new_func
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now we can patch any view easily with our short &lt;code&gt;limit_rate()&lt;/code&gt; function.&lt;/p&gt;
-
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; new_func
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we can patch any view easily with our short &lt;code&gt;limit_rate()&lt;/code&gt; function.&lt;/p&gt;
 &lt;p&gt;Have good time limiting around!&lt;/p&gt;
 </description>
     </item>
@@ -357,39 +296,30 @@ attach the decorator to the original function. How can we do that?&lt;/p&gt;
       <description>&lt;p&gt;If you don&amp;rsquo;t already know what critical CSS is, then do &lt;a href=&#34;https://developers.google.com/speed/pagespeed/insights/&#34;&gt;get some insights&lt;/a&gt;
 for your web, read the reference about &lt;a href=&#34;https://developers.google.com/speed/docs/insights/OptimizeCSSDelivery&#34;&gt;optimizing CSS delivery&lt;/a&gt;, and I&amp;rsquo;ll
 meet you here after. Really, just do it.&lt;/p&gt;
-
 &lt;p&gt;We use Django for some of our web projects for the server side. And with
 support from &lt;a href=&#34;https://github.com/ezhome/django-webpack-loader&#34;&gt;django-webpack-loader&lt;/a&gt;, now we can use Webpack in the client
 side, using massive libraries from Nodejs world to power our frontend part.
 We feel very happy about this integration.&lt;/p&gt;
-
 &lt;p&gt;And now I have to find a library support generate critical CSS from our CSS
 bundler, and put only that to &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt;, not all our CSS build.&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://github.com/addyosmani/critical&#34;&gt;Some&lt;/a&gt; &lt;a href=&#34;https://github.com/anthonygore/html-critical-webpack-plugin&#34;&gt;of&lt;/a&gt; &lt;a href=&#34;https://github.com/pocketjoso/penthouse&#34;&gt;them&lt;/a&gt; do exists. But it may do more work than I want:
 modify HTML / exact CSS file out of Webpack build process, or it is just
 a library that can output a critical CSS file. Yeah, time for me to write the
 plugin I want myself.&lt;/p&gt;
-
 &lt;p&gt;So what do I want?&lt;/p&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;I want a plugin that can get the CSS output from latest Webpack build step, do
 some magic to get critical CSS from that, then output an additional CSS file
 for me, then I&amp;rsquo;ll decide what to do with it later.&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;You can do exactly that with a plugin that wrap around a serious critical CSS
 extractor. I choose &lt;a href=&#34;https://github.com/pocketjoso/penthouse&#34;&gt;penthouse&lt;/a&gt; to do the heavy work, follow the &lt;a href=&#34;https://github.com/webpack/docs/wiki/how-to-write-a-plugin&#34;&gt;guide&lt;/a&gt;
 on how to write a Webpack plugin, I create &lt;a href=&#34;https://github.com/manhtai/webpack-critical-css-plugin&#34;&gt;webpack-critical-css-plugin&lt;/a&gt;
 for you to use.&lt;/p&gt;
-
 &lt;p&gt;Take a look, and send some PRs!&lt;/p&gt;
-
 &lt;p&gt;Now for it to work with &lt;strong&gt;django-webpack-loader&lt;/strong&gt;, put your second CSS build
 (the critical CSS) in the head, and put the first one (the original CSS) in
 the body.&lt;/p&gt;
-
 &lt;p&gt;Try it, then re-check your web score in Google PageSpeed Insights!&lt;/p&gt;
 </description>
     </item>
@@ -405,56 +335,43 @@ and &lt;a href=&#34;https://github.com/etianen/django-require/&#34;&gt;django-re
 &lt;a href=&#34;https://webpack.js.org/&#34;&gt;webpack&lt;/a&gt;, a client-side bundler (it will do both sass &amp;amp; js for us). It&amp;rsquo;s
 a long process, I admit, but things go smoothly eventually. Till something
 pops up.&lt;/p&gt;
-
 &lt;p&gt;Before that, we use django-require&amp;rsquo;s &lt;code&gt;OptimizedStaticFilesStorage&lt;/code&gt; to generate
 bundlers offline. This storage will generate a cache buster files side by
 side with original staticfiles in our &lt;code&gt;STATIC_ROOT&lt;/code&gt; folder. Some folder will
 look like this after collectstatic:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# public/
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# public/&lt;/span&gt;
 
 cms/header.css
 cms/header.0847d6eff302.css
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;After that, we must use &lt;a href=&#34;https://aws.amazon.com/cli/&#34;&gt;aws cli&lt;/a&gt; to sync staticfiles manually to our S3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After that, we must use &lt;a href=&#34;https://aws.amazon.com/cli/&#34;&gt;aws cli&lt;/a&gt; to sync staticfiles manually to our S3
 bucket, then set &lt;code&gt;STATIC_URL&lt;/code&gt; to our Cloudfront endpoint. It works, till now.&lt;/p&gt;
-
 &lt;p&gt;I now remove both django-compressor and django-require, and use Django&amp;rsquo;s
 &lt;code&gt;ManifestFilesMixin&lt;/code&gt; storage instead, with combination with &lt;code&gt;S3BotoStorage&lt;/code&gt;.&lt;/p&gt;
-
 &lt;p&gt;We must change default &lt;code&gt;manifest_name&lt;/code&gt; a little bit using git commit digest
 to support multiple deployments in the same bucket. The storage we use now
 looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;S3ManifestStaticFilesStorage&lt;/span&gt;(ManifestFilesMixin, S3BotoStorage):
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    This storage uses S3 as backend and having cache busting property of
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    ManifestStaticFilesStorage
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+    manifest_strict &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; False
 
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class S3ManifestStaticFilesStorage(ManifestFilesMixin, S3BotoStorage):
-    &amp;quot;&amp;quot;&amp;quot;
-    This storage uses S3 as backend and having cache busting property of
-    ManifestStaticFilesStorage
-    &amp;quot;&amp;quot;&amp;quot;
-    manifest_strict = False
-
-    @property
-    def manifest_name(self):
-        filename = &#39;staticfiles-{version}.json&#39;
-        version = subprocess.check_output([&#39;git&#39;, &#39;rev-parse&#39;, &#39;HEAD&#39;]).strip()
-        return filename.format(version=version.decode(&#39;utf-8&#39;))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now whenever we call &lt;code&gt;collectstatic&lt;/code&gt;, it will collect all our staticfiles to
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;@property&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;manifest_name&lt;/span&gt;(self):
+        filename &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;staticfiles-{version}.json&amp;#39;&lt;/span&gt;
+        version &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; subprocess&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;check_output([&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;git&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;rev-parse&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;HEAD&amp;#39;&lt;/span&gt;])&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;strip()
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; filename&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(version&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;version&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now whenever we call &lt;code&gt;collectstatic&lt;/code&gt;, it will collect all our staticfiles to
 S3, no need another step to sync them manually.&lt;/p&gt;
-
 &lt;p&gt;Things will work beautifully if Django collect all files, instead it
 &lt;strong&gt;WILL NOT&lt;/strong&gt; collect anything which are collected before, even when we&amp;rsquo;ve
 changed our storage backend.&lt;/p&gt;
-
 &lt;p&gt;I have done many twists back and forth but the &lt;code&gt;static&lt;/code&gt; template tags got wrong
 urls all the time. Then after checking &lt;code&gt;last-modified&lt;/code&gt; in one of response
 header, I find out that the file hasn&amp;rsquo;t change for very long time. Hence
 Django mustn&amp;rsquo;t touch these files when I change staticfiles backend storage.&lt;/p&gt;
-
 &lt;p&gt;Voyla!&lt;/p&gt;
-
 &lt;p&gt;Just copy all staticfiles form old folder into the new one, and problem
 solved, new files would work as expected.&lt;/p&gt;
 </description>
@@ -466,108 +383,79 @@ solved, new files would work as expected.&lt;/p&gt;
       <pubDate>Sun, 28 Jan 2018 16:53:15 +0700</pubDate>
       
       <guid>https://manhtai.github.io/posts/building-erp-using-django-react-native/</guid>
-      <description>
-
-&lt;p&gt;The title may seem too promising, and but it is a working ERP, not a complete
+      <description>&lt;p&gt;The title may seem too promising, and but it is a working ERP, not a complete
 one, we are still having many things to build and improve.&lt;/p&gt;
-
 &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
-
 &lt;p&gt;Within 3 months, 2 developers, we managed to build a web UI (using &lt;a href=&#34;https://www.djangoproject.com&#34;&gt;Django&lt;/a&gt;) and
 a mobile app (using &lt;a href=&#34;https://facebook.github.io/react-native/&#34;&gt;React Native&lt;/a&gt;), with this core business flow:&lt;/p&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;Quotation &amp;gt; Sales Order &amp;gt; Purchase Order&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;A little bit about above flow looks like this.&lt;/p&gt;
-
 &lt;p&gt;The sales staffs create Quotations when they are selling Products to Customers,
 usually over telephones. They make an assignment to services staff in the same
 screen they create the quotation. This services staff will instantly receive a
 notification about this new quotation assigned for them through an app, and
 know when and where they should meet the customer.&lt;/p&gt;
-
 &lt;p&gt;When the services staff delivers service to customer, they will make a sales
 order in their app, print an invoice using a thermal printer and get the money.
 They can do all of that offline, and do it fast.&lt;/p&gt;
-
 &lt;p&gt;After that, they must be online to sync the sales orders back to our server.
 In there, some purchase orders will be created automatically base on the products
 customers bought from us. Those purchase orders will be sent to corresponding
 suppliers for purchasing.&lt;/p&gt;
-
 &lt;h2 id=&#34;the-fail&#34;&gt;The fail&lt;/h2&gt;
-
 &lt;p&gt;I am the technical lead of this new ERP project, and the first task is to do
 research about ERP frameworks that already out there in the market. We don&amp;rsquo;t
 think about create one from scratch at first because it must be too big for us
 to handle. We are only a small startup team after all.&lt;/p&gt;
-
 &lt;p&gt;After a day or two playing around, two most promising ones I found are &lt;a href=&#34;https://www.odoo.com/&#34;&gt;Odoo&lt;/a&gt;
 and &lt;a href=&#34;https://erpnext.com/&#34;&gt;ERPNext&lt;/a&gt;. But soon I drop Oddo because it&amp;rsquo;s too big and not very
 &amp;ldquo;open&amp;rdquo; anymore in the sense of open source softwares.&lt;/p&gt;
-
 &lt;p&gt;And then, after that, there was 2 sweaty weeks of trying to fit our business
 model in to ERPNext. Finally, I must give up. It&amp;rsquo;s not our business flow is too
 complex, but the devil is in the details. I need freedom to create models and
 calculations for the system that ERPNext just does not allow.&lt;/p&gt;
-
 &lt;p&gt;&lt;em&gt;We must create all from scratch&lt;/em&gt;, I told our CTO. And he agreed.&lt;/p&gt;
-
 &lt;h2 id=&#34;the-web&#34;&gt;The web&lt;/h2&gt;
-
 &lt;p&gt;I choose Django mainly for its battery-included features: ORM &amp;amp; admin interfaces.
 All we need to do is to declare models, and it will generate migration files
 and fire up an admin page for us, so we can create and change things fast.&lt;/p&gt;
-
 &lt;p&gt;We use &lt;a href=&#34;http://grappelliproject.com/&#34;&gt;Grappelli&lt;/a&gt; for admin style instead of default one, and use admin UI as
 default UI for our staffs. It does not look fancy, but simple and configurable.&lt;/p&gt;
-
 &lt;h2 id=&#34;the-api&#34;&gt;The API&lt;/h2&gt;
-
 &lt;p&gt;The first thing in mind when we start the project is the mobile app, not the
 web UI, hence the API, and Django with its famous &lt;a href=&#34;http://www.django-rest-framework.org/&#34;&gt;REST framework&lt;/a&gt; suits our
 need very well. At least I thought that, because I have many experiences working
 with this.&lt;/p&gt;
-
 &lt;p&gt;But then, something pop up in my eyes: &lt;a href=&#34;http://graphql.org/learn/&#34;&gt;Graphql&lt;/a&gt;, and it looks shiny!
 After digging around, I found this &lt;a href=&#34;http://graphene-python.org/&#34;&gt;Graphene&lt;/a&gt; for Python, give it a try, and
 the choice has been made.&lt;/p&gt;
-
 &lt;p&gt;Graphql help us build API faster &amp;amp; easier than REST, just declare your schema
 and boom, you got a full-fledged API!&lt;/p&gt;
-
 &lt;h2 id=&#34;the-app&#34;&gt;The app&lt;/h2&gt;
-
 &lt;p&gt;At first our team has only one mobile dev, and he is using &lt;a href=&#34;https://ionicframework.com/&#34;&gt;Ionic&lt;/a&gt; for some
 of our apps. I myself am a backend developer most of the time, so I need
 another man for the project. I can&amp;rsquo;t take the only mobile developer we had because
 he is very busy himself. Our CTO suggests that I should use the same mobile framework
 we already use, i.e. Ionic, so I can get support from the experienced one.&lt;/p&gt;
-
 &lt;p&gt;I also thought that myself, but then, you know, many things pop up in our
 little eyes these days. You already know what it is this time: React Native.
 As I just said, our team only had one mobile developer, but fortunately, all
 our frontend dev already use a frontend framework at another project of ours:
 &lt;a href=&#34;https://vuejs.org/&#34;&gt;Vuejs&lt;/a&gt;. And React Native is just &lt;a href=&#34;https://reactjs.org/&#34;&gt;Reactjs&lt;/a&gt; in the mobile world, and it
 must be the same!&lt;/p&gt;
-
 &lt;p&gt;When I mention React Native, one of our dev shows the interest, so I invited
 him to join, and it turns out he and I made an awesome team! He
 builds most parts of the app, I only help for some. And the most tricky thing
 I face is to print Vietnamese characters to thermal printer. I really should write
 a post about that later.&lt;/p&gt;
-
 &lt;h2 id=&#34;the-result&#34;&gt;The result&lt;/h2&gt;
-
 &lt;p&gt;We had a working ERP system for recording our core business activities that we
 can take advantages of by using other data centric tools for making reports,
 alerts, forecast, etc. All fancy things that we imagined we can do with the data,
 now we can do it.&lt;/p&gt;
-
 &lt;h2 id=&#34;the-ongoing&#34;&gt;The ongoing&lt;/h2&gt;
-
 &lt;p&gt;There are many parts of the system need to be added: CRM, Call center, etc.
 But really, choosing the right tools from the start is the key for any success
 later. Good tools are all around, just pick one for your need!&lt;/p&gt;
@@ -581,35 +469,25 @@ later. Good tools are all around, just pick one for your need!&lt;/p&gt;
       
       <guid>https://manhtai.github.io/posts/django-transactions/</guid>
       <description>&lt;p&gt;Django &lt;a href=&#34;https://docs.djangoproject.com/en/dev/topics/db/transactions/&#34;&gt;documentation&lt;/a&gt; about transaction points out:&lt;/p&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;Django uses transactions or savepoints automatically to guarantee the integrity
 of ORM operations that require multiple queries, especially &lt;code&gt;delete()&lt;/code&gt; and
 &lt;code&gt;update()&lt;/code&gt; queries.&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;This means whenever we call &lt;code&gt;save()&lt;/code&gt; or &lt;code&gt;create()&lt;/code&gt;, it&amp;rsquo;s already wrapped in
 a transaction. And usually new data is not in the database yet when we try to
 get that again somewhere after.&lt;/p&gt;
-
 &lt;p&gt;To make sure it&amp;rsquo;s commited, we have to use &lt;code&gt;transaction.on_commit()&lt;/code&gt;.&lt;/p&gt;
-
 &lt;p&gt;There are 2 popular cases I find that we must use &lt;code&gt;on_commit()&lt;/code&gt; function.&lt;/p&gt;
-
 &lt;p&gt;&lt;em&gt;The first one&lt;/em&gt; is when we send task to a Celery queue. The error we usually made
 here is to put that on a &lt;code&gt;post_save&lt;/code&gt; signal and hope for the best. Remember that
 &lt;code&gt;post_save&lt;/code&gt; is in the same transaction with &lt;code&gt;save()&lt;/code&gt;, so there is no guarantee
 that new data will be in the database when Celery task get it from there.&lt;/p&gt;
-
 &lt;p&gt;We must use put the task to &lt;code&gt;on_commit()&lt;/code&gt; function like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;transaction.on_commit(lambda: celery_task_with_id(id))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;The second case&lt;/em&gt; is when we want to do something after all inline forms in
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;transaction&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;on_commit(&lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt;: celery_task_with_id(id))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;The second case&lt;/em&gt; is when we want to do something after all inline forms in
 admin page is saved. But the thing we actually want is data is commited to
 database. You already know how to do it, just like the case above.&lt;/p&gt;
-
 &lt;p&gt;The catch here is we can put &lt;code&gt;on_commit()&lt;/code&gt; function in many places, as long as
 it&amp;rsquo;s in the transaction. I usually put that on &lt;code&gt;save_model()&lt;/code&gt; or &lt;code&gt;save_related()&lt;/code&gt;,
 depend on what extra infomation I need for further processing.&lt;/p&gt;

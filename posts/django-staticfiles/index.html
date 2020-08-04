@@ -110,56 +110,43 @@ and <a href="https://github.com/etianen/django-require/">django-require</a> (one
 <a href="https://webpack.js.org/">webpack</a>, a client-side bundler (it will do both sass &amp; js for us). It&rsquo;s
 a long process, I admit, but things go smoothly eventually. Till something
 pops up.</p>
-
 <p>Before that, we use django-require&rsquo;s <code>OptimizedStaticFilesStorage</code> to generate
 bundlers offline. This storage will generate a cache buster files side by
 side with original staticfiles in our <code>STATIC_ROOT</code> folder. Some folder will
 look like this after collectstatic:</p>
-
-<pre><code class="language-sh"># public/
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># public/</span>
 
 cms/header.css
 cms/header.0847d6eff302.css
-</code></pre>
-
-<p>After that, we must use <a href="https://aws.amazon.com/cli/">aws cli</a> to sync staticfiles manually to our S3
+</code></pre></div><p>After that, we must use <a href="https://aws.amazon.com/cli/">aws cli</a> to sync staticfiles manually to our S3
 bucket, then set <code>STATIC_URL</code> to our Cloudfront endpoint. It works, till now.</p>
-
 <p>I now remove both django-compressor and django-require, and use Django&rsquo;s
 <code>ManifestFilesMixin</code> storage instead, with combination with <code>S3BotoStorage</code>.</p>
-
 <p>We must change default <code>manifest_name</code> a little bit using git commit digest
 to support multiple deployments in the same bucket. The storage we use now
 looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">S3ManifestStaticFilesStorage</span>(ManifestFilesMixin, S3BotoStorage):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    This storage uses S3 as backend and having cache busting property of
+</span><span style="color:#e6db74">    ManifestStaticFilesStorage
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    manifest_strict <span style="color:#f92672">=</span> False
 
-<pre><code class="language-python">class S3ManifestStaticFilesStorage(ManifestFilesMixin, S3BotoStorage):
-    &quot;&quot;&quot;
-    This storage uses S3 as backend and having cache busting property of
-    ManifestStaticFilesStorage
-    &quot;&quot;&quot;
-    manifest_strict = False
-
-    @property
-    def manifest_name(self):
-        filename = 'staticfiles-{version}.json'
-        version = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip()
-        return filename.format(version=version.decode('utf-8'))
-</code></pre>
-
-<p>Now whenever we call <code>collectstatic</code>, it will collect all our staticfiles to
+    <span style="color:#a6e22e">@property</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">manifest_name</span>(self):
+        filename <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;staticfiles-{version}.json&#39;</span>
+        version <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>check_output([<span style="color:#e6db74">&#39;git&#39;</span>, <span style="color:#e6db74">&#39;rev-parse&#39;</span>, <span style="color:#e6db74">&#39;HEAD&#39;</span>])<span style="color:#f92672">.</span>strip()
+        <span style="color:#66d9ef">return</span> filename<span style="color:#f92672">.</span>format(version<span style="color:#f92672">=</span>version<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#39;utf-8&#39;</span>))
+</code></pre></div><p>Now whenever we call <code>collectstatic</code>, it will collect all our staticfiles to
 S3, no need another step to sync them manually.</p>
-
 <p>Things will work beautifully if Django collect all files, instead it
 <strong>WILL NOT</strong> collect anything which are collected before, even when we&rsquo;ve
 changed our storage backend.</p>
-
 <p>I have done many twists back and forth but the <code>static</code> template tags got wrong
 urls all the time. Then after checking <code>last-modified</code> in one of response
 header, I find out that the file hasn&rsquo;t change for very long time. Hence
 Django mustn&rsquo;t touch these files when I change staticfiles backend storage.</p>
-
 <p>Voyla!</p>
-
 <p>Just copy all staticfiles form old folder into the new one, and problem
 solved, new files would work as expected.</p>
 

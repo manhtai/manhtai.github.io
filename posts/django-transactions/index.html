@@ -106,35 +106,25 @@ window.onload = ready;
 <div class="content">
   <h1>Django transactions <aside><a href="/tags/python/">python</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/django/">django</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
   <p>Django <a href="https://docs.djangoproject.com/en/dev/topics/db/transactions/">documentation</a> about transaction points out:</p>
-
 <blockquote>
 <p>Django uses transactions or savepoints automatically to guarantee the integrity
 of ORM operations that require multiple queries, especially <code>delete()</code> and
 <code>update()</code> queries.</p>
 </blockquote>
-
 <p>This means whenever we call <code>save()</code> or <code>create()</code>, it&rsquo;s already wrapped in
 a transaction. And usually new data is not in the database yet when we try to
 get that again somewhere after.</p>
-
 <p>To make sure it&rsquo;s commited, we have to use <code>transaction.on_commit()</code>.</p>
-
 <p>There are 2 popular cases I find that we must use <code>on_commit()</code> function.</p>
-
 <p><em>The first one</em> is when we send task to a Celery queue. The error we usually made
 here is to put that on a <code>post_save</code> signal and hope for the best. Remember that
 <code>post_save</code> is in the same transaction with <code>save()</code>, so there is no guarantee
 that new data will be in the database when Celery task get it from there.</p>
-
 <p>We must use put the task to <code>on_commit()</code> function like this:</p>
-
-<pre><code class="language-python">transaction.on_commit(lambda: celery_task_with_id(id))
-</code></pre>
-
-<p><em>The second case</em> is when we want to do something after all inline forms in
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">transaction<span style="color:#f92672">.</span>on_commit(<span style="color:#66d9ef">lambda</span>: celery_task_with_id(id))
+</code></pre></div><p><em>The second case</em> is when we want to do something after all inline forms in
 admin page is saved. But the thing we actually want is data is commited to
 database. You already know how to do it, just like the case above.</p>
-
 <p>The catch here is we can put <code>on_commit()</code> function in many places, as long as
 it&rsquo;s in the transaction. I usually put that on <code>save_model()</code> or <code>save_related()</code>,
 depend on what extra infomation I need for further processing.</p>

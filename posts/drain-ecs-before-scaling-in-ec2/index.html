@@ -106,34 +106,33 @@ window.onload = ready;
 <div class="content">
   <h1>Drain ECS instances before scaling down in EC2 <aside></aside></h1>
   <p><strong>Problem</strong>:</p>
-
 <p>We have 2 independent auto scaling systems: EC2 auto scaling groups which
 scales instances number &amp; ECS auto scaling which scales tasks number. This
 setup may work fine when scaling up. Still, if new tasks need more instances
 to start up, it must wait for them, but it&rsquo;s ok to wait a little.</p>
-
 <p>But things soon become disaster when EC2 instances terminates <strong>before</strong>
 ECS tasks draining out.</p>
-
 <p>Actually, ECS instances will not auto drain to be ready for terminating
 instances in EC2, so don&rsquo;t expect anything. We have to set that up manually.</p>
-
 <p><strong>Solution</strong>:</p>
-
 <p>An AWS official <a href="https://aws.amazon.com/blogs/compute/how-to-automate-container-instance-draining-in-amazon-ecs/">blog</a> shows us how to do this, and it has a nice demo for
 newly created EC2 &amp; ECS setup. But what if we just want to set up for our
 running ECS instances? Here it is.</p>
-
 <p>Firstly, make sure you know what <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html">lifecycle hooks</a> are. Then follow these
 steps:</p>
-
 <ul>
-<li><p>1) Create a lambda function using this <a href="https://gist.github.com/manhtai/66dfdae56ebce7b6270788018516a409">script</a>. It is my fork of AWS
-sample <a href="https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py">script</a>, but sucks less.</p></li>
-
-<li><p>2) Set role for our lambda function to have these permissions:</p></li>
+<li>
+<ol>
+<li>Create a lambda function using this <a href="https://gist.github.com/manhtai/66dfdae56ebce7b6270788018516a409">script</a>. It is my fork of AWS
+sample <a href="https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py">script</a>, but sucks less.</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>Set role for our lambda function to have these permissions:</li>
+</ol>
+</li>
 </ul>
-
 <pre><code>- autoscaling:CompleteLifecycleAction
 - logs:CreateLogGroup
 - logs:CreateLogStream
@@ -150,19 +149,26 @@ sample <a href="https://github.com/aws-samples/ecs-cid-sample/blob/master/code/i
 - ecs:ListTasks
 - ecs:DescribeTasks
 - sns:Publish
-</code></pre>
-
-<ul>
-<li><p>3) Setup an SNS trigger for the function, choose a name for it.</p></li>
-
-<li><p>4) Setup a service role so Auto Scaling Groups can push to SNS, using <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html#sns-notifications">this
+</code></pre><ul>
+<li>
+<ol start="3">
+<li>Setup an SNS trigger for the function, choose a name for it.</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>Setup a service role so Auto Scaling Groups can push to SNS, using <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html#sns-notifications">this
 guide</a>. (This is quite interesting because you have to set up a role so
-that a service will have some kind of permission).</p></li>
-
-<li><p>5) Create a lifecycle hook by CLI, since the <strong>GUI is not fully supported
-yet</strong>:</p></li>
+that a service will have some kind of permission).</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li>Create a lifecycle hook by CLI, since the <strong>GUI is not fully supported
+yet</strong>:</li>
+</ol>
+</li>
 </ul>
-
 <pre><code>aws autoscaling put-lifecycle-hook
   --lifecycle-hook-name EcsWebScaleDown
   --auto-scaling-group-name ecs-web
@@ -170,9 +176,7 @@ yet</strong>:</p></li>
   --heartbeat-timeout 900
   --notification-target-arn arn:aws:sns:ap-southeast-1:XXXXXXXXXXXX:EcsInstanceDrain
   --role-arn arn:aws:iam::XXXXXXXXXXXX:role/AutoScalingNotificationRole
-</code></pre>
-
-<p>It should be good now, as advertised :)</p>
+</code></pre><p>It should be good now, as advertised :)</p>
 
 </div>
 

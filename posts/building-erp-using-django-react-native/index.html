@@ -105,108 +105,79 @@ window.onload = ready;
 
 <div class="content">
   <h1>How we build a working ERP system using Django and React Native in 3 months <aside><a href="/tags/django/">django</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/react-native/">react native</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
-  
-
-<p>The title may seem too promising, and but it is a working ERP, not a complete
+  <p>The title may seem too promising, and but it is a working ERP, not a complete
 one, we are still having many things to build and improve.</p>
-
 <h2 id="overview">Overview</h2>
-
 <p>Within 3 months, 2 developers, we managed to build a web UI (using <a href="https://www.djangoproject.com">Django</a>) and
 a mobile app (using <a href="https://facebook.github.io/react-native/">React Native</a>), with this core business flow:</p>
-
 <blockquote>
 <p>Quotation &gt; Sales Order &gt; Purchase Order</p>
 </blockquote>
-
 <p>A little bit about above flow looks like this.</p>
-
 <p>The sales staffs create Quotations when they are selling Products to Customers,
 usually over telephones. They make an assignment to services staff in the same
 screen they create the quotation. This services staff will instantly receive a
 notification about this new quotation assigned for them through an app, and
 know when and where they should meet the customer.</p>
-
 <p>When the services staff delivers service to customer, they will make a sales
 order in their app, print an invoice using a thermal printer and get the money.
 They can do all of that offline, and do it fast.</p>
-
 <p>After that, they must be online to sync the sales orders back to our server.
 In there, some purchase orders will be created automatically base on the products
 customers bought from us. Those purchase orders will be sent to corresponding
 suppliers for purchasing.</p>
-
 <h2 id="the-fail">The fail</h2>
-
 <p>I am the technical lead of this new ERP project, and the first task is to do
 research about ERP frameworks that already out there in the market. We don&rsquo;t
 think about create one from scratch at first because it must be too big for us
 to handle. We are only a small startup team after all.</p>
-
 <p>After a day or two playing around, two most promising ones I found are <a href="https://www.odoo.com/">Odoo</a>
 and <a href="https://erpnext.com/">ERPNext</a>. But soon I drop Oddo because it&rsquo;s too big and not very
 &ldquo;open&rdquo; anymore in the sense of open source softwares.</p>
-
 <p>And then, after that, there was 2 sweaty weeks of trying to fit our business
 model in to ERPNext. Finally, I must give up. It&rsquo;s not our business flow is too
 complex, but the devil is in the details. I need freedom to create models and
 calculations for the system that ERPNext just does not allow.</p>
-
 <p><em>We must create all from scratch</em>, I told our CTO. And he agreed.</p>
-
 <h2 id="the-web">The web</h2>
-
 <p>I choose Django mainly for its battery-included features: ORM &amp; admin interfaces.
 All we need to do is to declare models, and it will generate migration files
 and fire up an admin page for us, so we can create and change things fast.</p>
-
 <p>We use <a href="http://grappelliproject.com/">Grappelli</a> for admin style instead of default one, and use admin UI as
 default UI for our staffs. It does not look fancy, but simple and configurable.</p>
-
 <h2 id="the-api">The API</h2>
-
 <p>The first thing in mind when we start the project is the mobile app, not the
 web UI, hence the API, and Django with its famous <a href="http://www.django-rest-framework.org/">REST framework</a> suits our
 need very well. At least I thought that, because I have many experiences working
 with this.</p>
-
 <p>But then, something pop up in my eyes: <a href="http://graphql.org/learn/">Graphql</a>, and it looks shiny!
 After digging around, I found this <a href="http://graphene-python.org/">Graphene</a> for Python, give it a try, and
 the choice has been made.</p>
-
 <p>Graphql help us build API faster &amp; easier than REST, just declare your schema
 and boom, you got a full-fledged API!</p>
-
 <h2 id="the-app">The app</h2>
-
 <p>At first our team has only one mobile dev, and he is using <a href="https://ionicframework.com/">Ionic</a> for some
 of our apps. I myself am a backend developer most of the time, so I need
 another man for the project. I can&rsquo;t take the only mobile developer we had because
 he is very busy himself. Our CTO suggests that I should use the same mobile framework
 we already use, i.e. Ionic, so I can get support from the experienced one.</p>
-
 <p>I also thought that myself, but then, you know, many things pop up in our
 little eyes these days. You already know what it is this time: React Native.
 As I just said, our team only had one mobile developer, but fortunately, all
 our frontend dev already use a frontend framework at another project of ours:
 <a href="https://vuejs.org/">Vuejs</a>. And React Native is just <a href="https://reactjs.org/">Reactjs</a> in the mobile world, and it
 must be the same!</p>
-
 <p>When I mention React Native, one of our dev shows the interest, so I invited
 him to join, and it turns out he and I made an awesome team! He
 builds most parts of the app, I only help for some. And the most tricky thing
 I face is to print Vietnamese characters to thermal printer. I really should write
 a post about that later.</p>
-
 <h2 id="the-result">The result</h2>
-
 <p>We had a working ERP system for recording our core business activities that we
 can take advantages of by using other data centric tools for making reports,
 alerts, forecast, etc. All fancy things that we imagined we can do with the data,
 now we can do it.</p>
-
 <h2 id="the-ongoing">The ongoing</h2>
-
 <p>There are many parts of the system need to be added: CRM, Call center, etc.
 But really, choosing the right tools from the start is the key for any success
 later. Good tools are all around, just pick one for your need!</p>

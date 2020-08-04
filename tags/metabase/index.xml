@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Metabase on Go slowly</title>
+    <title>metabase on Go slowly</title>
     <link>https://manhtai.github.io/tags/metabase/</link>
-    <description>Recent content in Metabase on Go slowly</description>
+    <description>Recent content in metabase on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 12 Feb 2018 22:04:15 +0700</lastBuildDate>
@@ -21,30 +20,24 @@
 since we use Metabase for all our analysis tasks, we got the HR database to
 query all the things about our colleagues (not the salary though, it&amp;rsquo;s
 accounting&amp;rsquo;s matter).&lt;/p&gt;
-
 &lt;p&gt;I&amp;rsquo;m not interested in my colleagues&amp;rsquo; days of leave, but I wish they got a happy
 birthday, so why don&amp;rsquo;t we send out a wish, automatically?&lt;/p&gt;
-
 &lt;p&gt;I write a question in SQL, it&amp;rsquo;s just as simple as list out all people who
 have date and month equal to today&amp;rsquo;s date and month. And use a &lt;a href=&#34;https://manhtai.github.io/posts/metabase-alerts&#34;&gt;bot&lt;/a&gt; to
 check the question everyday at 10am, then send out a wish if the question is
 not empty.&lt;/p&gt;
-
 &lt;p&gt;The tricky part is we don&amp;rsquo;t know firsthand what should be included in the
 message, like our colleagues&amp;rsquo; name, slack id, etc. So I have to evaluate them
 at running time. The solution is to pass a string to alert message and then
 convert it to string interpolation later. Like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// When creating alert
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;originalMessage&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Happy birthday to ${rows.join(&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;)}!&amp;#34;&lt;/span&gt;;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// When creating alert
-const originalMessage = &amp;quot;Happy birthday to ${rows.join(&amp;quot;, &amp;quot;)}!&amp;quot;;
-
-// At running time
-const rows = [&amp;quot;some&amp;quot;, &amp;quot;data&amp;quot;];
-const theMessage = eval(&#39;`&#39; + originalMessage + &#39;`&#39;);
-sendMessageToSlack(theMessage);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I know it&amp;rsquo;s extremely risky to use &lt;code&gt;eval()&lt;/code&gt; anywhere, so I use &lt;a href=&#34;https://github.com/hacksparrow/safe-eval&#34;&gt;safe-eval&lt;/a&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;// At running time
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;some&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;data&amp;#34;&lt;/span&gt;];
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;theMessage&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; eval(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;`&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;originalMessage&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;`&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#a6e22e&#34;&gt;sendMessageToSlack&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;theMessage&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I know it&amp;rsquo;s extremely risky to use &lt;code&gt;eval()&lt;/code&gt; anywhere, so I use &lt;a href=&#34;https://github.com/hacksparrow/safe-eval&#34;&gt;safe-eval&lt;/a&gt;
 instead. Although at the moment it has a security &lt;a href=&#34;https://github.com/hacksparrow/safe-eval/issues/5&#34;&gt;bug&lt;/a&gt;, it should be fine
 for our internal use, at least for now.&lt;/p&gt;
 </description>
@@ -59,23 +52,17 @@ for our internal use, at least for now.&lt;/p&gt;
       <description>&lt;p&gt;&lt;a href=&#34;https://metabase.com&#34;&gt;Metabase&lt;/a&gt; is a simple and powerful BI tool for business. We use it to get
 insights about almost everything that happens in our system. In &lt;a href=&#34;https://metabase.com/blog/Metabase-0.27/index.html&#34;&gt;recent&lt;/a&gt;
 version it added alerts feature to question, but has some limitations.&lt;/p&gt;
-
 &lt;p&gt;Firstly, the shortest time it allows checking for something bad may happen is
 one hour. It may seem acceptable in some business model but not ours. We need
 at most 5 minutes delay time in alerting.&lt;/p&gt;
-
 &lt;p&gt;Secondly, we can&amp;rsquo;t customize Slack alert format, and it sucks most of the
 time.&lt;/p&gt;
-
 &lt;p&gt;Lastly, I don&amp;rsquo;t know whether it&amp;rsquo;s a bug or not, but sometime the alerts just
 stop working!&lt;/p&gt;
-
 &lt;p&gt;Fortunately, Metabase has a &lt;a href=&#34;https://github.com/metabase/metabase/blob/master/docs/api-documentation.md&#34;&gt;rich&lt;/a&gt; API for frontend part, and we can use
 that to make our own alert system.&lt;/p&gt;
-
 &lt;p&gt;So our solution is use a Slack bot to call the question API periodically, and
 send a message to a choosen channel if the response is not empty.&lt;/p&gt;
-
 &lt;p&gt;Checkout the sample code &lt;a href=&#34;https://github.com/manhtai/mimi/blob/master/metabase.js&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>

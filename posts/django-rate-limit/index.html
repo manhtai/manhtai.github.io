@@ -107,76 +107,53 @@ window.onload = ready;
   <h1>Django rate limit (and monkey patching) <aside><a href="/tags/django/">django</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
   <p><a href="https://github.com/jsocol/django-ratelimit">Django Ratelimit</a> is a good rate limiter for Django. It has a convenient
 decorator for views, so we can do this:</p>
-
-<pre><code class="language-python">@ratelimit(key='post:username', rate='5/m')
-def login(request):
-    return HttpResponse()
-</code></pre>
-
-<p>to limit the times we can try to login with one specific username to
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@ratelimit</span>(key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;post:username&#39;</span>, rate<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;5/m&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">login</span>(request):
+    <span style="color:#66d9ef">return</span> HttpResponse()
+</code></pre></div><p>to limit the times we can try to login with one specific username to
 5 requests per minute.</p>
-
 <p>The decorator can be used with function-based views and class-based views, but
 if we want to use it with built-in views, e.g. admin login view, we have to
 monkey patch them.</p>
-
 <p>Django allows us to patch any function from any module when init app.
 I usually do this in <code>AppConfig</code> class, like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyAppConfig</span>(AppConfig):
+    name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;my_app&#39;</span>
 
-<pre><code class="language-python">class MyAppConfig(AppConfig):
-    name = 'my_app'
-
-    def ready(self):
-        from my_app.monkey_patching import patch
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ready</span>(self):
+        <span style="color:#f92672">from</span> my_app.monkey_patching <span style="color:#f92672">import</span> patch
         patch()
-</code></pre>
-
-<p>And this is the <code>patch()</code> function, for admin login view:</p>
-
-<pre><code class="language-python">def patch():
-    from django.contrib.admin.sites import AdminSite
-    AdminSite.login = new_login
-</code></pre>
-
-<p>Where <code>new_login()</code> is our patched function and <code>login()</code> is original function
+</code></pre></div><p>And this is the <code>patch()</code> function, for admin login view:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">patch</span>():
+    <span style="color:#f92672">from</span> django.contrib.admin.sites <span style="color:#f92672">import</span> AdminSite
+    AdminSite<span style="color:#f92672">.</span>login <span style="color:#f92672">=</span> new_login
+</code></pre></div><p>Where <code>new_login()</code> is our patched function and <code>login()</code> is original function
 that handles requests for logging user in.</p>
-
 <p>The thing is we don&rsquo;t want to rewrite <code>new_login()</code> to be exactly like the old
 <code>login()</code> function with the <code>ratelimit</code> decorator. We only want to &ldquo;magically&rdquo;
 attach the decorator to the original function. How can we do that?</p>
-
 <p>One idea is to write a function to input function <code>login()</code> and return function
 <code>new_login()</code> with <code>ratelimit</code> decorator, like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">limit_login</span>(login):
 
-<pre><code class="language-python">def limit_login(login):
+    <span style="color:#a6e22e">@ratelimit</span>(key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;post:username&#39;</span>, rate<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;10/m&#39;</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;POST&#39;</span>, block<span style="color:#f92672">=</span>True)
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">new_login</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+        <span style="color:#66d9ef">return</span> login(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
 
-    @ratelimit(key='post:username', rate='10/m', method='POST', block=True)
-    def new_login(*args, **kwargs):
-        return login(*args, **kwargs)
+    <span style="color:#66d9ef">return</span> new_login
+</code></pre></div><p>So now we can do this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">patch</span>():
+    <span style="color:#f92672">from</span> django.contrib.admin.sites <span style="color:#f92672">import</span> AdminSite
+    AdminSite<span style="color:#f92672">.</span>login <span style="color:#f92672">=</span> limit_login(AdminSite<span style="color:#f92672">.</span>login)
+</code></pre></div><p>We can make <code>limit_login()</code> function even more generic, with some defaults:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">limit_rate</span>(func, group<span style="color:#f92672">=</span>None, key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;post:username&#39;</span>, rate<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;10/m&#39;</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;POST&#39;</span>, block<span style="color:#f92672">=</span>True):
 
-    return new_login
-</code></pre>
+    <span style="color:#a6e22e">@ratelimit</span>(group<span style="color:#f92672">=</span>group, key<span style="color:#f92672">=</span>key, rate<span style="color:#f92672">=</span>rate, method<span style="color:#f92672">=</span>method, block<span style="color:#f92672">=</span>block)
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">new_func</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+        <span style="color:#66d9ef">return</span> func(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
 
-<p>So now we can do this:</p>
-
-<pre><code class="language-python">def patch():
-    from django.contrib.admin.sites import AdminSite
-    AdminSite.login = limit_login(AdminSite.login)
-</code></pre>
-
-<p>We can make <code>limit_login()</code> function even more generic, with some defaults:</p>
-
-<pre><code class="language-python">def limit_rate(func, group=None, key='post:username', rate='10/m', method='POST', block=True):
-
-    @ratelimit(group=group, key=key, rate=rate, method=method, block=block)
-    def new_func(*args, **kwargs):
-        return func(*args, **kwargs)
-
-    return new_func
-</code></pre>
-
-<p>Now we can patch any view easily with our short <code>limit_rate()</code> function.</p>
-
+    <span style="color:#66d9ef">return</span> new_func
+</code></pre></div><p>Now we can patch any view easily with our short <code>limit_rate()</code> function.</p>
 <p>Have good time limiting around!</p>
 
 </div>

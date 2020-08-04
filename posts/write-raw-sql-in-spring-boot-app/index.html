@@ -109,55 +109,47 @@ window.onload = ready;
 elegant and type safety. Who wouldn&rsquo;t want that? Efficient, you may nod
 slightly, but elegant and type safety, aren&rsquo;t it? Yes it is, if you use
 <a href="https://en.wikipedia.org/wiki/Java_Persistence_Query_Language">JPQL</a> in combination with <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions">SpEL</a>.</p>
-
 <p>JPQL uses the entity object models instead of database tables to define a
 query. It is not really raw SQL you might say, but it got all the syntax of
 a raw SQL query. And because it is based on entity models, it is strong type
 and it ensure type safety for us (i.e it won&rsquo;t start application if we use
 wrong type in our query).</p>
-
 <p>In addition to that, we can use SpEL to write expressions directly in queries
 using a subset of Java code. Let&rsquo;s take a look at an example:</p>
-
-<pre><code class="language-java">@Repository
-public interface NotificationRepository extends JpaRepository&lt;Notification, Long&gt; {
-    @Query(
-            &quot; SELECT new NotificationResponse(&quot; +
-                    &quot;   n.id, n.title,&quot; +
-                    &quot;   CASE&quot; +
-                    &quot;     WHEN (u.id IS NULL) THEN FALSE&quot; +
-                    &quot;     ELSE u.isRead END,&quot; +
-                    &quot;   n.createTime) &quot; +
-                    &quot; FROM Notification n &quot; +
-                    &quot; LEFT JOIN UserNotification u ON &quot; +
-                    &quot;   u.notificationId = n.id&quot; +
-                    &quot;   AND u.userId = :#{#filter.userId}&quot; +
-                    &quot;   AND u.userType = :#{#filter.receiverType}&quot; +
-                    &quot; WHERE &quot; +
-                    &quot;   n.receiverType = :#{#filter.receiverType}&quot; +
-                    &quot; GROUP BY n.id&quot; +
-                    &quot; ORDER BY n.createTime DESC&quot;
-    )
-    Page&lt;NotificationResponse&gt; getNotifications(NotificationFilter filter, Pageable pageable);
-}
-</code></pre>
-
-<p>Here <strong>Notification</strong> and <strong>UserNotification</strong> are two entity models
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Repository</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">NotificationRepository</span> <span style="color:#66d9ef">extends</span> JpaRepository<span style="color:#f92672">&lt;</span>Notification<span style="color:#f92672">,</span> Long<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Query</span><span style="color:#f92672">(</span>
+            <span style="color:#e6db74">&#34; SELECT new NotificationResponse(&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;   n.id, n.title,&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;   CASE&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;     WHEN (u.id IS NULL) THEN FALSE&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;     ELSE u.isRead END,&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;   n.createTime) &#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34; FROM Notification n &#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34; LEFT JOIN UserNotification u ON &#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;   u.notificationId = n.id&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;   AND u.userId = :#{#filter.userId}&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;   AND u.userType = :#{#filter.receiverType}&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34; WHERE &#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34;   n.receiverType = :#{#filter.receiverType}&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34; GROUP BY n.id&#34;</span> <span style="color:#f92672">+</span>
+                    <span style="color:#e6db74">&#34; ORDER BY n.createTime DESC&#34;</span>
+    <span style="color:#f92672">)</span>
+    Page<span style="color:#f92672">&lt;</span>NotificationResponse<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getNotifications</span><span style="color:#f92672">(</span>NotificationFilter filter<span style="color:#f92672">,</span> Pageable pageable<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>Here <strong>Notification</strong> and <strong>UserNotification</strong> are two entity models
 corresponding to two tables in database and we can join them using ON
 condition as in raw SQL. All statements may look familiar to you, except some
 weird <code>:#{#filter.fieldName}</code> annotations. They are SpEL expressions that use
 Java reflection to inject field values of notification filter into the query.
 You can use either private field names or public get methods to get the values
 out of filter param.</p>
-
 <p>Something else worth noting here is we don&rsquo;t need to specify <code>COUNT</code> query,
 JPA will do that for us, but we can customize it of course, and sometime it is
 a must.</p>
-
 <p>The last parameter of <code>getNotifications()</code> method is a Pageable instance, JPA
 will automatically using <code>LIMIT</code> and <code>OFFSET</code> to do pagination for us, hence
 the returning type of the query is <code>Page&lt;NotificationResponse&gt;</code>.</p>
-
 <p>I am very comfortable with writing queries in SQL so I am very happy with this
 setup, and I hope you will enjoy it too: the magic of Spring (and JPA)!</p>
 
