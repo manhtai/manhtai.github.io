@@ -5,10 +5,73 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Aug 2020 16:46:11 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 01 Nov 2020 15:10:07 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Setup TailwindCSS for React</title>
+      <link>https://manhtai.github.io/posts/setup-tailwindcss-for-react/</link>
+      <pubDate>Sun, 01 Nov 2020 15:10:07 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/setup-tailwindcss-for-react/</guid>
+      <description>&lt;h2 id=&#34;1-basic-setup&#34;&gt;1. Basic setup&lt;/h2&gt;
+&lt;p&gt;After installing TailwindCSS and doing &lt;a href=&#34;https://tailwindcss.com/docs/installation&#34;&gt;the basic setup&lt;/a&gt;, you need
+PostCSS-CLI to build out &lt;code&gt;main.css&lt;/code&gt;, setup some commands in &lt;code&gt;package.json&lt;/code&gt;
+to do that:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;scripts&amp;quot;: {
+    &amp;quot;start&amp;quot;: &amp;quot;npm run watch:css &amp;amp;&amp;amp; react-scripts start&amp;quot;,
+    &amp;quot;build&amp;quot;: &amp;quot;npm run build:css &amp;amp;&amp;amp; react-scripts build&amp;quot;,
+    &amp;quot;deploy&amp;quot;: &amp;quot;NODE_ENV=production npm run build&amp;quot;,
+    &amp;quot;test&amp;quot;: &amp;quot;react-scripts test&amp;quot;,
+    &amp;quot;eject&amp;quot;: &amp;quot;react-scripts eject&amp;quot;,
+    &amp;quot;watch:css&amp;quot;: &amp;quot;postcss src/css/tailwind.css -o src/css/main.css&amp;quot;,
+    &amp;quot;build:css&amp;quot;: &amp;quot;postcss src/css/tailwind.css -o src/css/main.css&amp;quot;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Don&amp;rsquo;t forget to import &lt;code&gt;main.css&lt;/code&gt; in your React index file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import &#39;./css/main.css&#39;;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;2-install-font-family&#34;&gt;2. Install font family&lt;/h2&gt;
+&lt;p&gt;Choose your favorite font from a &lt;code&gt;fontsouce-*&lt;/code&gt; package and extend Tailwind
+config, I choose &amp;lsquo;Nunito&amp;rsquo;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;theme: {
+  extend: {
+    fontFamily: {
+      sans: [&amp;quot;Nunito&amp;quot;, ...defaultTheme.fontFamily.sans]
+    }
+  },
+},
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Remember to include the font in your index file, too:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import &#39;fontsource-nunito&#39;;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;3-set-default-color&#34;&gt;3. Set default color&lt;/h2&gt;
+&lt;p&gt;If you don&amp;rsquo;t want black as your default text body color, override it in
+plugins config, I choose &lt;code&gt;blue-900&lt;/code&gt; as my default color, so:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  plugins: [
+    plugin(function({ addBase, config }) {
+      addBase({
+        &#39;body&#39;: { color: config(&#39;theme.colors.blue.900&#39;) },
+      })
+    })
+  ],
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;4-purge-unused-css&#34;&gt;4. Purge unused CSS&lt;/h2&gt;
+&lt;p&gt;Full size of TailwindCSS is around 2MB, but you rarely use it all, TailwindCSS
+&lt;a href=&#34;https://tailwindcss.com/docs/controlling-file-size&#34;&gt;official guide&lt;/a&gt; recommends not to use string concatenation to create class
+names, but if you still want to do that, use whitelist patterns to bypass the
+cleaning.&lt;/p&gt;
+&lt;p&gt;For example if I want to keep all colors for background and text:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  purge: {
+    content: [
+      &amp;quot;./src/**/*.{ts,tsx,html}&amp;quot;,
+    ],
+    options: {
+      whitelistPatterns: [/^bg-/, /^text-/],
+    },
+  },
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can find my full setup for my &lt;a href=&#34;https://metaboard.net&#34;&gt;new React app&lt;/a&gt; in &lt;a href=&#34;https://github.com/manhtai/metaboard&#34;&gt;Github&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Reset Css Animation</title>
@@ -1075,14 +1138,14 @@ in the summer. I&amp;rsquo;m expecting an interesting journey in the end of the 
 since we use Metabase for all our analysis tasks, we got the HR database to
 query all the things about our colleagues (not the salary though, it&amp;rsquo;s
 accounting&amp;rsquo;s matter).&lt;/p&gt;
-&lt;p&gt;I&amp;rsquo;m not interested in my colleagues&amp;rsquo; days of leave, but I wish they got a happy
+&lt;p&gt;I&amp;rsquo;m not interested in my colleagues&#39; days of leave, but I wish they got a happy
 birthday, so why don&amp;rsquo;t we send out a wish, automatically?&lt;/p&gt;
 &lt;p&gt;I write a question in SQL, it&amp;rsquo;s just as simple as list out all people who
 have date and month equal to today&amp;rsquo;s date and month. And use a &lt;a href=&#34;https://manhtai.github.io/posts/metabase-alerts&#34;&gt;bot&lt;/a&gt; to
 check the question everyday at 10am, then send out a wish if the question is
 not empty.&lt;/p&gt;
 &lt;p&gt;The tricky part is we don&amp;rsquo;t know firsthand what should be included in the
-message, like our colleagues&amp;rsquo; name, slack id, etc. So I have to evaluate them
+message, like our colleagues&#39; name, slack id, etc. So I have to evaluate them
 at running time. The solution is to pass a string to alert message and then
 convert it to string interpolation later. Like this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// When creating alert
@@ -1141,7 +1204,7 @@ the body.&lt;/p&gt;
       <pubDate>Tue, 30 Jan 2018 22:31:54 +0700</pubDate>
       
       <guid>https://manhtai.github.io/posts/django-staticfiles/</guid>
-      <description>&lt;p&gt;Recently we move our sass &amp;amp; js complier from good ol&amp;rsquo; &lt;a href=&#34;https://django-compressor.readthedocs.io/en/latest/&#34;&gt;django-compressor&lt;/a&gt;
+      <description>&lt;p&gt;Recently we move our sass &amp;amp; js complier from good ol&#39; &lt;a href=&#34;https://django-compressor.readthedocs.io/en/latest/&#34;&gt;django-compressor&lt;/a&gt;
 and &lt;a href=&#34;https://github.com/etianen/django-require/&#34;&gt;django-require&lt;/a&gt; (one for compile sass, one for bundle js), to
 &lt;a href=&#34;https://webpack.js.org/&#34;&gt;webpack&lt;/a&gt;, a client-side bundler (it will do both sass &amp;amp; js for us). It&amp;rsquo;s
 a long process, I admit, but things go smoothly eventually. Till something

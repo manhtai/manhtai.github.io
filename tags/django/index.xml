@@ -330,7 +330,7 @@ the body.&lt;/p&gt;
       <pubDate>Tue, 30 Jan 2018 22:31:54 +0700</pubDate>
       
       <guid>https://manhtai.github.io/posts/django-staticfiles/</guid>
-      <description>&lt;p&gt;Recently we move our sass &amp;amp; js complier from good ol&amp;rsquo; &lt;a href=&#34;https://django-compressor.readthedocs.io/en/latest/&#34;&gt;django-compressor&lt;/a&gt;
+      <description>&lt;p&gt;Recently we move our sass &amp;amp; js complier from good ol&#39; &lt;a href=&#34;https://django-compressor.readthedocs.io/en/latest/&#34;&gt;django-compressor&lt;/a&gt;
 and &lt;a href=&#34;https://github.com/etianen/django-require/&#34;&gt;django-require&lt;/a&gt; (one for compile sass, one for bundle js), to
 &lt;a href=&#34;https://webpack.js.org/&#34;&gt;webpack&lt;/a&gt;, a client-side bundler (it will do both sass &amp;amp; js for us). It&amp;rsquo;s
 a long process, I admit, but things go smoothly eventually. Till something

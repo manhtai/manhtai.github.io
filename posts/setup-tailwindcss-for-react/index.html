@@ -4,23 +4,23 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
-	<title>Wish our colleagues a happy birthday</title>
+	<title>Setup TailwindCSS for React</title>
 	
 	<meta name="description" content="">
 	<meta name="image" content="">
 	
-	<meta itemprop="name" content="Wish our colleagues a happy birthday">
+	<meta itemprop="name" content="Setup TailwindCSS for React">
 	<meta itemprop="description" content="">
 	<meta itemprop="image" content="">
 	
-	<meta name="og:title" content="Wish our colleagues a happy birthday">
+	<meta name="og:title" content="Setup TailwindCSS for React">
 	<meta name="og:description" content="">
 	
-	<meta name="og:url" content="https://manhtai.github.io/posts/wish-our-colleagues-a-happy-birthday/">
-	<meta name="og:site_name" content="Wish our colleagues a happy birthday">
+	<meta name="og:url" content="https://manhtai.github.io/posts/setup-tailwindcss-for-react/">
+	<meta name="og:site_name" content="Setup TailwindCSS for React">
 	<meta name="og:type" content="article">
 	
-	<meta name="article:tag" content="bot metabase slack ">
+	<meta name="article:tag" content="tailwindcss react ">
 	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
 	
 	
@@ -104,31 +104,61 @@ window.onload = ready;
 </script>
 
 <div class="content">
-  <h1>Wish our colleagues a happy birthday <aside><a href="/tags/bot/">bot</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/metabase/">metabase</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/slack/">slack</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
-  <p>We build an intranet app using Django to help HR manage people at work. And
-since we use Metabase for all our analysis tasks, we got the HR database to
-query all the things about our colleagues (not the salary though, it&rsquo;s
-accounting&rsquo;s matter).</p>
-<p>I&rsquo;m not interested in my colleagues' days of leave, but I wish they got a happy
-birthday, so why don&rsquo;t we send out a wish, automatically?</p>
-<p>I write a question in SQL, it&rsquo;s just as simple as list out all people who
-have date and month equal to today&rsquo;s date and month. And use a <a href="/posts/metabase-alerts">bot</a> to
-check the question everyday at 10am, then send out a wish if the question is
-not empty.</p>
-<p>The tricky part is we don&rsquo;t know firsthand what should be included in the
-message, like our colleagues' name, slack id, etc. So I have to evaluate them
-at running time. The solution is to pass a string to alert message and then
-convert it to string interpolation later. Like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// When creating alert
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">originalMessage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Happy birthday to ${rows.join(&#34;</span>, <span style="color:#e6db74">&#34;)}!&#34;</span>;
-
-<span style="color:#75715e">// At running time
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">rows</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;some&#34;</span>, <span style="color:#e6db74">&#34;data&#34;</span>];
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">theMessage</span> <span style="color:#f92672">=</span> eval(<span style="color:#e6db74">&#39;`&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">originalMessage</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;`&#39;</span>);
-<span style="color:#a6e22e">sendMessageToSlack</span>(<span style="color:#a6e22e">theMessage</span>);
-</code></pre></div><p>I know it&rsquo;s extremely risky to use <code>eval()</code> anywhere, so I use <a href="https://github.com/hacksparrow/safe-eval">safe-eval</a>
-instead. Although at the moment it has a security <a href="https://github.com/hacksparrow/safe-eval/issues/5">bug</a>, it should be fine
-for our internal use, at least for now.</p>
+  <h1>Setup TailwindCSS for React <aside><a href="/tags/tailwindcss/">tailwindcss</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/react/">react</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <h2 id="1-basic-setup">1. Basic setup</h2>
+<p>After installing TailwindCSS and doing <a href="https://tailwindcss.com/docs/installation">the basic setup</a>, you need
+PostCSS-CLI to build out <code>main.css</code>, setup some commands in <code>package.json</code>
+to do that:</p>
+<pre><code>{
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;npm run watch:css &amp;&amp; react-scripts start&quot;,
+    &quot;build&quot;: &quot;npm run build:css &amp;&amp; react-scripts build&quot;,
+    &quot;deploy&quot;: &quot;NODE_ENV=production npm run build&quot;,
+    &quot;test&quot;: &quot;react-scripts test&quot;,
+    &quot;eject&quot;: &quot;react-scripts eject&quot;,
+    &quot;watch:css&quot;: &quot;postcss src/css/tailwind.css -o src/css/main.css&quot;,
+    &quot;build:css&quot;: &quot;postcss src/css/tailwind.css -o src/css/main.css&quot;
+  }
+}
+</code></pre><p>Don&rsquo;t forget to import <code>main.css</code> in your React index file:</p>
+<pre><code>import './css/main.css';
+</code></pre><h2 id="2-install-font-family">2. Install font family</h2>
+<p>Choose your favorite font from a <code>fontsouce-*</code> package and extend Tailwind
+config, I choose &lsquo;Nunito&rsquo;:</p>
+<pre><code>theme: {
+  extend: {
+    fontFamily: {
+      sans: [&quot;Nunito&quot;, ...defaultTheme.fontFamily.sans]
+    }
+  },
+},
+</code></pre><p>Remember to include the font in your index file, too:</p>
+<pre><code>import 'fontsource-nunito';
+</code></pre><h2 id="3-set-default-color">3. Set default color</h2>
+<p>If you don&rsquo;t want black as your default text body color, override it in
+plugins config, I choose <code>blue-900</code> as my default color, so:</p>
+<pre><code>  plugins: [
+    plugin(function({ addBase, config }) {
+      addBase({
+        'body': { color: config('theme.colors.blue.900') },
+      })
+    })
+  ],
+</code></pre><h2 id="4-purge-unused-css">4. Purge unused CSS</h2>
+<p>Full size of TailwindCSS is around 2MB, but you rarely use it all, TailwindCSS
+<a href="https://tailwindcss.com/docs/controlling-file-size">official guide</a> recommends not to use string concatenation to create class
+names, but if you still want to do that, use whitelist patterns to bypass the
+cleaning.</p>
+<p>For example if I want to keep all colors for background and text:</p>
+<pre><code>  purge: {
+    content: [
+      &quot;./src/**/*.{ts,tsx,html}&quot;,
+    ],
+    options: {
+      whitelistPatterns: [/^bg-/, /^text-/],
+    },
+  },
+</code></pre><p>You can find my full setup for my <a href="https://metaboard.net">new React app</a> in <a href="https://github.com/manhtai/metaboard">Github</a>.</p>
 
 </div>
 

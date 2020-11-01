@@ -20,14 +20,14 @@
 since we use Metabase for all our analysis tasks, we got the HR database to
 query all the things about our colleagues (not the salary though, it&amp;rsquo;s
 accounting&amp;rsquo;s matter).&lt;/p&gt;
-&lt;p&gt;I&amp;rsquo;m not interested in my colleagues&amp;rsquo; days of leave, but I wish they got a happy
+&lt;p&gt;I&amp;rsquo;m not interested in my colleagues&#39; days of leave, but I wish they got a happy
 birthday, so why don&amp;rsquo;t we send out a wish, automatically?&lt;/p&gt;
 &lt;p&gt;I write a question in SQL, it&amp;rsquo;s just as simple as list out all people who
 have date and month equal to today&amp;rsquo;s date and month. And use a &lt;a href=&#34;https://manhtai.github.io/posts/metabase-alerts&#34;&gt;bot&lt;/a&gt; to
 check the question everyday at 10am, then send out a wish if the question is
 not empty.&lt;/p&gt;
 &lt;p&gt;The tricky part is we don&amp;rsquo;t know firsthand what should be included in the
-message, like our colleagues&amp;rsquo; name, slack id, etc. So I have to evaluate them
+message, like our colleagues&#39; name, slack id, etc. So I have to evaluate them
 at running time. The solution is to pass a string to alert message and then
 convert it to string interpolation later. Like this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// When creating alert
