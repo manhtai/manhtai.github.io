@@ -1,0 +1,92 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>aws on Go slowly</title>
+    <link>https://manhtai.github.io/tags/aws/</link>
+    <description>Recent content in aws on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 04 Dec 2020 20:53:21 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Setup CORS for S3 and Cloudfront</title>
+      <link>https://manhtai.github.io/posts/setup-cors-for-s3-and-cloudfront/</link>
+      <pubDate>Fri, 04 Dec 2020 20:53:21 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/setup-cors-for-s3-and-cloudfront/</guid>
+      <description>&lt;p&gt;CORS problem arises in one of our apps because static files return from
+CloudFront has not allow CORS. Specifically, it does not return following
+header:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;Access-Control-Allow-Origin: *
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The problem is, we&amp;rsquo;ve setup CloudFront and S3 to support CORS as mentioned in
+&lt;a href=&#34;https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html&#34;&gt;the docs&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In S3 bucket rules, we have:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;[
+    {
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;AllowedHeaders&amp;#34;&lt;/span&gt;: [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Authorization&amp;#34;&lt;/span&gt;
+        ],
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;AllowedMethods&amp;#34;&lt;/span&gt;: [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GET&amp;#34;&lt;/span&gt;
+        ],
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;AllowedOrigins&amp;#34;&lt;/span&gt;: [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;
+        ],
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;ExposeHeaders&amp;#34;&lt;/span&gt;: [],
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;MaxAgeSeconds&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;20000&lt;/span&gt;
+    }
+]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In CloudFront, we have:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;Cache and origin request settings: Use a cache policy and origin request policy
+Cache Policy                     : Managed-CachingOptimized
+Origin Request Policy            : Managed-CORS-S3Origin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;All looks good, but our problem persists.&lt;/p&gt;
+&lt;p&gt;Following &lt;a href=&#34;https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html&#34;&gt;the docs&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How does Amazon S3 evaluate the CORS configuration on a bucket?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When Amazon S3 receives a preflight request from a browser, it evaluates the
+CORS configuration for the bucket and uses the first CORSRule rule that matches
+the incoming browser request to enable a cross-origin request. For a rule to
+match, the following conditions must be met:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The request&amp;rsquo;s Origin header must match an AllowedOrigin element.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The request method (for example, GET or PUT) or the Access-Control-Request-Method
+header in case of a preflight OPTIONS request must be one of the AllowedMethod elements.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Every header listed in the request&amp;rsquo;s Access-Control-Request-Headers header on the
+preflight request must match an AllowedHeader element.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We inspect the GET request that the browser makes to get the static file and
+observe that the request header does not include &lt;code&gt;Origin&lt;/code&gt; in the first request
+send to CloudFront, and CloudFront does not send back
+&lt;code&gt;Access-Control-Allow-Origin&lt;/code&gt;.
+After the first request, CloudFront will cache the response header, and even
+if the browser send the &lt;code&gt;Origin&lt;/code&gt; header next time, it still does not send back
+&lt;code&gt;Access-Control-Allow-Origin&lt;/code&gt; header.&lt;/p&gt;
+&lt;p&gt;The solution is quite simple now, we create a new cache policy with &lt;code&gt;Origin&lt;/code&gt; be one
+of the cache keys (the only different one from &lt;code&gt;Managed-CachingOptimized&lt;/code&gt; policy),
+then the problem goes away.&lt;/p&gt;
+&lt;p&gt;This works fine if the origin number is small as in our case.&lt;/p&gt;
+&lt;p&gt;There are two other ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;(1) Use Lambda@Edge to set the necessary header.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;(2) Override origin header from CloudFront to a dummy one.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(2) feels a little bit hacky but it might be the best solution.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

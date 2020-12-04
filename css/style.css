@@ -1,13 +1,12 @@
-@import url('https://fonts.googleapis.com/css?family=Merriweather');
-@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans+SC');
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
 
 body, li p {
-	font-family: 'Merriweather', serif;
+	font-family: 'Nunito Sans', Tahoma, sans-serif;
 }
 
 h1,h2,h3,h4,h5,h6,header,header.a {
-	text-transform: lowercase;
-	font-family: 'Alegreya Sans SC', sans-serif;
+	text-transform: capitalize;
+	font-family: 'Nunito Sans', Tahoma, sans-serif;
 }
 
 header,header.a{
@@ -216,8 +215,6 @@ p a {
 }
 
 code {
-	font-size: 85%;
-	margin-bottom: 20px;
 	background-color: #F4F4F5;
 	-moz-hyphens: none;
 	-webkit-hyphens: none;
