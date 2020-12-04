@@ -6,7 +6,7 @@ draft: false
 ---
 
 CORS problem arises in one of our apps because static files return from
-CloudFront has not allow CORS. Specifically, it does not return following
+CloudFront do not allow CORS. Specifically, they do not return following
 header:
 
 ```markdown
@@ -47,7 +47,7 @@ Origin Request Policy            : Managed-CORS-S3Origin
 
 All looks good, but our problem persists.
 
-Following [the docs][0]:
+Continue following [the docs][0]:
 
 
 > How does Amazon S3 evaluate the CORS configuration on a bucket?
@@ -66,17 +66,18 @@ Following [the docs][0]:
 >    preflight request must match an AllowedHeader element.
 
 
-We inspect the GET request that the browser makes to get the static file and
+We inspect the GET request that the browser makes to get the static files and
 observe that the request header does not include `Origin` in the first request
 send to CloudFront, and CloudFront does not send back
-`Access-Control-Allow-Origin`.
-After the first request, CloudFront will cache the response header, and even
-if the browser send the `Origin` header next time, it still does not send back
 `Access-Control-Allow-Origin` header.
 
-The solution is quite simple now, we create a new cache policy with `Origin` be one
-of the cache keys (the only different one from `Managed-CachingOptimized` policy),
-then the problem goes away.
+After the first request, CloudFront will cache the response header, and even
+if the browser send the `Origin` request header next time, it still does not send back
+`Access-Control-Allow-Origin` response header.
+
+The solution is quite simple than we thought, we create a new cache policy with
+`Origin` be one of the cache keys (the only different one from `Managed-CachingOptimized`
+policy), then the problem goes away.
 
 This works fine if the origin number is small as in our case.
 
