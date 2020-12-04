@@ -7,6 +7,8 @@ body, li p {
 h1,h2,h3,h4,h5,h6,header,header.a {
 	text-transform: capitalize;
 	font-family: 'Nunito Sans', Tahoma, sans-serif;
+	margin-top: 1rem;
+	margin-bottom: 0.5rem;
 }
 
 header,header.a{
@@ -221,6 +223,8 @@ code {
 	-o-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
+	margin-top: 0.75rem;
+	margin-bottom: 1.5rem;
 }
 
 code.has-jax {
