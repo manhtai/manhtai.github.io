@@ -106,7 +106,7 @@ window.onload = ready;
 <div class="content">
   <h1>Setup CORS for S3 and Cloudfront <aside><a href="/tags/s3/">s3</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/cloudfront/">cloudfront</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/aws/">aws</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
   <p>CORS problem arises in one of our apps because static files return from
-CloudFront has not allow CORS. Specifically, it does not return following
+CloudFront do not allow CORS. Specifically, they do not return following
 header:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">Access-Control-Allow-Origin: *
 </code></pre></div><p>The problem is, we&rsquo;ve setup CloudFront and S3 to support CORS as mentioned in
@@ -132,7 +132,7 @@ header:</p>
 Cache Policy                     : Managed-CachingOptimized
 Origin Request Policy            : Managed-CORS-S3Origin
 </code></pre></div><p>All looks good, but our problem persists.</p>
-<p>Following <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html">the docs</a>:</p>
+<p>Continue following <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html">the docs</a>:</p>
 <blockquote>
 <p>How does Amazon S3 evaluate the CORS configuration on a bucket?</p>
 </blockquote>
@@ -153,16 +153,16 @@ header in case of a preflight OPTIONS request must be one of the AllowedMethod e
 <p>Every header listed in the request&rsquo;s Access-Control-Request-Headers header on the
 preflight request must match an AllowedHeader element.</p>
 </blockquote>
-<p>We inspect the GET request that the browser makes to get the static file and
+<p>We inspect the GET request that the browser makes to get the static files and
 observe that the request header does not include <code>Origin</code> in the first request
 send to CloudFront, and CloudFront does not send back
-<code>Access-Control-Allow-Origin</code>.
-After the first request, CloudFront will cache the response header, and even
-if the browser send the <code>Origin</code> header next time, it still does not send back
 <code>Access-Control-Allow-Origin</code> header.</p>
-<p>The solution is quite simple now, we create a new cache policy with <code>Origin</code> be one
-of the cache keys (the only different one from <code>Managed-CachingOptimized</code> policy),
-then the problem goes away.</p>
+<p>After the first request, CloudFront will cache the response header, and even
+if the browser send the <code>Origin</code> request header next time, it still does not send back
+<code>Access-Control-Allow-Origin</code> response header.</p>
+<p>The solution is quite simple than we thought, we create a new cache policy with
+<code>Origin</code> be one of the cache keys (the only different one from <code>Managed-CachingOptimized</code>
+policy), then the problem goes away.</p>
 <p>This works fine if the origin number is small as in our case.</p>
 <p>There are two other ways:</p>
 <ul>
