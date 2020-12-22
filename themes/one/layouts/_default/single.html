@@ -52,7 +52,7 @@ window.onload = ready;
   {{ .Content }}
 </div>
 
-{{ if (eq .Type "post") }}
+{{ if (eq .Type "posts") }}
   <p><small><em>Written on {{ .Date.Format "January 2, 2006"}}. </em></small></p>
 {{ end }}
 
