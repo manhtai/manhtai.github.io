@@ -78,13 +78,13 @@ policy), then the problem goes away.&lt;/p&gt;
 &lt;p&gt;There are two other ways:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;(1) Use Lambda@Edge to set the necessary header.&lt;/p&gt;
+&lt;p&gt;1, Use Lambda@Edge to set the necessary header.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;(2) Override origin header from CloudFront to a dummy one.&lt;/p&gt;
+&lt;p&gt;2, Override origin header from CloudFront to a dummy one.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;(2) feels a little bit hacky but it might be the best solution.&lt;/p&gt;
+&lt;p&gt;2, feels a little bit hacky but it might be the best solution.&lt;/p&gt;
 </description>
     </item>
     
@@ -208,21 +208,21 @@ when uploading data, into a &lt;code&gt;InputStream&lt;/code&gt; for consuming?&
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; isPipe&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The code is quite trivial, but some notes worth mentioning here:&lt;/p&gt;
-&lt;ol&gt;
+&lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
+&lt;p&gt;1, We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
 avoid blocking.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
+&lt;p&gt;2, We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
 subscriber will know when to stop.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
+&lt;p&gt;3, &lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
 stream is subscribed to, so we use &lt;code&gt;DataBufferUtils.releaseConsumer()&lt;/code&gt; to
 start the writing immediately.&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -444,29 +444,21 @@ benefits of the reactive web client.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Some things worth noting here are:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;ol&gt;
-&lt;li&gt;The parameters in &lt;code&gt;@Value&lt;/code&gt; are default configurations for Spring Security
+&lt;p&gt;1, The parameters in &lt;code&gt;@Value&lt;/code&gt; are default configurations for Spring Security
 Oauth2 Client to work (ie. autowiring), so with some luck you can make it work
-without define a bean for &lt;code&gt;ReactiveClientRegistrationRepository&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;
+without define a bean for &lt;code&gt;ReactiveClientRegistrationRepository&lt;/code&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;&lt;code&gt;WebClient&lt;/code&gt; bean is qualified with &lt;code&gt;&amp;quot;my-platform&amp;quot;&lt;/code&gt; so it will not conflict
-with other web clients that you may use in your project.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;2, &lt;code&gt;WebClient&lt;/code&gt; bean is qualified with &lt;code&gt;&amp;quot;my-platform&amp;quot;&lt;/code&gt; so it will not conflict
+with other web clients that you may use in your project.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;I used &lt;code&gt;AuthorizationGrantType.CLIENT_CREDENTIALS&lt;/code&gt; here, but it should
-work with any authorization grant types.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;3, I used &lt;code&gt;AuthorizationGrantType.CLIENT_CREDENTIALS&lt;/code&gt; here, but it should
+work with any authorization grant types.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;4&#34;&gt;
-&lt;li&gt;I use &lt;strong&gt;constructor injection&lt;/strong&gt; instead of &lt;strong&gt;field injection&lt;/strong&gt; and it
-is considered better practice, you should read more about that.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;4, I use &lt;strong&gt;constructor injection&lt;/strong&gt; instead of &lt;strong&gt;field injection&lt;/strong&gt; and it
+is considered better practice, you should read more about that.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Now we can use the WebClient as we are used to:&lt;/p&gt;
@@ -521,21 +513,15 @@ they can be easily consumed by applications and services.&lt;/p&gt;
 keep in mind:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;ol&gt;
-&lt;li&gt;Kafka Connect container must join your Kafka cluster to do the work.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;1, Kafka Connect container must join your Kafka cluster to do the work.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;We can pre-build Debezium connector in Kafka Connect image (or vice
+&lt;p&gt;2, We can pre-build Debezium connector in Kafka Connect image (or vice
 versa), but we have to manually create new Kafka Connect source using REST
-API.&lt;/li&gt;
-&lt;/ol&gt;
+API.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;We can do the 2nd thing automatically when deploying to K8s.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;3, We can do the 2nd thing automatically when deploying to K8s.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Let&amp;rsquo;t get started!&lt;/p&gt;
@@ -982,15 +968,11 @@ running ECS instances? Here it is.&lt;/p&gt;
 steps:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;ol&gt;
-&lt;li&gt;Create a lambda function using this &lt;a href=&#34;https://gist.github.com/manhtai/66dfdae56ebce7b6270788018516a409&#34;&gt;script&lt;/a&gt;. It is my fork of AWS
-sample &lt;a href=&#34;https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py&#34;&gt;script&lt;/a&gt;, but sucks less.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;1, Create a lambda function using this &lt;a href=&#34;https://gist.github.com/manhtai/66dfdae56ebce7b6270788018516a409&#34;&gt;script&lt;/a&gt;. It is my fork of AWS
+sample &lt;a href=&#34;https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py&#34;&gt;script&lt;/a&gt;, but sucks less.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;Set role for our lambda function to have these permissions:&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;2, Set role for our lambda function to have these permissions:&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre&gt;&lt;code&gt;- autoscaling:CompleteLifecycleAction
@@ -1011,22 +993,16 @@ sample &lt;a href=&#34;https://github.com/aws-samples/ecs-cid-sample/blob/master
 - sns:Publish
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
 &lt;li&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;Setup an SNS trigger for the function, choose a name for it.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;3, Setup an SNS trigger for the function, choose a name for it.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;4&#34;&gt;
-&lt;li&gt;Setup a service role so Auto Scaling Groups can push to SNS, using &lt;a href=&#34;https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html#sns-notifications&#34;&gt;this
+&lt;p&gt;4, Setup a service role so Auto Scaling Groups can push to SNS, using &lt;a href=&#34;https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html#sns-notifications&#34;&gt;this
 guide&lt;/a&gt;. (This is quite interesting because you have to set up a role so
-that a service will have some kind of permission).&lt;/li&gt;
-&lt;/ol&gt;
+that a service will have some kind of permission).&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;5&#34;&gt;
-&lt;li&gt;Create a lifecycle hook by CLI, since the &lt;strong&gt;GUI is not fully supported
-yet&lt;/strong&gt;:&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;5, Create a lifecycle hook by CLI, since the &lt;strong&gt;GUI is not fully supported
+yet&lt;/strong&gt;:&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre&gt;&lt;code&gt;aws autoscaling put-lifecycle-hook

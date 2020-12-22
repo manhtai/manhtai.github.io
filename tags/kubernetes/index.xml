@@ -34,21 +34,15 @@ they can be easily consumed by applications and services.&lt;/p&gt;
 keep in mind:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;ol&gt;
-&lt;li&gt;Kafka Connect container must join your Kafka cluster to do the work.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;1, Kafka Connect container must join your Kafka cluster to do the work.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;We can pre-build Debezium connector in Kafka Connect image (or vice
+&lt;p&gt;2, We can pre-build Debezium connector in Kafka Connect image (or vice
 versa), but we have to manually create new Kafka Connect source using REST
-API.&lt;/li&gt;
-&lt;/ol&gt;
+API.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;We can do the 2nd thing automatically when deploying to K8s.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;3, We can do the 2nd thing automatically when deploying to K8s.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Let&amp;rsquo;t get started!&lt;/p&gt;

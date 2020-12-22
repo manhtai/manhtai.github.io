@@ -155,29 +155,21 @@ benefits of the reactive web client.</p>
 </code></pre></div><p>Some things worth noting here are:</p>
 <ul>
 <li>
-<ol>
-<li>The parameters in <code>@Value</code> are default configurations for Spring Security
+<p>1, The parameters in <code>@Value</code> are default configurations for Spring Security
 Oauth2 Client to work (ie. autowiring), so with some luck you can make it work
-without define a bean for <code>ReactiveClientRegistrationRepository</code>.</li>
-</ol>
+without define a bean for <code>ReactiveClientRegistrationRepository</code>.</p>
 </li>
 <li>
-<ol start="2">
-<li><code>WebClient</code> bean is qualified with <code>&quot;my-platform&quot;</code> so it will not conflict
-with other web clients that you may use in your project.</li>
-</ol>
+<p>2, <code>WebClient</code> bean is qualified with <code>&quot;my-platform&quot;</code> so it will not conflict
+with other web clients that you may use in your project.</p>
 </li>
 <li>
-<ol start="3">
-<li>I used <code>AuthorizationGrantType.CLIENT_CREDENTIALS</code> here, but it should
-work with any authorization grant types.</li>
-</ol>
+<p>3, I used <code>AuthorizationGrantType.CLIENT_CREDENTIALS</code> here, but it should
+work with any authorization grant types.</p>
 </li>
 <li>
-<ol start="4">
-<li>I use <strong>constructor injection</strong> instead of <strong>field injection</strong> and it
-is considered better practice, you should read more about that.</li>
-</ol>
+<p>4, I use <strong>constructor injection</strong> instead of <strong>field injection</strong> and it
+is considered better practice, you should read more about that.</p>
 </li>
 </ul>
 <p>Now we can use the WebClient as we are used to:</p>

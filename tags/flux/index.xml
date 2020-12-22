@@ -35,21 +35,21 @@ when uploading data, into a &lt;code&gt;InputStream&lt;/code&gt; for consuming?&
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; isPipe&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The code is quite trivial, but some notes worth mentioning here:&lt;/p&gt;
-&lt;ol&gt;
+&lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
+&lt;p&gt;1, We need to subscribe on another Thread by using &lt;code&gt;Schedulers.elastic()&lt;/code&gt; to
 avoid blocking.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
+&lt;p&gt;2, We need to close the &lt;code&gt;PipedOutputStream&lt;/code&gt; when we finished, so downstream
 subscriber will know when to stop.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
+&lt;p&gt;3, &lt;code&gt;DataBufferUtils.write()&lt;/code&gt; start writing as soon as the Flux from output
 stream is subscribed to, so we use &lt;code&gt;DataBufferUtils.releaseConsumer()&lt;/code&gt; to
 start the writing immediately.&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ul&gt;
 </description>
     </item>
     

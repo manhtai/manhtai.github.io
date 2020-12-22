@@ -124,21 +124,21 @@ when uploading data, into a <code>InputStream</code> for consuming?</p>
     <span style="color:#66d9ef">return</span> isPipe<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>The code is quite trivial, but some notes worth mentioning here:</p>
-<ol>
+<ul>
 <li>
-<p>We need to subscribe on another Thread by using <code>Schedulers.elastic()</code> to
+<p>1, We need to subscribe on another Thread by using <code>Schedulers.elastic()</code> to
 avoid blocking.</p>
 </li>
 <li>
-<p>We need to close the <code>PipedOutputStream</code> when we finished, so downstream
+<p>2, We need to close the <code>PipedOutputStream</code> when we finished, so downstream
 subscriber will know when to stop.</p>
 </li>
 <li>
-<p><code>DataBufferUtils.write()</code> start writing as soon as the Flux from output
+<p>3, <code>DataBufferUtils.write()</code> start writing as soon as the Flux from output
 stream is subscribed to, so we use <code>DataBufferUtils.releaseConsumer()</code> to
 start the writing immediately.</p>
 </li>
-</ol>
+</ul>
 
 </div>
 

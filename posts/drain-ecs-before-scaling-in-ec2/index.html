@@ -122,15 +122,11 @@ running ECS instances? Here it is.</p>
 steps:</p>
 <ul>
 <li>
-<ol>
-<li>Create a lambda function using this <a href="https://gist.github.com/manhtai/66dfdae56ebce7b6270788018516a409">script</a>. It is my fork of AWS
-sample <a href="https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py">script</a>, but sucks less.</li>
-</ol>
+<p>1, Create a lambda function using this <a href="https://gist.github.com/manhtai/66dfdae56ebce7b6270788018516a409">script</a>. It is my fork of AWS
+sample <a href="https://github.com/aws-samples/ecs-cid-sample/blob/master/code/index.py">script</a>, but sucks less.</p>
 </li>
 <li>
-<ol start="2">
-<li>Set role for our lambda function to have these permissions:</li>
-</ol>
+<p>2, Set role for our lambda function to have these permissions:</p>
 </li>
 </ul>
 <pre><code>- autoscaling:CompleteLifecycleAction
@@ -151,22 +147,16 @@ sample <a href="https://github.com/aws-samples/ecs-cid-sample/blob/master/code/i
 - sns:Publish
 </code></pre><ul>
 <li>
-<ol start="3">
-<li>Setup an SNS trigger for the function, choose a name for it.</li>
-</ol>
+<p>3, Setup an SNS trigger for the function, choose a name for it.</p>
 </li>
 <li>
-<ol start="4">
-<li>Setup a service role so Auto Scaling Groups can push to SNS, using <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html#sns-notifications">this
+<p>4, Setup a service role so Auto Scaling Groups can push to SNS, using <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html#sns-notifications">this
 guide</a>. (This is quite interesting because you have to set up a role so
-that a service will have some kind of permission).</li>
-</ol>
+that a service will have some kind of permission).</p>
 </li>
 <li>
-<ol start="5">
-<li>Create a lifecycle hook by CLI, since the <strong>GUI is not fully supported
-yet</strong>:</li>
-</ol>
+<p>5, Create a lifecycle hook by CLI, since the <strong>GUI is not fully supported
+yet</strong>:</p>
 </li>
 </ul>
 <pre><code>aws autoscaling put-lifecycle-hook

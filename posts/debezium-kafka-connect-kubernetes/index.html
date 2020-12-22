@@ -123,21 +123,15 @@ they can be easily consumed by applications and services.</p>
 keep in mind:</p>
 <ul>
 <li>
-<ol>
-<li>Kafka Connect container must join your Kafka cluster to do the work.</li>
-</ol>
+<p>1, Kafka Connect container must join your Kafka cluster to do the work.</p>
 </li>
 <li>
-<ol start="2">
-<li>We can pre-build Debezium connector in Kafka Connect image (or vice
+<p>2, We can pre-build Debezium connector in Kafka Connect image (or vice
 versa), but we have to manually create new Kafka Connect source using REST
-API.</li>
-</ol>
+API.</p>
 </li>
 <li>
-<ol start="3">
-<li>We can do the 2nd thing automatically when deploying to K8s.</li>
-</ol>
+<p>3, We can do the 2nd thing automatically when deploying to K8s.</p>
 </li>
 </ul>
 <p>Let&rsquo;t get started!</p>

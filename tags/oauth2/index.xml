@@ -66,29 +66,21 @@ benefits of the reactive web client.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Some things worth noting here are:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;ol&gt;
-&lt;li&gt;The parameters in &lt;code&gt;@Value&lt;/code&gt; are default configurations for Spring Security
+&lt;p&gt;1, The parameters in &lt;code&gt;@Value&lt;/code&gt; are default configurations for Spring Security
 Oauth2 Client to work (ie. autowiring), so with some luck you can make it work
-without define a bean for &lt;code&gt;ReactiveClientRegistrationRepository&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;
+without define a bean for &lt;code&gt;ReactiveClientRegistrationRepository&lt;/code&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;&lt;code&gt;WebClient&lt;/code&gt; bean is qualified with &lt;code&gt;&amp;quot;my-platform&amp;quot;&lt;/code&gt; so it will not conflict
-with other web clients that you may use in your project.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;2, &lt;code&gt;WebClient&lt;/code&gt; bean is qualified with &lt;code&gt;&amp;quot;my-platform&amp;quot;&lt;/code&gt; so it will not conflict
+with other web clients that you may use in your project.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;I used &lt;code&gt;AuthorizationGrantType.CLIENT_CREDENTIALS&lt;/code&gt; here, but it should
-work with any authorization grant types.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;3, I used &lt;code&gt;AuthorizationGrantType.CLIENT_CREDENTIALS&lt;/code&gt; here, but it should
+work with any authorization grant types.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;ol start=&#34;4&#34;&gt;
-&lt;li&gt;I use &lt;strong&gt;constructor injection&lt;/strong&gt; instead of &lt;strong&gt;field injection&lt;/strong&gt; and it
-is considered better practice, you should read more about that.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;4, I use &lt;strong&gt;constructor injection&lt;/strong&gt; instead of &lt;strong&gt;field injection&lt;/strong&gt; and it
+is considered better practice, you should read more about that.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Now we can use the WebClient as we are used to:&lt;/p&gt;

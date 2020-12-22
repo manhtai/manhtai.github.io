@@ -78,13 +78,13 @@ policy), then the problem goes away.&lt;/p&gt;
 &lt;p&gt;There are two other ways:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;(1) Use Lambda@Edge to set the necessary header.&lt;/p&gt;
+&lt;p&gt;1, Use Lambda@Edge to set the necessary header.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;(2) Override origin header from CloudFront to a dummy one.&lt;/p&gt;
+&lt;p&gt;2, Override origin header from CloudFront to a dummy one.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;(2) feels a little bit hacky but it might be the best solution.&lt;/p&gt;
+&lt;p&gt;2, feels a little bit hacky but it might be the best solution.&lt;/p&gt;
 </description>
     </item>
     
