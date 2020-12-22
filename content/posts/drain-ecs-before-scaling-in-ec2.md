@@ -26,10 +26,10 @@ running ECS instances? Here it is.
 Firstly, make sure you know what [lifecycle hooks][2] are. Then follow these
 steps:
 
-- 1) Create a lambda function using this [script][3]. It is my fork of AWS
+- 1, Create a lambda function using this [script][3]. It is my fork of AWS
   sample [script][4], but sucks less.
 
-- 2) Set role for our lambda function to have these permissions:
+- 2, Set role for our lambda function to have these permissions:
 
 ```
 - autoscaling:CompleteLifecycleAction
@@ -50,13 +50,13 @@ steps:
 - sns:Publish
 ```
 
-- 3) Setup an SNS trigger for the function, choose a name for it.
+- 3, Setup an SNS trigger for the function, choose a name for it.
 
-- 4) Setup a service role so Auto Scaling Groups can push to SNS, using [this
+- 4, Setup a service role so Auto Scaling Groups can push to SNS, using [this
    guide][5]. (This is quite interesting because you have to set up a role so
    that a service will have some kind of permission).
 
-- 5) Create a lifecycle hook by CLI, since the **GUI is not fully supported
+- 5, Create a lifecycle hook by CLI, since the **GUI is not fully supported
    yet**:
 
 ```

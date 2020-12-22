@@ -65,17 +65,17 @@ public class Oauth2ClientConfig {
 
 Some things worth noting here are:
 
-- 1) The parameters in `@Value` are default configurations for Spring Security
+- 1, The parameters in `@Value` are default configurations for Spring Security
   Oauth2 Client to work (ie. autowiring), so with some luck you can make it work
   without define a bean for `ReactiveClientRegistrationRepository`.
 
-- 2) `WebClient` bean is qualified with `"my-platform"` so it will not conflict
+- 2, `WebClient` bean is qualified with `"my-platform"` so it will not conflict
   with other web clients that you may use in your project.
 
-- 3) I used `AuthorizationGrantType.CLIENT_CREDENTIALS` here, but it should
+- 3, I used `AuthorizationGrantType.CLIENT_CREDENTIALS` here, but it should
   work with any authorization grant types.
 
-- 4) I use **constructor injection** instead of **field injection** and it
+- 4, I use **constructor injection** instead of **field injection** and it
   is considered better practice, you should read more about that.
 
 

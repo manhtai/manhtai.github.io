@@ -83,12 +83,12 @@ This works fine if the origin number is small as in our case.
 
 There are two other ways:
 
-- (1) Use Lambda@Edge to set the necessary header.
+- 1, Use Lambda@Edge to set the necessary header.
 
-- (2) Override origin header from CloudFront to a dummy one.
+- 2, Override origin header from CloudFront to a dummy one.
 
 
-(2) feels a little bit hacky but it might be the best solution.
+2, feels a little bit hacky but it might be the best solution.
 
 
 [0]: https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html

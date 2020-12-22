@@ -24,13 +24,13 @@ From Debezium website, we could easily find out what it does:
 Now to deploy Debezium connector to Kubernetes, there are 3 things we need to
 keep in mind:
 
-- 1) Kafka Connect container must join your Kafka cluster to do the work.
+- 1, Kafka Connect container must join your Kafka cluster to do the work.
 
-- 2) We can pre-build Debezium connector in Kafka Connect image (or vice
+- 2, We can pre-build Debezium connector in Kafka Connect image (or vice
 versa), but we have to manually create new Kafka Connect source using REST
 API.
 
-- 3) We can do the 2nd thing automatically when deploying to K8s.
+- 3, We can do the 2nd thing automatically when deploying to K8s.
 
 Let't get started!
 

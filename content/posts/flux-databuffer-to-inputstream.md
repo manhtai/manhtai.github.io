@@ -31,12 +31,12 @@ InputStream getInputStreamFromFluxDataBuffer(Flux<DataBuffer> data) throws IOExc
 
 The code is quite trivial, but some notes worth mentioning here:
 
-1) We need to subscribe on another Thread by using `Schedulers.elastic()` to
+- 1, We need to subscribe on another Thread by using `Schedulers.elastic()` to
 avoid blocking.
 
-2) We need to close the `PipedOutputStream` when we finished, so downstream
+- 2, We need to close the `PipedOutputStream` when we finished, so downstream
 subscriber will know when to stop.
 
-3) `DataBufferUtils.write()` start writing as soon as the Flux from output
+- 3, `DataBufferUtils.write()` start writing as soon as the Flux from output
 stream is subscribed to, so we use `DataBufferUtils.releaseConsumer()` to
 start the writing immediately.
