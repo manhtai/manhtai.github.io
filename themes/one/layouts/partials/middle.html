@@ -2,14 +2,18 @@
 
 
 <div class="content">
-    <h1>{{ title .Data.Term  }} posts</h1>
-    {{ range first 8 .Site.RegularPages }}
-    {{ if eq .Type "posts"}}
-        <p>
-        <aside>{{ .Date.Format "January 2, 2006"}}</aside>
-        <a href="{{ .Permalink }}" style="color:black;">{{ .Title }}</a>{{ if .Draft }} <span style="color:#FF4136;">(unpublished)</span>{{ end }}
-        </p>
-    {{ end }}
+    <h1>{{ title .Data.Term | default "Recent" }} posts</h1>
+    {{ $tags := where .Paginator.Pages ".Params.tags" "intersect" (slice .Data.Term) }}
+    {{ range $tags }}
+        {{ if eq .Type "posts"}}
+            {{ partial "item.html" . }}
+        {{ end }}
+    {{ else }}
+        {{ range first 8 .Site.RegularPages }}
+            {{ if eq .Type "posts"}}
+                {{ partial "item.html" . }}
+            {{ end }}
+        {{ end }}
     {{ end }}
 </div>
 

@@ -1,0 +1,4 @@
+<p>
+    <aside>{{ .Date.Format "January 2, 2006"}}</aside>
+    <a href="{{ .Permalink }}" style="color:black;">{{ .Title }}</a>{{ if .Draft }} <span style="color:#FF4136;">(unpublished)</span>{{ end }}
+</p>
