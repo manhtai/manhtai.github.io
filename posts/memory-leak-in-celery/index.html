@@ -104,7 +104,7 @@ window.onload = ready;
 </script>
 
 <div class="content">
-  <h1>Memory Leak in Celery <aside><a href="/tags/celery/">celery</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/ecs/">ecs</a></a>&nbsp;&nbsp;&nbsp;<a href="/tags/docker/">docker</a></a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <h1>Memory Leak in Celery <aside><a href="/tags/celery/">celery</a>&nbsp;&nbsp;&nbsp;<a href="/tags/ecs/">ecs</a>&nbsp;&nbsp;&nbsp;<a href="/tags/docker/">docker</a>&nbsp;&nbsp;&nbsp;</aside></h1>
   <p>Turn out Celery has <a href="https://github.com/celery/celery/issues/1427">some memory leaks</a>. We don&rsquo;t know that beforehand.
 After deploying some Celery servers using AWS ECS we notice that all Celery
 tasks will consume most of the server memory and then become idle.</p>

@@ -3,6 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/2020-in-review/</loc>
+    <lastmod>2020-12-31T21:10:51+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/end-year/</loc>
+    <lastmod>2020-12-31T21:10:51+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/</loc>
+    <lastmod>2020-12-31T21:10:51+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2020-12-31T21:10:51+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/short/</loc>
+    <lastmod>2020-12-31T21:10:51+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2020-12-31T21:10:51+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/tags/aws/</loc>
     <lastmod>2020-12-04T20:53:21+07:00</lastmod>
   </url>
@@ -13,27 +43,12 @@
   </url>
   
   <url>
-    <loc>https://manhtai.github.io/</loc>
-    <lastmod>2020-12-04T20:53:21+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2020-12-04T20:53:21+07:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://manhtai.github.io/tags/s3/</loc>
     <lastmod>2020-12-04T20:53:21+07:00</lastmod>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/posts/setup-cors-for-s3-and-cloudfront/</loc>
-    <lastmod>2020-12-04T20:53:21+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2020-12-04T20:53:21+07:00</lastmod>
   </url>
   
@@ -89,16 +104,6 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/2019-in-review/</loc>
-    <lastmod>2019-12-18T22:04:55+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/end-year/</loc>
-    <lastmod>2019-12-18T22:04:55+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/short/</loc>
     <lastmod>2019-12-18T22:04:55+07:00</lastmod>
   </url>
   
