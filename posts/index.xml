@@ -1552,6 +1552,7 @@ send a message to a choosen channel if the response is not empty.&lt;/p&gt;
 &lt;p&gt;This blog is powered by &lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt; and hosted by &lt;a href=&#34;https://github.com&#34;&gt;GitHub&lt;/a&gt;. I modified the
 &lt;a href=&#34;https://gohugo.io/hosting-and-deployment/hosting-on-github/#github-user-or-organization-pages&#34;&gt;deployment script&lt;/a&gt; a little bit to use 2 braches in 1 repo instead of
 2 repos. It looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; We got &lt;a href=&#34;https://github.com/manhtai/manhtai.github.io/tree/develop/.github/workflows/main.yml&#34;&gt;GitHub actions&lt;/a&gt; now.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;# 0. Notify &amp;amp; get message&lt;/span&gt;
