@@ -5,7 +5,6 @@ body, li p {
 }
 
 h1,h2,h3,h4,h5,h6,header,header.a {
-	text-transform: capitalize;
 	font-family: 'Nunito Sans', Tahoma, sans-serif;
 	margin-top: 1rem;
 	margin-bottom: 0.5rem;
@@ -120,13 +119,19 @@ h1 {
 }
 
 aside {
+	text-transform: capitalize;
 	font-size: 0.84rem;
-	line-height: 1.40;
+	line-height: 1.6;
 	color: #667;
+	opacity: 0.5;
 }
 
 aside em {
 	font-size: 0.7rem;
+}
+
+small {
+	opacity: 0.5;
 }
 
 
