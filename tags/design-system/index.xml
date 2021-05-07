@@ -1,0 +1,48 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>design system on Go slowly</title>
+    <link>https://manhtai.github.io/tags/design-system/</link>
+    <description>Recent content in design system on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 07 May 2021 20:52:25 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/design-system/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Building a design system with Tailwind and Storybook</title>
+      <link>https://manhtai.github.io/posts/building-design-system-with-tailwind-storybook/</link>
+      <pubDate>Fri, 07 May 2021 20:52:25 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/building-design-system-with-tailwind-storybook/</guid>
+      <description>&lt;p&gt;If you don&amp;rsquo;t already know what a design system is, Storybook &lt;a href=&#34;https://storybook.js.org/tutorials/design-systems-for-developers/react/en/introduction/&#34;&gt;tutorial&lt;/a&gt;
+on design system is a good place to start.&lt;/p&gt;
+&lt;p&gt;In short, design systems contain reusable UI components that help teams
+build complex, durable, and accessible user interfaces across projects.
+Storybook is a tool for us to do just that.&lt;/p&gt;
+&lt;p&gt;Our experience in this process as follows:&lt;/p&gt;
+&lt;h4 id=&#34;1-generate-full-tailwindcss-configuration-then-matching-it-with-design-tokens&#34;&gt;1, Generate full Tailwindcss configuration, then matching it with design tokens&lt;/h4&gt;
+&lt;p&gt;We need to fine tune colors, spacing, font sizes and screens at first hand,
+the rest can be updated later. The job is quite boring as we have to input
+numbers manually from Figma to &lt;code&gt;tailwind.config.js&lt;/code&gt; file, but it is one-off
+job so just do it anyway.&lt;/p&gt;
+&lt;h4 id=&#34;2-build-ui-components-in-storybook-one-by-one&#34;&gt;2, Build UI components in Storybook, one by one&lt;/h4&gt;
+&lt;p&gt;This can be built in batch if you had the resources or whenever in need.&lt;/p&gt;
+&lt;h4 id=&#34;3-publish-storybook-as-private-npm-package&#34;&gt;3, Publish Storybook as private npm package&lt;/h4&gt;
+&lt;p&gt;We use GitLab package registry to do that. Every releases will be auto published to
+the registry as well as the Storybook web for showcase purpose.&lt;/p&gt;
+&lt;h4 id=&#34;4-install-the-package-and-reuse-ui-components-in-other-projects&#34;&gt;4, Install the package and reuse UI components in other projects&lt;/h4&gt;
+&lt;p&gt;For local development, you can use &lt;code&gt;npm link&lt;/code&gt; to link local Storybook project with
+the project you are working on without having to publish the package consecutively.&lt;/p&gt;
+&lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;For any project started out with a design team to spare, TailwindCSS is
+pefectly fit for setting up a &amp;ldquo;style API&amp;rdquo; with predefined variables such as colors
+or spacing. Along with Storybook for building reusable components and we got
+a design system good enough to make our product UI/UX experience become consistent
+at scale.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

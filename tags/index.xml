@@ -5,10 +5,37 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 31 Dec 2020 21:10:51 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 07 May 2021 20:52:25 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>design system</title>
+      <link>https://manhtai.github.io/tags/design-system/</link>
+      <pubDate>Fri, 07 May 2021 20:52:25 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/design-system/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>storybook</title>
+      <link>https://manhtai.github.io/tags/storybook/</link>
+      <pubDate>Fri, 07 May 2021 20:52:25 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/storybook/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tailwindcss</title>
+      <link>https://manhtai.github.io/tags/tailwindcss/</link>
+      <pubDate>Fri, 07 May 2021 20:52:25 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/tailwindcss/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>end year</title>
@@ -61,15 +88,6 @@
       <pubDate>Sun, 01 Nov 2020 15:10:07 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/react/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tailwindcss</title>
-      <link>https://manhtai.github.io/tags/tailwindcss/</link>
-      <pubDate>Sun, 01 Nov 2020 15:10:07 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/tailwindcss/</guid>
       <description></description>
     </item>
     
