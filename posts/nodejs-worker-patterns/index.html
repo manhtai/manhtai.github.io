@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>NodeJS worker patterns</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="NodeJS worker patterns">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="NodeJS worker patterns">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/nodejs-worker-patterns/">
+	<meta name="og:site_name" content="NodeJS worker patterns">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="nodejs worker ">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-52114958-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>NodeJS worker patterns <aside><a href="/tags/nodejs/">nodejs</a>&nbsp;&nbsp;&nbsp;<a href="/tags/worker/">worker</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>Sometimes we just need to run a separated worker to process long running jobs in
+NodeJS, what are our options?</p>
+<p>First step is to put the heavy actions into a queue. The second step is to run
+a poller to pull out the messages and execute theme one by one.</p>
+<p>What can we do to max out those worker performance?</p>
+<h3 id="1-fork-a-child-process">1, Fork a child process</h3>
+<p>NodeJS <a href="https://nodejs.org/api/child_process.html">supports</a> spinning off a new child process from the main one.
+It&rsquo;s too expensive so we shouldn&rsquo;t use it. It sure has uses on its own though.</p>
+<h3 id="2-fire-up-worker-threads">2, Fire up Worker threads</h3>
+<p>From Node 10, <code>worker_threads</code> is <a href="https://nodejs.org/api/worker_threads.html">supported</a>, the code is trivial enough:</p>
+<pre><code>const {
+  Worker, isMainThread, parentPort, workerData
+} = require('worker_threads');
+
+if (isMainThread) {
+  module.exports = function parseJSAsync(script) {
+    return new Promise((resolve, reject) =&gt; {
+      const worker = new Worker(__filename, {
+        workerData: script
+      });
+      worker.on('message', resolve);
+      worker.on('error', reject);
+      worker.on('exit', (code) =&gt; {
+        if (code !== 0)
+          reject(new Error(`Worker stopped with exit code ${code}`));
+      });
+    });
+  };
+} else {
+  const { parse } = require('some-js-parsing-library');
+  const script = workerData;
+  parentPort.postMessage(parse(script));
+}
+</code></pre><p>These workers are useful for performing CPU-intensive tasks, not much effects
+for IO operations.</p>
+<h3 id="3-eventemitter">3, EventEmitter</h3>
+<p>Who would have thought about <a href="https://nodejs.org/api/events.html">that</a>?</p>
+<pre><code>const EventEmitter = require('events');
+
+const myWorker = new EventEmitter();
+
+myWorker.on('poll', () =&gt; {
+  console.log('Go and do work');
+
+  myWorker.emit('poll');
+});
+
+
+myWorker.emit('poll');
+</code></pre><p>We could fire up as many <code>EventEmitter</code> as we want and keep them doing the
+work for us.</p>
+
+</div>
+
+
+  <p><small><em>Written on May 13, 2021. </em></small></p>
+
+
+
+
+
+
+<footer>
+	<p><aside>&copy; 2021</aside></a>
+</footer>
+</body>
+</html>
+

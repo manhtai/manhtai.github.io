@@ -5,10 +5,70 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 07 May 2021 20:52:25 +0700</lastBuildDate>
+    <lastBuildDate>Thu, 13 May 2021 19:45:08 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>NodeJS worker patterns</title>
+      <link>https://manhtai.github.io/posts/nodejs-worker-patterns/</link>
+      <pubDate>Thu, 13 May 2021 19:45:08 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/nodejs-worker-patterns/</guid>
+      <description>&lt;p&gt;Sometimes we just need to run a separated worker to process long running jobs in
+NodeJS, what are our options?&lt;/p&gt;
+&lt;p&gt;First step is to put the heavy actions into a queue. The second step is to run
+a poller to pull out the messages and execute theme one by one.&lt;/p&gt;
+&lt;p&gt;What can we do to max out those worker performance?&lt;/p&gt;
+&lt;h3 id=&#34;1-fork-a-child-process&#34;&gt;1, Fork a child process&lt;/h3&gt;
+&lt;p&gt;NodeJS &lt;a href=&#34;https://nodejs.org/api/child_process.html&#34;&gt;supports&lt;/a&gt; spinning off a new child process from the main one.
+It&amp;rsquo;s too expensive so we shouldn&amp;rsquo;t use it. It sure has uses on its own though.&lt;/p&gt;
+&lt;h3 id=&#34;2-fire-up-worker-threads&#34;&gt;2, Fire up Worker threads&lt;/h3&gt;
+&lt;p&gt;From Node 10, &lt;code&gt;worker_threads&lt;/code&gt; is &lt;a href=&#34;https://nodejs.org/api/worker_threads.html&#34;&gt;supported&lt;/a&gt;, the code is trivial enough:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;const {
+  Worker, isMainThread, parentPort, workerData
+} = require(&#39;worker_threads&#39;);
+
+if (isMainThread) {
+  module.exports = function parseJSAsync(script) {
+    return new Promise((resolve, reject) =&amp;gt; {
+      const worker = new Worker(__filename, {
+        workerData: script
+      });
+      worker.on(&#39;message&#39;, resolve);
+      worker.on(&#39;error&#39;, reject);
+      worker.on(&#39;exit&#39;, (code) =&amp;gt; {
+        if (code !== 0)
+          reject(new Error(`Worker stopped with exit code ${code}`));
+      });
+    });
+  };
+} else {
+  const { parse } = require(&#39;some-js-parsing-library&#39;);
+  const script = workerData;
+  parentPort.postMessage(parse(script));
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;These workers are useful for performing CPU-intensive tasks, not much effects
+for IO operations.&lt;/p&gt;
+&lt;h3 id=&#34;3-eventemitter&#34;&gt;3, EventEmitter&lt;/h3&gt;
+&lt;p&gt;Who would have thought about &lt;a href=&#34;https://nodejs.org/api/events.html&#34;&gt;that&lt;/a&gt;?&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;const EventEmitter = require(&#39;events&#39;);
+
+const myWorker = new EventEmitter();
+
+myWorker.on(&#39;poll&#39;, () =&amp;gt; {
+  console.log(&#39;Go and do work&#39;);
+
+  myWorker.emit(&#39;poll&#39;);
+});
+
+
+myWorker.emit(&#39;poll&#39;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We could fire up as many &lt;code&gt;EventEmitter&lt;/code&gt; as we want and keep them doing the
+work for us.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Building a design system with Tailwind and Storybook</title>
