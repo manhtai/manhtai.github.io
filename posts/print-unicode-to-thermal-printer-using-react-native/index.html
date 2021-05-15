@@ -1,58 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
-	<title>How to print Unicode text to a Thermal printer using React Native</title>
-	
-	<meta name="description" content="">
-	<meta name="image" content="">
-	
-	<meta itemprop="name" content="How to print Unicode text to a Thermal printer using React Native">
-	<meta itemprop="description" content="">
-	<meta itemprop="image" content="">
-	
-	<meta name="og:title" content="How to print Unicode text to a Thermal printer using React Native">
-	<meta name="og:description" content="">
-	
-	<meta name="og:url" content="https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/">
-	<meta name="og:site_name" content="How to print Unicode text to a Thermal printer using React Native">
-	<meta name="og:type" content="article">
-	
-	<meta name="article:tag" content="thermal printer react native ">
-	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
-	
-	
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-52114958-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-	
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
-	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>How to print Unicode text to a Thermal printer using React Native</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="How to print Unicode text to a Thermal printer using React Native">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="How to print Unicode text to a Thermal printer using React Native">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/">
+    <meta name="og:site_name" content="How to print Unicode text to a Thermal printer using React Native">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="thermal printer react native ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
 </head>
 
 <body>
 
 <header>
-	
-	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
-	
-	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
-	
-	
-	
-	<a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
 </header>
 
 
@@ -163,72 +150,72 @@ to set it to character font A, like this:</p>
 var CurrentPage = 0;
 
 function ParseLinkHeader(link) {
-	var entries = link && link.split(",") || [];
-	var links = {};
-	for (var i in entries) {
-		var entry = entries[i];
-		var link = {};
-		link.name = entry.match(/rel=\"([^\"]*)/)[1];
-		link.url = entry.match(/<([^>]*)/)[1];
-		link.page = entry.match(/page=(\d+).*$/)[1];
-		links[link.name] = link;
-	}
-	return links;
+    var entries = link && link.split(",") || [];
+    var links = {};
+    for (var i in entries) {
+        var entry = entries[i];
+        var link = {};
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
 }
 
 function DoGithubComments(comment_id, page_id) {
-	var repo_name = "manhtai/manhtai.github.io";
+    var repo_name = "manhtai/manhtai.github.io";
 
-	if (page_id === undefined)
-		page_id = 1;
+    if (page_id === undefined)
+        page_id = 1;
 
-	var api_url = "https://api.github.com/repos/" + repo_name;
-	var api_issue_url = api_url + "/issues/" + comment_id;
-	var api_comments_url = api_url + "/issues/" + comment_id + "/comments" + "?page=" + page_id;
+    var api_url = "https://api.github.com/repos/" + repo_name;
+    var api_issue_url = api_url + "/issues/" + comment_id;
+    var api_comments_url = api_url + "/issues/" + comment_id + "/comments" + "?page=" + page_id;
 
-	var url = "https://github.com/" + repo_name + "/issues/" + comment_id;
+    var url = "https://github.com/" + repo_name + "/issues/" + comment_id;
 
-	$(document).ready(function () {
-		$.getJSON(api_issue_url, function(data) {
-			NbComments = data.comments;
-		});
+    $(document).ready(function () {
+        $.getJSON(api_issue_url, function(data) {
+            NbComments = data.comments;
+        });
 
-		$.ajax(api_comments_url, {
-			headers: {Accept: "application/vnd.github.v3.html+json"},
-			dataType: "json",
-			success: function(comments, textStatus, jqXHR) {
+        $.ajax(api_comments_url, {
+            headers: {Accept: "application/vnd.github.v3.html+json"},
+            dataType: "json",
+            success: function(comments, textStatus, jqXHR) {
 
-				
-				if (page_id == 1)
-					$("#gh-comments-list").append("<a href='" + url + "#new_comment_field' rel='nofollow' target='_blank' class='button'>Post new comment</a>");
+                
+                if (page_id == 1)
+                    $("#gh-comments-list").append("<a href='" + url + "#new_comment_field' rel='nofollow' target='_blank' class='button'>Post new comment</a>");
 
-				
-				$.each(comments, function(i, comment) {
-					var date = new Date(comment.created_at);
-					var t = "<div id='gh-comment'>";
-					
-					t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a></b>";
-					t += " posted at ";
-					t += "<em>" + date.toUTCString() + "</em>";
-					t += "<hr>";
-					t += comment.body_html;
-					t += "</div>";
-					$("#gh-comments-list").append(t);
-				});
+                
+                $.each(comments, function(i, comment) {
+                    var date = new Date(comment.created_at);
+                    var t = "<div id='gh-comment'>";
+                    
+                    t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a></b>";
+                    t += " posted at ";
+                    t += "<em>" + date.toUTCString() + "</em>";
+                    t += "<hr>";
+                    t += comment.body_html;
+                    t += "</div>";
+                    $("#gh-comments-list").append(t);
+                });
 
-				
-				var links = ParseLinkHeader(jqXHR.getResponseHeader("Link"));
-				if ("next" in links) {
-					$("#gh-load-comments").attr("onclick", "DoGithubComments(" + comment_id + "," + (page_id + 1) + ");");
-					$("#gh-load-comments").show();
-				} else {
-					$("#gh-load-comments").hide();
-				}
-			},
-			error: function() {
-				$("#gh-comments-list").append("<a href='" + url + "' rel='nofollow' target='_blank'class='button'>View all comments</a>");
-			}
-		});
+                
+                var links = ParseLinkHeader(jqXHR.getResponseHeader("Link"));
+                if ("next" in links) {
+                    $("#gh-load-comments").attr("onclick", "DoGithubComments(" + comment_id + "," + (page_id + 1) + ");");
+                    $("#gh-load-comments").show();
+                } else {
+                    $("#gh-load-comments").hide();
+                }
+            },
+            error: function() {
+                $("#gh-comments-list").append("<a href='" + url + "' rel='nofollow' target='_blank'class='button'>View all comments</a>");
+            }
+        });
     });
 }
 
@@ -236,10 +223,10 @@ DoGithubComments( 2 );
 </script>
 
 <div id="gh-comments">
-	<br/><br/>
-	<h4>COMMENTS</h4>
-	<div id="gh-comments-list"></div>
-	<a href="javascript:void(0)" id="gh-load-comments" class="btn" style="display:none">Load more comments</a>
+    <br/><br/>
+    <h4>Comments</h4>
+    <div id="gh-comments-list"></div>
+    <a href="javascript:void(0)" id="gh-load-comments" class="btn" style="display:none">Load more comments</a>
 </div>
 
 
@@ -247,7 +234,7 @@ DoGithubComments( 2 );
 
 
 <footer>
-	<p><aside>&copy; 2021</aside></a>
+    <p><aside>&copy; 2021</aside></a>
 </footer>
 </body>
 </html>
