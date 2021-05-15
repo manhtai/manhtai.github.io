@@ -5,10 +5,71 @@
     <description>Recent content in python on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Apr 2018 12:05:19 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 15 May 2021 09:42:52 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>From Python to Rust, then Elixir</title>
+      <link>https://manhtai.github.io/posts/from-python-to-rust-then-elixir/</link>
+      <pubDate>Sat, 15 May 2021 09:42:52 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/from-python-to-rust-then-elixir/</guid>
+      <description>&lt;p&gt;Recently I made &lt;a href=&#34;https://github.com/memoetapp/memoet&#34;&gt;an app&lt;/a&gt; to prepare for some kind of test I have to take.
+I would have use &lt;a href=&#34;https://apps.ankiweb.net/&#34;&gt;Anki&lt;/a&gt; for this purpose but I don&amp;rsquo;t want to spend too much
+time learing how to make an Anki package again. Instead, I spent much more
+time to create a new alternative, but at least I&amp;rsquo;ve learned some things new.&lt;/p&gt;
+&lt;h2 id=&#34;1-porting-ankis-supermemo2-from-python-to-rust&#34;&gt;1. Porting Anki&amp;rsquo;s SuperMemo2 from Python to Rust&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;m not confident enough to launch my own spaced repetition algorithm yet so
+I decided to use &lt;a href=&#34;https://www.supermemo.com/archives1990-2015/english/ol/sm2&#34;&gt;SuperMemo2&lt;/a&gt; in a version implemented by Anki desktop app.
+The Python code is on &lt;a href=&#34;https://github.com/ankitects/anki/blob/6e954e82a5/pylib/anki/scheduler/v2.py&#34;&gt;one scheduler&lt;/a&gt; file and &lt;a href=&#34;https://github.com/ankitects/anki/blob/6e954e82a5/pylib/tests/test_schedv2.py&#34;&gt;one test&lt;/a&gt; file.&lt;/p&gt;
+&lt;p&gt;First thing first, we define an interface which is the core of the algorithm:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;pub&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;trait&lt;/span&gt; Sched {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;next_interval&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;self, card: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Card&lt;/span&gt;, choice: &lt;span style=&#34;color:#a6e22e&#34;&gt;Choice&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;i64&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;answer_card&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;self, card: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mut&lt;/span&gt; Card, choice: &lt;span style=&#34;color:#a6e22e&#34;&gt;Choice&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;Card&lt;/code&gt; contains SuperMemo2&amp;rsquo;s parameters such as queue name, due time, lapses.
+&lt;code&gt;Choice&lt;/code&gt; is an enum correspond to the answer we make, from &lt;strong&gt;Forgot&lt;/strong&gt; to &lt;strong&gt;Easy&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;next_interval&lt;/code&gt; shows estimated time to recall the card if we make a choice,
+&lt;code&gt;answer_card&lt;/code&gt; is the real action when we make that choice.&lt;/p&gt;
+&lt;p&gt;The next following steps are to translate Python functions to Rust methods one by
+one. It is quite a smooth process, I feel like I am just adding type annotations
+to Python code instead of writing new Rust code. The result is &lt;a href=&#34;https://github.com/memoetapp/memoet/blob/master/native/sm2/src/srs/scheduler.rs&#34;&gt;a new Rust&lt;/a&gt;
+file, look quite the same as the old Python one.&lt;/p&gt;
+&lt;h2 id=&#34;2-expose-rust-api-to-elixir-phoenix-app&#34;&gt;2. Expose Rust API to Elixir Phoenix app&lt;/h2&gt;
+&lt;p&gt;After having myself a spaced repetition package, I need to bring it to life.
+To tell the truth, I chose Rust to port to because I know I can import it from
+almost anywhere through &lt;a href=&#34;https://doc.rust-lang.org/1.2.0/book/rust-inside-other-languages.html&#34;&gt;Foreign Function Interface&lt;/a&gt; (FFI).&lt;/p&gt;
+&lt;p&gt;For no &lt;a href=&#34;https://www.erlang-solutions.com/blog/why-elixir-is-the-programming-language-you-should-learn-in-2020/&#34;&gt;specific reasons&lt;/a&gt;, let&amp;rsquo;s make an Elixir app!&lt;/p&gt;
+&lt;p&gt;We use &lt;a href=&#34;https://github.com/rusterlium/rustler&#34;&gt;Rustler&lt;/a&gt; to build the bridge between Rust code and Erlang NIFs. The
+setup is quite simple. After some times, we get a new Elixir module with the
+APIs we need:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;defmodule Memoet.SRS.Sm2 do
+  @moduledoc &amp;quot;&amp;quot;&amp;quot;
+  Sm2 API, calling Rust code
+  When your NIF is loaded, it will override those functions below.
+  &amp;quot;&amp;quot;&amp;quot;
+
+  use Rustler, otp_app: :memoet, crate: &amp;quot;sm2&amp;quot;
+  alias Memoet.SRS.{Config, Scheduler, Card, Choices}
+
+  @spec new(Config.t(), integer(), integer()) :: Scheduler.t()
+  def new(_config, _day_cut_off, _day_today), do: error()
+
+  @spec next_interval(Card.t(), Scheduler.t(), Choices.t()) :: integer()
+  def next_interval(_card, _scheduler, _choice), do: error()
+
+  @spec answer_card(Card.t(), Scheduler.t(), Choices.t()) :: Card.t()
+  def answer_card(_card, _scheduler, _choice), do: error()
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Another way would work is to compile Rust code to Wasm, and then import it from
+anywhere support Wasm runtime.&lt;/p&gt;
+&lt;h2 id=&#34;3-summary&#34;&gt;3. Summary&lt;/h2&gt;
+&lt;p&gt;Rust is reducing the gap between languages. Maintaining the core logic in Rust
+if possible should be considered as a wise choice.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Python 2to3 Transition</title>

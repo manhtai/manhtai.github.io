@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>From Python to Rust, then Elixir</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="From Python to Rust, then Elixir">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="From Python to Rust, then Elixir">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://manhtai.github.io/posts/from-python-to-rust-then-elixir/">
+	<meta name="og:site_name" content="From Python to Rust, then Elixir">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="python rust elixir wasm ">
+	<link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+	
+	
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-52114958-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+	
+	&nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+	
+	
+	
+	<a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>From Python to Rust, then Elixir <aside><a href="/tags/python/">python</a>&nbsp;&nbsp;&nbsp;<a href="/tags/rust/">rust</a>&nbsp;&nbsp;&nbsp;<a href="/tags/elixir/">elixir</a>&nbsp;&nbsp;&nbsp;<a href="/tags/wasm/">wasm</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>Recently I made <a href="https://github.com/memoetapp/memoet">an app</a> to prepare for some kind of test I have to take.
+I would have use <a href="https://apps.ankiweb.net/">Anki</a> for this purpose but I don&rsquo;t want to spend too much
+time learing how to make an Anki package again. Instead, I spent much more
+time to create a new alternative, but at least I&rsquo;ve learned some things new.</p>
+<h2 id="1-porting-ankis-supermemo2-from-python-to-rust">1. Porting Anki&rsquo;s SuperMemo2 from Python to Rust</h2>
+<p>I&rsquo;m not confident enough to launch my own spaced repetition algorithm yet so
+I decided to use <a href="https://www.supermemo.com/archives1990-2015/english/ol/sm2">SuperMemo2</a> in a version implemented by Anki desktop app.
+The Python code is on <a href="https://github.com/ankitects/anki/blob/6e954e82a5/pylib/anki/scheduler/v2.py">one scheduler</a> file and <a href="https://github.com/ankitects/anki/blob/6e954e82a5/pylib/tests/test_schedv2.py">one test</a> file.</p>
+<p>First thing first, we define an interface which is the core of the algorithm:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Sched {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">next_interval</span>(<span style="color:#f92672">&amp;</span>self, card: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">Card</span>, choice: <span style="color:#a6e22e">Choice</span>) -&gt; <span style="color:#66d9ef">i64</span>;
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">answer_card</span>(<span style="color:#f92672">&amp;</span>self, card: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> Card, choice: <span style="color:#a6e22e">Choice</span>);
+}
+</code></pre></div><p><code>Card</code> contains SuperMemo2&rsquo;s parameters such as queue name, due time, lapses.
+<code>Choice</code> is an enum correspond to the answer we make, from <strong>Forgot</strong> to <strong>Easy</strong>.</p>
+<p><code>next_interval</code> shows estimated time to recall the card if we make a choice,
+<code>answer_card</code> is the real action when we make that choice.</p>
+<p>The next following steps are to translate Python functions to Rust methods one by
+one. It is quite a smooth process, I feel like I am just adding type annotations
+to Python code instead of writing new Rust code. The result is <a href="https://github.com/memoetapp/memoet/blob/master/native/sm2/src/srs/scheduler.rs">a new Rust</a>
+file, look quite the same as the old Python one.</p>
+<h2 id="2-expose-rust-api-to-elixir-phoenix-app">2. Expose Rust API to Elixir Phoenix app</h2>
+<p>After having myself a spaced repetition package, I need to bring it to life.
+To tell the truth, I chose Rust to port to because I know I can import it from
+almost anywhere through <a href="https://doc.rust-lang.org/1.2.0/book/rust-inside-other-languages.html">Foreign Function Interface</a> (FFI).</p>
+<p>For no <a href="https://www.erlang-solutions.com/blog/why-elixir-is-the-programming-language-you-should-learn-in-2020/">specific reasons</a>, let&rsquo;s make an Elixir app!</p>
+<p>We use <a href="https://github.com/rusterlium/rustler">Rustler</a> to build the bridge between Rust code and Erlang NIFs. The
+setup is quite simple. After some times, we get a new Elixir module with the
+APIs we need:</p>
+<pre><code>defmodule Memoet.SRS.Sm2 do
+  @moduledoc &quot;&quot;&quot;
+  Sm2 API, calling Rust code
+  When your NIF is loaded, it will override those functions below.
+  &quot;&quot;&quot;
+
+  use Rustler, otp_app: :memoet, crate: &quot;sm2&quot;
+  alias Memoet.SRS.{Config, Scheduler, Card, Choices}
+
+  @spec new(Config.t(), integer(), integer()) :: Scheduler.t()
+  def new(_config, _day_cut_off, _day_today), do: error()
+
+  @spec next_interval(Card.t(), Scheduler.t(), Choices.t()) :: integer()
+  def next_interval(_card, _scheduler, _choice), do: error()
+
+  @spec answer_card(Card.t(), Scheduler.t(), Choices.t()) :: Card.t()
+  def answer_card(_card, _scheduler, _choice), do: error()
+end
+</code></pre><p>Another way would work is to compile Rust code to Wasm, and then import it from
+anywhere support Wasm runtime.</p>
+<h2 id="3-summary">3. Summary</h2>
+<p>Rust is reducing the gap between languages. Maintaining the core logic in Rust
+if possible should be considered as a wise choice.</p>
+
+</div>
+
+
+  <p><small><em>Written on May 15, 2021. </em></small></p>
+
+
+
+
+
+
+<footer>
+	<p><aside>&copy; 2021</aside></a>
+</footer>
+</body>
+</html>
+
