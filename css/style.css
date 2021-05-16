@@ -88,14 +88,16 @@ div.content {
 }
 
 header {
-    display:block;
+    display: block;
     padding: 0.5rem 0 0.5rem 0;
     border-bottom: 0.10em solid black;
 }
 
 footer {
-    display:block;
-    padding: 0.5rem 0 5.5rem 0;
+    display: block;
+    padding: 1rem 0 1.5rem 0;
+    font-size: 0.7rem;
+    opacity: 0.5;
 }
 
 @media all and (max-width:520px) {
@@ -134,6 +136,11 @@ small {
     opacity: 0.5;
 }
 
+small em {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
 
 p {
     margin-bottom: 1em;
@@ -278,4 +285,9 @@ blockquote p {
 
 .button:hover {
     background-color: #e7e7e7;
+}
+
+.copyleft {
+    display:inline-block;
+    transform: rotate(180deg);
 }
