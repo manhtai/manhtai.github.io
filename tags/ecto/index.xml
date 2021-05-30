@@ -89,14 +89,14 @@ inputs:&lt;/p&gt;
     &amp;lt;%= deck.name %&amp;gt;
   &amp;lt;/label&amp;gt;
 &amp;lt;% end %&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Data for &lt;code&gt;collection[deck_ids][]&lt;/code&gt; name will become &lt;code&gt;%{&amp;quot;collection&amp;quot; =&amp;gt; %{&amp;quot;deck_ids&amp;quot; =&amp;gt; [1, 2, 3]}}&lt;/code&gt; when pass to controller. And we got the deck IDs we need to keep these
-decks in the collection, so in our controller, we got:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Data for &lt;code&gt;collection[deck_ids][]&lt;/code&gt; name will become &lt;code&gt;%{&amp;quot;collection&amp;quot; =&amp;gt; %{&amp;quot;deck_ids&amp;quot; =&amp;gt; [1, 2, 3]}}&lt;/code&gt; when passing to controller. And we got the deck IDs we need to keep only
+these decks in the collection. So in our controller, we got:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;def update(conn, %{&amp;quot;collection&amp;quot; =&amp;gt; collection_data, &amp;quot;id&amp;quot; =&amp;gt; collection_id} = _params) do
   decks_collections =
     case collection_data do
       %{&amp;quot;deck_ids&amp;quot; =&amp;gt; deck_ids} -&amp;gt;
         deck_ids
-        |&amp;gt; Enum.map(fn dec_id -&amp;gt;
+        |&amp;gt; Enum.map(fn deck_id -&amp;gt;
           %{
             &amp;quot;deck_id&amp;quot; =&amp;gt; deck_id,
             &amp;quot;collection_id&amp;quot; =&amp;gt; collection_id,
@@ -116,7 +116,7 @@ decks in the collection, so in our controller, we got:&lt;/p&gt;
   |&amp;gt; Collection.changeset(params)
   |&amp;gt; Repo.update()
 end
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When passing &lt;code&gt;%{&amp;quot;decks_collections&amp;quot; =&amp;gt; [%{&amp;quot;deck_id&amp;quot; =&amp;gt; 1, &amp;quot;collection_id&amp;quot; =&amp;gt; 1}]}&lt;/code&gt; to
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When we pass &lt;code&gt;%{&amp;quot;decks_collections&amp;quot; =&amp;gt; [%{&amp;quot;deck_id&amp;quot; =&amp;gt; 1, &amp;quot;collection_id&amp;quot; =&amp;gt; 1}]}&lt;/code&gt; to
 &lt;code&gt;changeset&lt;/code&gt; function, Ecto will handle all the hard works for us, following
 the rules we have defined before in our models.&lt;/p&gt;
 &lt;h2 id=&#34;the-end&#34;&gt;The end&lt;/h2&gt;

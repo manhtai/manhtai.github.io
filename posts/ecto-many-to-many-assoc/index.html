@@ -165,14 +165,14 @@ inputs:</p>
     &lt;%= deck.name %&gt;
   &lt;/label&gt;
 &lt;% end %&gt;
-</code></pre><p>Data for <code>collection[deck_ids][]</code> name will become <code>%{&quot;collection&quot; =&gt; %{&quot;deck_ids&quot; =&gt; [1, 2, 3]}}</code> when pass to controller. And we got the deck IDs we need to keep these
-decks in the collection, so in our controller, we got:</p>
+</code></pre><p>Data for <code>collection[deck_ids][]</code> name will become <code>%{&quot;collection&quot; =&gt; %{&quot;deck_ids&quot; =&gt; [1, 2, 3]}}</code> when passing to controller. And we got the deck IDs we need to keep only
+these decks in the collection. So in our controller, we got:</p>
 <pre><code>def update(conn, %{&quot;collection&quot; =&gt; collection_data, &quot;id&quot; =&gt; collection_id} = _params) do
   decks_collections =
     case collection_data do
       %{&quot;deck_ids&quot; =&gt; deck_ids} -&gt;
         deck_ids
-        |&gt; Enum.map(fn dec_id -&gt;
+        |&gt; Enum.map(fn deck_id -&gt;
           %{
             &quot;deck_id&quot; =&gt; deck_id,
             &quot;collection_id&quot; =&gt; collection_id,
@@ -192,7 +192,7 @@ decks in the collection, so in our controller, we got:</p>
   |&gt; Collection.changeset(params)
   |&gt; Repo.update()
 end
-</code></pre><p>When passing <code>%{&quot;decks_collections&quot; =&gt; [%{&quot;deck_id&quot; =&gt; 1, &quot;collection_id&quot; =&gt; 1}]}</code> to
+</code></pre><p>When we pass <code>%{&quot;decks_collections&quot; =&gt; [%{&quot;deck_id&quot; =&gt; 1, &quot;collection_id&quot; =&gt; 1}]}</code> to
 <code>changeset</code> function, Ecto will handle all the hard works for us, following
 the rules we have defined before in our models.</p>
 <h2 id="the-end">The end</h2>
