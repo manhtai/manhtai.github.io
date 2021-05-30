@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Maintain Ecto many-to-many associations in Phoenix template</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Maintain Ecto many-to-many associations in Phoenix template">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Maintain Ecto many-to-many associations in Phoenix template">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/ecto-many-to-many-assoc/">
+    <meta name="og:site_name" content="Maintain Ecto many-to-many associations in Phoenix template">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="Ecto Phoenix Elixir Memoet ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Maintain Ecto many-to-many associations in Phoenix template <aside><a href="/tags/ecto/">Ecto</a>&nbsp;&nbsp;&nbsp;<a href="/tags/phoenix/">Phoenix</a>&nbsp;&nbsp;&nbsp;<a href="/tags/elixir/">Elixir</a>&nbsp;&nbsp;&nbsp;<a href="/tags/memoet/">Memoet</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>While building Today collection feature for <a href="https://github.com/memoetapp/memoet">Memoet</a>, I encounter a
+many-to-many relation problem in Ecto: how to edit the relationship using
+only Phoenix template form.</p>
+<h2 id="the-models">The models</h2>
+<p>We got a Deck model, which contains many notes of the same topic, as follow:</p>
+<pre><code>schema &quot;decks&quot; do
+  field(:name, :string)
+  has_many(:notes, Note)
+
+  timestamps()
+end
+</code></pre><p>Now we create a new Collection model, which will contains many decks for us to
+learn all notes in those decks at once, aka cross-deck learning:</p>
+<pre><code>schema &quot;collections&quot; do
+  field(:name, :string)
+
+  timestamps()
+end
+</code></pre><p>Now a collection will contains many decks, and a deck may belong to many
+collections, so that is a typical many-to-many relation. We define a mediate
+model for that:</p>
+<pre><code>schema &quot;decks_collections&quot; do
+  belongs_to(:collection, Collection)
+  belongs_to(:deck, Deck)
+
+  timestamps()
+end
+</code></pre><p>We will work mostly from the collection onward, i.e. adding decks from one
+collection, not adding collections to one deck, so we only need to add the
+association to Collection model:</p>
+<pre><code>schema &quot;collections&quot; do
+  field(:name, :string)
+
+  has_many(:decks_collections, DeckCollection, on_replace: :delete)
+  has_many(:decks, through: [:decks_collections, :deck], on_replace: :delete)
+
+  timestamps()
+end
+
+def changeset(col_or_changeset, attrs) do
+  col_or_changeset
+  |&gt; cast(attrs, [:name])
+  |&gt; cast_assoc(:decks_collections)
+end
+</code></pre><p><code>cast_assoc</code> in the <code>changeset</code> function is responsible for creating new or
+updating the old relations when in need. And we use <code>has_many</code> with
+<code>on_replace: :delete</code> to replace all relations at once for that matter.</p>
+<p>If you want to add collections to a deck, define similar associations in the
+Deck model.</p>
+<p>The models are all looking good now.</p>
+<h2 id="the-template">The template</h2>
+<p>To display current decks in one collection and allow users to edit the
+relations, we need two lists of decks:</p>
+<ul>
+<li>All available decks which can be added to a collection</li>
+<li>All decks which currently belongs to a collection</li>
+</ul>
+<pre><code>all_decks = Deck
+            |&gt; Repo.all()
+col_decks = collection.decks
+</code></pre><p>And in the collection&rsquo;s edit template, we display the relation using checkbox
+inputs:</p>
+<pre><code>&lt;%= for deck &lt;- @all_decks do %&gt;
+  &lt;label
+    &lt;input
+      &lt;%= if Deck.member?(@col_decks, deck), do: &quot;checked&quot; %&gt;
+      name=&quot;collection[deck_ids][]&quot;
+      type=&quot;checkbox&quot;
+      value=&quot;&lt;%= deck.id %&gt;&quot;
+    &gt;
+    &lt;%= deck.name %&gt;
+  &lt;/label&gt;
+&lt;% end %&gt;
+</code></pre><p>Data for <code>collection[deck_ids][]</code> name will become <code>%{&quot;collection&quot; =&gt; %{&quot;deck_ids&quot; =&gt; [1, 2, 3]}}</code> when pass to controller. And we got the deck IDs we need to keep these
+decks in the collection, so in our controller, we got:</p>
+<pre><code>def update(conn, %{&quot;collection&quot; =&gt; collection_data, &quot;id&quot; =&gt; collection_id} = _params) do
+  decks_collections =
+    case collection_data do
+      %{&quot;deck_ids&quot; =&gt; deck_ids} -&gt;
+        deck_ids
+        |&gt; Enum.map(fn dec_id -&gt;
+          %{
+            &quot;deck_id&quot; =&gt; deck_id,
+            &quot;collection_id&quot; =&gt; collection_id,
+          }
+        end)
+
+      _ -&gt;
+        []
+    end
+
+  params = %{
+    &quot;decks_collections&quot; =&gt; decks_collections
+  }
+
+  Collection
+  |&gt; Repo.get!(collection_id)
+  |&gt; Collection.changeset(params)
+  |&gt; Repo.update()
+end
+</code></pre><p>When passing <code>%{&quot;decks_collections&quot; =&gt; [%{&quot;deck_id&quot; =&gt; 1, &quot;collection_id&quot; =&gt; 1}]}</code> to
+<code>changeset</code> function, Ecto will handle all the hard works for us, following
+the rules we have defined before in our models.</p>
+<h2 id="the-end">The end</h2>
+<p>That&rsquo;s it. All is done without a single line of JavaScript. Visit
+<a href="https://memoet.com">memoet.com</a> and see the Today collection for yourself!</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on May 30, 2021.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/ecto-many-to-many-assoc.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2021
+</footer>
+</body>
+</html>
+

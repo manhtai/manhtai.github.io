@@ -136,20 +136,20 @@ mentioning here are:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Things I&amp;rsquo;ve learned:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;- &lt;em&gt;Go&lt;/em&gt;, then build a &lt;a href=&#34;https://manhtai.github.io/posts/chat-app-in-golang/&#34;&gt;chat app&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Go&lt;/em&gt;, then build a &lt;a href=&#34;https://manhtai.github.io/posts/chat-app-in-golang/&#34;&gt;chat app&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;- &lt;em&gt;Cryptography&lt;/em&gt;, taught by a brilliant &lt;a href=&#34;https://manhtai.github.io/posts/8-weeks-crypto-write-up/&#34;&gt;teacher&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Cryptography&lt;/em&gt;, taught by a brilliant &lt;a href=&#34;https://manhtai.github.io/posts/8-weeks-crypto-write-up/&#34;&gt;teacher&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;- &lt;em&gt;Google Cloud Platform&lt;/em&gt;, for work&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Google Cloud Platform&lt;/em&gt;, for work&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;- &lt;em&gt;Apache Airflow &amp;amp; Apache Beam&lt;/em&gt; for data ingestion (I should write a blog
+&lt;p&gt;&lt;em&gt;Apache Airflow &amp;amp; Apache Beam&lt;/em&gt; for data ingestion (I should write a blog
 about these)&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;- &lt;em&gt;Design patterns&lt;/em&gt; in Java&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Design patterns&lt;/em&gt; in Java&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Go and Java are two more programming languages that are in my belt now, love
@@ -157,17 +157,17 @@ to use both of them so far.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Things I&amp;rsquo;ve dropped:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;- &lt;em&gt;Operating System&lt;/em&gt; class&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Operating System&lt;/em&gt; class&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;- &lt;em&gt;Computer Vision&lt;/em&gt; class&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Computer Vision&lt;/em&gt; class&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The first one is too hard, the second one is not attracted to me anymore, so I
 decided to quit early.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Things I am going to learn:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;- &lt;em&gt;MOOC&lt;/em&gt;: Create a programming course in Vietnamese&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;MOOC&lt;/em&gt;: Create a programming course in Vietnamese&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;As you may know, I&amp;rsquo;m a self-taught developer, hence it will never be enough for
 me to learn how to code. But I think it might come the time that I am
@@ -175,7 +175,7 @@ certified to reteach what I&amp;rsquo;ve learned to those people who just be lik
 when I started. Hope I will learn new things along the way, too.
 &lt;a href=&#34;https://techcamp.vn&#34;&gt;techcamp.vn&lt;/a&gt; is registered and ready to go live. Stay tuned!&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;- &lt;em&gt;Microservices&lt;/em&gt;: Building microservices in Go and Java&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Microservices&lt;/em&gt;: Building microservices in Go and Java&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;I&amp;rsquo;ve built many monolith applications and none of microservices, so I will try
 to build one next year.&lt;/p&gt;

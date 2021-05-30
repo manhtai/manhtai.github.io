@@ -3,22 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://manhtai.github.io/tags/elixir/</loc>
-    <lastmod>2021-05-15T09:42:52+07:00</lastmod>
+    <loc>https://manhtai.github.io/tags/ecto/</loc>
+    <lastmod>2021-05-30T10:54:27+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://manhtai.github.io/posts/from-python-to-rust-then-elixir/</loc>
-    <lastmod>2021-05-15T09:42:52+07:00</lastmod>
+    <loc>https://manhtai.github.io/tags/elixir/</loc>
+    <lastmod>2021-05-30T10:54:27+07:00</lastmod>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2021-05-15T09:42:52+07:00</lastmod>
+    <lastmod>2021-05-30T10:54:27+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/ecto-many-to-many-assoc/</loc>
+    <lastmod>2021-05-30T10:54:27+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/memoet/</loc>
+    <lastmod>2021-05-30T10:54:27+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/phoenix/</loc>
+    <lastmod>2021-05-30T10:54:27+07:00</lastmod>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2021-05-30T10:54:27+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2021-05-30T10:54:27+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/from-python-to-rust-then-elixir/</loc>
     <lastmod>2021-05-15T09:42:52+07:00</lastmod>
   </url>
   
@@ -29,11 +54,6 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/rust/</loc>
-    <lastmod>2021-05-15T09:42:52+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2021-05-15T09:42:52+07:00</lastmod>
   </url>
   

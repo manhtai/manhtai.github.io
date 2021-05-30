@@ -5,17 +5,44 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 15 May 2021 09:42:52 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 30 May 2021 10:54:27 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>elixir</title>
+      <title>Ecto</title>
+      <link>https://manhtai.github.io/tags/ecto/</link>
+      <pubDate>Sun, 30 May 2021 10:54:27 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/ecto/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Elixir</title>
       <link>https://manhtai.github.io/tags/elixir/</link>
-      <pubDate>Sat, 15 May 2021 09:42:52 +0700</pubDate>
+      <pubDate>Sun, 30 May 2021 10:54:27 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/elixir/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Memoet</title>
+      <link>https://manhtai.github.io/tags/memoet/</link>
+      <pubDate>Sun, 30 May 2021 10:54:27 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/memoet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Phoenix</title>
+      <link>https://manhtai.github.io/tags/phoenix/</link>
+      <pubDate>Sun, 30 May 2021 10:54:27 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/phoenix/</guid>
       <description></description>
     </item>
     
@@ -29,7 +56,7 @@
     </item>
     
     <item>
-      <title>rust</title>
+      <title>Rust</title>
       <link>https://manhtai.github.io/tags/rust/</link>
       <pubDate>Sat, 15 May 2021 09:42:52 +0700</pubDate>
       

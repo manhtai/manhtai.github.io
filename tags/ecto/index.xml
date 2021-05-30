@@ -1,0 +1,129 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ecto on Go slowly</title>
+    <link>https://manhtai.github.io/tags/ecto/</link>
+    <description>Recent content in Ecto on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 30 May 2021 10:54:27 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/ecto/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Maintain Ecto many-to-many associations in Phoenix template</title>
+      <link>https://manhtai.github.io/posts/ecto-many-to-many-assoc/</link>
+      <pubDate>Sun, 30 May 2021 10:54:27 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/ecto-many-to-many-assoc/</guid>
+      <description>&lt;p&gt;While building Today collection feature for &lt;a href=&#34;https://github.com/memoetapp/memoet&#34;&gt;Memoet&lt;/a&gt;, I encounter a
+many-to-many relation problem in Ecto: how to edit the relationship using
+only Phoenix template form.&lt;/p&gt;
+&lt;h2 id=&#34;the-models&#34;&gt;The models&lt;/h2&gt;
+&lt;p&gt;We got a Deck model, which contains many notes of the same topic, as follow:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;schema &amp;quot;decks&amp;quot; do
+  field(:name, :string)
+  has_many(:notes, Note)
+
+  timestamps()
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now we create a new Collection model, which will contains many decks for us to
+learn all notes in those decks at once, aka cross-deck learning:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;schema &amp;quot;collections&amp;quot; do
+  field(:name, :string)
+
+  timestamps()
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now a collection will contains many decks, and a deck may belong to many
+collections, so that is a typical many-to-many relation. We define a mediate
+model for that:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;schema &amp;quot;decks_collections&amp;quot; do
+  belongs_to(:collection, Collection)
+  belongs_to(:deck, Deck)
+
+  timestamps()
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We will work mostly from the collection onward, i.e. adding decks from one
+collection, not adding collections to one deck, so we only need to add the
+association to Collection model:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;schema &amp;quot;collections&amp;quot; do
+  field(:name, :string)
+
+  has_many(:decks_collections, DeckCollection, on_replace: :delete)
+  has_many(:decks, through: [:decks_collections, :deck], on_replace: :delete)
+
+  timestamps()
+end
+
+def changeset(col_or_changeset, attrs) do
+  col_or_changeset
+  |&amp;gt; cast(attrs, [:name])
+  |&amp;gt; cast_assoc(:decks_collections)
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;cast_assoc&lt;/code&gt; in the &lt;code&gt;changeset&lt;/code&gt; function is responsible for creating new or
+updating the old relations when in need. And we use &lt;code&gt;has_many&lt;/code&gt; with
+&lt;code&gt;on_replace: :delete&lt;/code&gt; to replace all relations at once for that matter.&lt;/p&gt;
+&lt;p&gt;If you want to add collections to a deck, define similar associations in the
+Deck model.&lt;/p&gt;
+&lt;p&gt;The models are all looking good now.&lt;/p&gt;
+&lt;h2 id=&#34;the-template&#34;&gt;The template&lt;/h2&gt;
+&lt;p&gt;To display current decks in one collection and allow users to edit the
+relations, we need two lists of decks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;All available decks which can be added to a collection&lt;/li&gt;
+&lt;li&gt;All decks which currently belongs to a collection&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;all_decks = Deck
+            |&amp;gt; Repo.all()
+col_decks = collection.decks
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And in the collection&amp;rsquo;s edit template, we display the relation using checkbox
+inputs:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;%= for deck &amp;lt;- @all_decks do %&amp;gt;
+  &amp;lt;label
+    &amp;lt;input
+      &amp;lt;%= if Deck.member?(@col_decks, deck), do: &amp;quot;checked&amp;quot; %&amp;gt;
+      name=&amp;quot;collection[deck_ids][]&amp;quot;
+      type=&amp;quot;checkbox&amp;quot;
+      value=&amp;quot;&amp;lt;%= deck.id %&amp;gt;&amp;quot;
+    &amp;gt;
+    &amp;lt;%= deck.name %&amp;gt;
+  &amp;lt;/label&amp;gt;
+&amp;lt;% end %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Data for &lt;code&gt;collection[deck_ids][]&lt;/code&gt; name will become &lt;code&gt;%{&amp;quot;collection&amp;quot; =&amp;gt; %{&amp;quot;deck_ids&amp;quot; =&amp;gt; [1, 2, 3]}}&lt;/code&gt; when pass to controller. And we got the deck IDs we need to keep these
+decks in the collection, so in our controller, we got:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;def update(conn, %{&amp;quot;collection&amp;quot; =&amp;gt; collection_data, &amp;quot;id&amp;quot; =&amp;gt; collection_id} = _params) do
+  decks_collections =
+    case collection_data do
+      %{&amp;quot;deck_ids&amp;quot; =&amp;gt; deck_ids} -&amp;gt;
+        deck_ids
+        |&amp;gt; Enum.map(fn dec_id -&amp;gt;
+          %{
+            &amp;quot;deck_id&amp;quot; =&amp;gt; deck_id,
+            &amp;quot;collection_id&amp;quot; =&amp;gt; collection_id,
+          }
+        end)
+
+      _ -&amp;gt;
+        []
+    end
+
+  params = %{
+    &amp;quot;decks_collections&amp;quot; =&amp;gt; decks_collections
+  }
+
+  Collection
+  |&amp;gt; Repo.get!(collection_id)
+  |&amp;gt; Collection.changeset(params)
+  |&amp;gt; Repo.update()
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When passing &lt;code&gt;%{&amp;quot;decks_collections&amp;quot; =&amp;gt; [%{&amp;quot;deck_id&amp;quot; =&amp;gt; 1, &amp;quot;collection_id&amp;quot; =&amp;gt; 1}]}&lt;/code&gt; to
+&lt;code&gt;changeset&lt;/code&gt; function, Ecto will handle all the hard works for us, following
+the rules we have defined before in our models.&lt;/p&gt;
+&lt;h2 id=&#34;the-end&#34;&gt;The end&lt;/h2&gt;
+&lt;p&gt;That&amp;rsquo;s it. All is done without a single line of JavaScript. Visit
+&lt;a href=&#34;https://memoet.com&#34;&gt;memoet.com&lt;/a&gt; and see the Today collection for yourself!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
