@@ -110,8 +110,8 @@ inputs:
 ```
 
 Data for `collection[deck_ids][]` name will become `%{"collection" => %{"deck_ids" =>
-[1, 2, 3]}}` when pass to controller. And we got the deck IDs we need to keep these
-decks in the collection, so in our controller, we got:
+[1, 2, 3]}}` when passing to controller. And we got the deck IDs we need to keep only
+these decks in the collection. So in our controller, we got:
 
 
 ```
@@ -120,7 +120,7 @@ def update(conn, %{"collection" => collection_data, "id" => collection_id} = _pa
     case collection_data do
       %{"deck_ids" => deck_ids} ->
         deck_ids
-        |> Enum.map(fn dec_id ->
+        |> Enum.map(fn deck_id ->
           %{
             "deck_id" => deck_id,
             "collection_id" => collection_id,
@@ -142,7 +142,7 @@ def update(conn, %{"collection" => collection_data, "id" => collection_id} = _pa
 end
 ```
 
-When passing `%{"decks_collections" => [%{"deck_id" => 1, "collection_id" => 1}]}` to
+When we pass `%{"decks_collections" => [%{"deck_id" => 1, "collection_id" => 1}]}` to
 `changeset` function, Ecto will handle all the hard works for us, following
 the rules we have defined before in our models.
 
