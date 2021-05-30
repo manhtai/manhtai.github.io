@@ -1,7 +1,7 @@
 ---
 title: "From Python to Rust, then Elixir"
 date: 2021-05-15T09:42:52+07:00
-tags: ["python", "rust", "elixir", "wasm"]
+tags: ["Python", "Rust", "Elixir", "wasm", "Memoet"]
 draft: false
 ---
 
