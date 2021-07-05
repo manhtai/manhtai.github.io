@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Design DynamoDB Tables</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Design DynamoDB Tables">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Design DynamoDB Tables">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/design-dynamodb-tables/">
+    <meta name="og:site_name" content="Design DynamoDB Tables">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="AWS DynamoDB Go ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Design DynamoDB Tables <aside><a href="/tags/aws/">AWS</a>&nbsp;&nbsp;&nbsp;<a href="/tags/dynamodb/">DynamoDB</a>&nbsp;&nbsp;&nbsp;<a href="/tags/go/">Go</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <h2 id="primary-key--indexes">Primary key &amp; Indexes</h2>
+<p>DynamoDB is a NoSQL database, so in reality you can store all kind of
+objects. The catch is you can specifiy the key to partition the data,
+so you can scale out your applications horizontally, proportion to the
+numbers of partition.</p>
+<p>There are 2 kinds of primary key in a DynamoDB table, you can only choose
+implement one:</p>
+<ul>
+<li><strong>Hash key only</strong>: The hash key is also the partition key, it must be globally
+unique.</li>
+<li><strong>Hash key with a range key combination</strong>: The hash key is the partition key, it
+is not required to be unique, but the combination, i.e. the primary key must
+be.</li>
+</ul>
+<p>Whichever kind of primary key you choose, the scalability is the same. To make
+it really work, make sure your hash keys are distributed equally in all
+partitions.</p>
+<p>Beside the primary key, DynamoDB supports global secondary indexes and local
+secondary indexes, so you can make your queries run fast in another dimentions
+also.</p>
+<h2 id="an-example-in-go">An example in Go</h2>
+<p><a href="https://github.com/guregu/dynamo/">dynamo</a> is a Golang library that makes extremely easy to define the primary
+key and indexes.</p>
+<p>Let&rsquo;s define a <code>Job</code> table with primary key is the combination of <code>ShardId</code>
+and <code>Token</code>, in which <code>ShardId</code> is a hash key, and <code>Token</code> is a range key:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Job</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">ShardId</span>      <span style="color:#66d9ef">int</span>               <span style="color:#e6db74">`dynamo:&#34;shard_id,hash&#34;`</span>
+	<span style="color:#a6e22e">Token</span>        <span style="color:#66d9ef">string</span>            <span style="color:#e6db74">`dynamo:&#34;date_token,range&#34;`</span>
+	<span style="color:#a6e22e">Name</span>         <span style="color:#66d9ef">string</span>            <span style="color:#e6db74">`dynamo:&#34;name&#34;`</span>
+	<span style="color:#a6e22e">CreatedAt</span>    <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>         <span style="color:#e6db74">`dynamo:&#34;created_at&#34;`</span>
+}
+</code></pre></div><p>Now to create the table, we init a DynamoDB session and create the table:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">session</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">NewSession</span>()
+<span style="color:#a6e22e">config</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">aws</span>.<span style="color:#a6e22e">NewConfig</span>()
+<span style="color:#a6e22e">client</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dynamo</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">session</span>, <span style="color:#a6e22e">config</span>)
+
+<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">CreateTable</span>(<span style="color:#e6db74">`Job`</span>, <span style="color:#a6e22e">Job</span>{}).<span style="color:#a6e22e">Run</span>()
+</code></pre></div><p>To query the jobs in a specific shard:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">jobs</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">Job</span>
+<span style="color:#a6e22e">client</span>.
+    <span style="color:#a6e22e">Table</span>(<span style="color:#e6db74">`Job`</span>).
+    <span style="color:#a6e22e">Scan</span>().
+    <span style="color:#a6e22e">Filter</span>(<span style="color:#e6db74">&#34;&#39;shard_id&#39; = ?&#34;</span>, <span style="color:#a6e22e">shardId</span>).
+    <span style="color:#a6e22e">Filter</span>(<span style="color:#e6db74">&#34;&#39;token&#39; &lt; ?&#34;</span>, <span style="color:#a6e22e">tokenId</span>).
+    <span style="color:#a6e22e">Limit</span>(<span style="color:#ae81ff">100</span>).
+    <span style="color:#a6e22e">All</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">jobs</span>)
+</code></pre></div>
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on July 5, 2021.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/design-dynamodb-tables.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2021
+</footer>
+</body>
+</html>
+

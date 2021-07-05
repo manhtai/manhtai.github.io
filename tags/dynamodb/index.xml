@@ -1,0 +1,69 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DynamoDB on Go slowly</title>
+    <link>https://manhtai.github.io/tags/dynamodb/</link>
+    <description>Recent content in DynamoDB on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 05 Jul 2021 16:27:58 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/dynamodb/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Design DynamoDB Tables</title>
+      <link>https://manhtai.github.io/posts/design-dynamodb-tables/</link>
+      <pubDate>Mon, 05 Jul 2021 16:27:58 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/design-dynamodb-tables/</guid>
+      <description>&lt;h2 id=&#34;primary-key--indexes&#34;&gt;Primary key &amp;amp; Indexes&lt;/h2&gt;
+&lt;p&gt;DynamoDB is a NoSQL database, so in reality you can store all kind of
+objects. The catch is you can specifiy the key to partition the data,
+so you can scale out your applications horizontally, proportion to the
+numbers of partition.&lt;/p&gt;
+&lt;p&gt;There are 2 kinds of primary key in a DynamoDB table, you can only choose
+implement one:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Hash key only&lt;/strong&gt;: The hash key is also the partition key, it must be globally
+unique.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hash key with a range key combination&lt;/strong&gt;: The hash key is the partition key, it
+is not required to be unique, but the combination, i.e. the primary key must
+be.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Whichever kind of primary key you choose, the scalability is the same. To make
+it really work, make sure your hash keys are distributed equally in all
+partitions.&lt;/p&gt;
+&lt;p&gt;Beside the primary key, DynamoDB supports global secondary indexes and local
+secondary indexes, so you can make your queries run fast in another dimentions
+also.&lt;/p&gt;
+&lt;h2 id=&#34;an-example-in-go&#34;&gt;An example in Go&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/guregu/dynamo/&#34;&gt;dynamo&lt;/a&gt; is a Golang library that makes extremely easy to define the primary
+key and indexes.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s define a &lt;code&gt;Job&lt;/code&gt; table with primary key is the combination of &lt;code&gt;ShardId&lt;/code&gt;
+and &lt;code&gt;Token&lt;/code&gt;, in which &lt;code&gt;ShardId&lt;/code&gt; is a hash key, and &lt;code&gt;Token&lt;/code&gt; is a range key:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Job&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;ShardId&lt;/span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;               &lt;span style=&#34;color:#e6db74&#34;&gt;`dynamo:&amp;#34;shard_id,hash&amp;#34;`&lt;/span&gt;
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;Token&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;            &lt;span style=&#34;color:#e6db74&#34;&gt;`dynamo:&amp;#34;date_token,range&amp;#34;`&lt;/span&gt;
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;         &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;            &lt;span style=&#34;color:#e6db74&#34;&gt;`dynamo:&amp;#34;name&amp;#34;`&lt;/span&gt;
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;CreatedAt&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Time&lt;/span&gt;         &lt;span style=&#34;color:#e6db74&#34;&gt;`dynamo:&amp;#34;created_at&amp;#34;`&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now to create the table, we init a DynamoDB session and create the table:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;session&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;session&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NewSession&lt;/span&gt;()
+&lt;span style=&#34;color:#a6e22e&#34;&gt;config&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;aws&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NewConfig&lt;/span&gt;()
+&lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dynamo&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;New&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;session&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;config&lt;/span&gt;)
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;CreateTable&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`Job`&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;Job&lt;/span&gt;{}).&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To query the jobs in a specific shard:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;jobs&lt;/span&gt; []&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Job&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;.
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Table&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`Job`&lt;/span&gt;).
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Scan&lt;/span&gt;().
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Filter&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#39;shard_id&amp;#39; = ?&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;shardId&lt;/span&gt;).
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Filter&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#39;token&amp;#39; &amp;lt; ?&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;tokenId&lt;/span&gt;).
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Limit&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;).
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;All&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;jobs&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
