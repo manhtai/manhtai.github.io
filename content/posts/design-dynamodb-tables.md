@@ -64,8 +64,7 @@ To query the jobs in a specific shard:
 var jobs []*Job
 client.
     Table(`Job`).
-    Scan().
-    Filter("'shard_id' = ?", shardId).
+    Get("'shard_id' = ?", shardId).
     Filter("'token' < ?", tokenId).
     Limit(100).
     All(&jobs)
