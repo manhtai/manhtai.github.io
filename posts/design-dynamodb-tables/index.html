@@ -133,8 +133,7 @@ and <code>Token</code>, in which <code>ShardId</code> is a hash key, and <code>T
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">jobs</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">Job</span>
 <span style="color:#a6e22e">client</span>.
     <span style="color:#a6e22e">Table</span>(<span style="color:#e6db74">`Job`</span>).
-    <span style="color:#a6e22e">Scan</span>().
-    <span style="color:#a6e22e">Filter</span>(<span style="color:#e6db74">&#34;&#39;shard_id&#39; = ?&#34;</span>, <span style="color:#a6e22e">shardId</span>).
+    <span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;&#39;shard_id&#39; = ?&#34;</span>, <span style="color:#a6e22e">shardId</span>).
     <span style="color:#a6e22e">Filter</span>(<span style="color:#e6db74">&#34;&#39;token&#39; &lt; ?&#34;</span>, <span style="color:#a6e22e">tokenId</span>).
     <span style="color:#a6e22e">Limit</span>(<span style="color:#ae81ff">100</span>).
     <span style="color:#a6e22e">All</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">jobs</span>)
