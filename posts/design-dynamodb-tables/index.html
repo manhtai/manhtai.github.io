@@ -93,29 +93,29 @@ window.onload = ready;
 <div class="content">
   <h1>Design DynamoDB Tables <aside><a href="/tags/aws/">AWS</a>&nbsp;&nbsp;&nbsp;<a href="/tags/dynamodb/">DynamoDB</a>&nbsp;&nbsp;&nbsp;<a href="/tags/go/">Go</a>&nbsp;&nbsp;&nbsp;</aside></h1>
   <h2 id="primary-key--indexes">Primary key &amp; Indexes</h2>
-<p>DynamoDB is a NoSQL database, so in reality you can store all kind of
-objects. The catch is you can specifiy the key to partition the data,
-so you can scale out your applications horizontally, proportion to the
-numbers of partition.</p>
-<p>There are 2 kinds of primary key in a DynamoDB table, you can only choose
-implement one:</p>
+<p>DynamoDB is a NoSQL database, so in theory, you can store all kinds of
+objects. The catch is you can specify the key to partition the data, so
+you can scale out your applications horizontally, in proportion to the
+numbers of partitions.</p>
+<p>There are two kinds of primary keys in a DynamoDB table, of which you
+can only choose to implement one:</p>
 <ul>
-<li><strong>Hash key only</strong>: The hash key is also the partition key, it must be globally
-unique.</li>
-<li><strong>Hash key with a range key combination</strong>: The hash key is the partition key, it
-is not required to be unique, but the combination, i.e. the primary key must
-be.</li>
+<li><strong>Hash key only</strong>: The hash key is also the partition key, which must
+be globally unique.</li>
+<li><strong>Hash key with a range key combination</strong>: The hash key is the
+partition key, which is not required to be unique, but the combination,
+i.e. the primary key must be.</li>
 </ul>
-<p>Whichever kind of primary key you choose, the scalability is the same. To make
-it really work, make sure your hash keys are distributed equally in all
+<p>Whichever kind of primary key you choose, the scalability is the same.
+To make it works, make sure your hash keys are distributed equally in all
 partitions.</p>
-<p>Beside the primary key, DynamoDB supports global secondary indexes and local
-secondary indexes, so you can make your queries run fast in another dimentions
+<p>Besides the primary key, DynamoDB supports global secondary indexes and local
+secondary indexes, so you can make your queries run fast in other dimensions
 also.</p>
 <h2 id="an-example-in-go">An example in Go</h2>
-<p><a href="https://github.com/guregu/dynamo/">dynamo</a> is a Golang library that makes extremely easy to define the primary
+<p><a href="https://github.com/guregu/dynamo/">dynamo</a> is a Golang library that makes it extremely easy to define the primary
 key and indexes.</p>
-<p>Let&rsquo;s define a <code>Job</code> table with primary key is the combination of <code>ShardId</code>
+<p>Let&rsquo;s define a <code>Job</code> table with a primary key as the combination of <code>ShardId</code>
 and <code>Token</code>, in which <code>ShardId</code> is a hash key, and <code>Token</code> is a range key:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Job</span> <span style="color:#66d9ef">struct</span> {
 	<span style="color:#a6e22e">ShardId</span>      <span style="color:#66d9ef">int</span>               <span style="color:#e6db74">`dynamo:&#34;shard_id,hash&#34;`</span>
