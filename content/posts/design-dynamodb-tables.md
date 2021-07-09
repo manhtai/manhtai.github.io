@@ -7,34 +7,34 @@ draft: false
 
 ## Primary key & Indexes
 
-DynamoDB is a NoSQL database, so in reality you can store all kind of
-objects. The catch is you can specifiy the key to partition the data,
-so you can scale out your applications horizontally, proportion to the
-numbers of partition.
+DynamoDB is a NoSQL database, so in theory, you can store all kinds of
+objects. The catch is you can specify the key to partition the data, so 
+you can scale out your applications horizontally, in proportion to the
+numbers of partitions.
 
-There are 2 kinds of primary key in a DynamoDB table, you can only choose
-implement one:
+There are two kinds of primary keys in a DynamoDB table, of which you 
+can only choose to implement one:
 
-- **Hash key only**: The hash key is also the partition key, it must be globally
-  unique.
-- **Hash key with a range key combination**: The hash key is the partition key, it
-  is not required to be unique, but the combination, i.e. the primary key must
-  be.
+- **Hash key only**: The hash key is also the partition key, which must
+  be globally unique.
+- **Hash key with a range key combination**: The hash key is the 
+  partition key, which is not required to be unique, but the combination,
+  i.e. the primary key must be.
 
-Whichever kind of primary key you choose, the scalability is the same. To make
-it really work, make sure your hash keys are distributed equally in all
+Whichever kind of primary key you choose, the scalability is the same.
+To make it works, make sure your hash keys are distributed equally in all
 partitions.
 
-Beside the primary key, DynamoDB supports global secondary indexes and local
-secondary indexes, so you can make your queries run fast in another dimentions
+Besides the primary key, DynamoDB supports global secondary indexes and local
+secondary indexes, so you can make your queries run fast in other dimensions
 also.
 
 ## An example in Go
 
-[dynamo][1] is a Golang library that makes extremely easy to define the primary
+[dynamo][1] is a Golang library that makes it extremely easy to define the primary
 key and indexes.
 
-Let's define a `Job` table with primary key is the combination of `ShardId`
+Let's define a `Job` table with a primary key as the combination of `ShardId`
 and `Token`, in which `ShardId` is a hash key, and `Token` is a range key:
 
 
