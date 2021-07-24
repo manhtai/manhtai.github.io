@@ -5,7 +5,7 @@ tags: ["electron", "react"]
 draft: false
 ---
 
-Recently I'm building a desktop app for developers who is working with
+Recently I'm building a desktop app for developers who are working with
 plain text: [PlainBelt][0]. It uses Electron with React [boilerplate][1]
 (ERB), and the old mighty **remote** module [won't work][2] anymore.
 
