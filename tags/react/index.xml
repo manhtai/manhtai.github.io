@@ -16,7 +16,7 @@
       <pubDate>Sat, 24 Jul 2021 11:00:04 +0700</pubDate>
       
       <guid>https://manhtai.github.io/posts/electron-react-open-native-dialog/</guid>
-      <description>&lt;p&gt;Recently I&amp;rsquo;m building a desktop app for developers who is working with
+      <description>&lt;p&gt;Recently I&amp;rsquo;m building a desktop app for developers who are working with
 plain text: &lt;a href=&#34;https://github.com/plainbelt/plainbelt&#34;&gt;PlainBelt&lt;/a&gt;. It uses Electron with React &lt;a href=&#34;https://github.com/electron-react-boilerplate/electron-react-boilerplate&#34;&gt;boilerplate&lt;/a&gt;
 (ERB), and the old mighty &lt;strong&gt;remote&lt;/strong&gt; module &lt;a href=&#34;https://github.com/electron/electron/issues/21408&#34;&gt;won&amp;rsquo;t work&lt;/a&gt; anymore.&lt;/p&gt;
 &lt;p&gt;So how can we open a native dialog without the &lt;strong&gt;remote&lt;/strong&gt; module?&lt;/p&gt;
