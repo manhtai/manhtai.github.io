@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Electron with React: How to open a native dialog</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Electron with React: How to open a native dialog">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Electron with React: How to open a native dialog">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/electron-react-open-native-dialog/">
+    <meta name="og:site_name" content="Electron with React: How to open a native dialog">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="electron react ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Electron with React: How to open a native dialog <aside><a href="/tags/electron/">electron</a>&nbsp;&nbsp;&nbsp;<a href="/tags/react/">react</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>Recently I&rsquo;m building a desktop app for developers who is working with
+plain text: <a href="https://github.com/plainbelt/plainbelt">PlainBelt</a>. It uses Electron with React <a href="https://github.com/electron-react-boilerplate/electron-react-boilerplate">boilerplate</a>
+(ERB), and the old mighty <strong>remote</strong> module <a href="https://github.com/electron/electron/issues/21408">won&rsquo;t work</a> anymore.</p>
+<p>So how can we open a native dialog without the <strong>remote</strong> module?</p>
+<h3 id="register-event-handler-on-the-main-process">Register event handler on the Main process</h3>
+<p>In ERB, the Main filename happens to be <code>main.dev.ts</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">ipcMain</span>.<span style="color:#a6e22e">handle</span>(
+  <span style="color:#e6db74">&#39;open-file&#39;</span>,
+  <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">_event</span>: <span style="color:#66d9ef">IpcMainInvokeEvent</span>, <span style="color:#a6e22e">filters</span>: <span style="color:#66d9ef">FileFilter</span>[]) <span style="color:#f92672">=&gt;</span> {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">files</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">dialog</span>.<span style="color:#a6e22e">showOpenDialog</span>({
+      <span style="color:#a6e22e">properties</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;openFile&#39;</span>],
+      <span style="color:#a6e22e">filters</span>,
+    });
+
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>;
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">files</span>) {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">buffer</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">promisify</span>(<span style="color:#a6e22e">fs</span>.<span style="color:#a6e22e">readFile</span>)(<span style="color:#a6e22e">files</span>.<span style="color:#a6e22e">filePaths</span>[<span style="color:#ae81ff">0</span>]);
+      <span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">buffer</span>.<span style="color:#a6e22e">toString</span>();
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">content</span>;
+  }
+);
+</code></pre></div><p>This function will open a native dialog with options that you define on
+<code>filters</code> and return an object that contains a list of file paths.
+We just read the first file content and return it to the renderer.</p>
+<h3 id="invoke-from-renderer-process">Invoke from Renderer process</h3>
+<p>From a React component, we can invoke the registered handler in Main:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript">  <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">content</span>, <span style="color:#a6e22e">setContent</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">useState</span>()
+
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">handleOpen</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">async</span> () <span style="color:#f92672">=&gt;</span> {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">filters</span> <span style="color:#f92672">=</span> [{ <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Text Files&#39;</span>, <span style="color:#a6e22e">extensions</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;txt&#39;</span>] }];
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">ipcRenderer</span>.<span style="color:#a6e22e">invoke</span>(<span style="color:#e6db74">&#39;open-file&#39;</span>, <span style="color:#a6e22e">filters</span>);
+    <span style="color:#a6e22e">setContent</span>(<span style="color:#a6e22e">content</span>);
+  };
+</code></pre></div><p>We get the content back, now do whatever you want with it!</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on July 24, 2021.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/electron-react-open-native-dialog.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2021
+</footer>
+</body>
+</html>
+

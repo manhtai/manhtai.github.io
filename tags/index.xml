@@ -5,10 +5,28 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 05 Jul 2021 16:27:58 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 24 Jul 2021 11:00:04 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>electron</title>
+      <link>https://manhtai.github.io/tags/electron/</link>
+      <pubDate>Sat, 24 Jul 2021 11:00:04 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/electron/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>react</title>
+      <link>https://manhtai.github.io/tags/react/</link>
+      <pubDate>Sat, 24 Jul 2021 11:00:04 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/react/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>AWS</title>
@@ -196,15 +214,6 @@
       <pubDate>Fri, 04 Dec 2020 20:53:21 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/s3/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>react</title>
-      <link>https://manhtai.github.io/tags/react/</link>
-      <pubDate>Sun, 01 Nov 2020 15:10:07 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/react/</guid>
       <description></description>
     </item>
     

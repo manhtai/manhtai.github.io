@@ -1,13 +1,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>react on Go slowly</title>
-    <link>https://manhtai.github.io/tags/react/</link>
-    <description>Recent content in react on Go slowly</description>
+    <title>electron on Go slowly</title>
+    <link>https://manhtai.github.io/tags/electron/</link>
+    <description>Recent content in electron on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 24 Jul 2021 11:00:04 +0700</lastBuildDate>
     
-        <atom:link href="https://manhtai.github.io/tags/react/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://manhtai.github.io/tags/electron/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -51,69 +51,6 @@ We just read the first file content and return it to the renderer.&lt;/p&gt;
     &lt;span style=&#34;color:#a6e22e&#34;&gt;setContent&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt;);
   };
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We get the content back, now do whatever you want with it!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Setup TailwindCSS for React</title>
-      <link>https://manhtai.github.io/posts/setup-tailwindcss-for-react/</link>
-      <pubDate>Sun, 01 Nov 2020 15:10:07 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/setup-tailwindcss-for-react/</guid>
-      <description>&lt;h2 id=&#34;1-basic-setup&#34;&gt;1. Basic setup&lt;/h2&gt;
-&lt;p&gt;After installing TailwindCSS and doing &lt;a href=&#34;https://tailwindcss.com/docs/installation&#34;&gt;the basic setup&lt;/a&gt;, you need
-PostCSS-CLI to build out &lt;code&gt;main.css&lt;/code&gt;, setup some commands in &lt;code&gt;package.json&lt;/code&gt;
-to do that:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;{
-  &amp;quot;scripts&amp;quot;: {
-    &amp;quot;start&amp;quot;: &amp;quot;npm run watch:css &amp;amp;&amp;amp; react-scripts start&amp;quot;,
-    &amp;quot;build&amp;quot;: &amp;quot;npm run build:css &amp;amp;&amp;amp; react-scripts build&amp;quot;,
-    &amp;quot;deploy&amp;quot;: &amp;quot;NODE_ENV=production npm run build&amp;quot;,
-    &amp;quot;test&amp;quot;: &amp;quot;react-scripts test&amp;quot;,
-    &amp;quot;eject&amp;quot;: &amp;quot;react-scripts eject&amp;quot;,
-    &amp;quot;watch:css&amp;quot;: &amp;quot;postcss src/css/tailwind.css -o src/css/main.css&amp;quot;,
-    &amp;quot;build:css&amp;quot;: &amp;quot;postcss src/css/tailwind.css -o src/css/main.css&amp;quot;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Don&amp;rsquo;t forget to import &lt;code&gt;main.css&lt;/code&gt; in your React index file:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;import &#39;./css/main.css&#39;;
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;2-install-font-family&#34;&gt;2. Install font family&lt;/h2&gt;
-&lt;p&gt;Choose your favorite font from a &lt;code&gt;fontsouce-*&lt;/code&gt; package and extend Tailwind
-config, I choose &amp;lsquo;Nunito&amp;rsquo;:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;theme: {
-  extend: {
-    fontFamily: {
-      sans: [&amp;quot;Nunito&amp;quot;, ...defaultTheme.fontFamily.sans]
-    }
-  },
-},
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Remember to include the font in your index file, too:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;import &#39;fontsource-nunito&#39;;
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;3-set-default-color&#34;&gt;3. Set default color&lt;/h2&gt;
-&lt;p&gt;If you don&amp;rsquo;t want black as your default text body color, override it in
-plugins config, I choose &lt;code&gt;blue-900&lt;/code&gt; as my default color, so:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;  plugins: [
-    plugin(function({ addBase, config }) {
-      addBase({
-        &#39;body&#39;: { color: config(&#39;theme.colors.blue.900&#39;) },
-      })
-    })
-  ],
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;4-purge-unused-css&#34;&gt;4. Purge unused CSS&lt;/h2&gt;
-&lt;p&gt;Full size of TailwindCSS is around 2MB, but you rarely use it all, TailwindCSS
-&lt;a href=&#34;https://tailwindcss.com/docs/controlling-file-size&#34;&gt;official guide&lt;/a&gt; recommends not to use string concatenation to create class
-names, but if you still want to do that, use whitelist patterns to bypass the
-cleaning.&lt;/p&gt;
-&lt;p&gt;For example if I want to keep all colors for background and text:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;  purge: {
-    content: [
-      &amp;quot;./src/**/*.{ts,tsx,html}&amp;quot;,
-    ],
-    options: {
-      whitelistPatterns: [/^bg-/, /^text-/],
-    },
-  },
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can find my full setup for my &lt;a href=&#34;https://metaboard.net&#34;&gt;new React app&lt;/a&gt; in &lt;a href=&#34;https://github.com/manhtai/metaboard&#34;&gt;Github&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     

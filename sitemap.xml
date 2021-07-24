@@ -3,6 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/tags/electron/</loc>
+    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/electron-react-open-native-dialog/</loc>
+    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/</loc>
+    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/react/</loc>
+    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/tags/aws/</loc>
     <lastmod>2021-07-05T16:27:58+07:00</lastmod>
   </url>
@@ -19,21 +49,6 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/go/</loc>
-    <lastmod>2021-07-05T16:27:58+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/</loc>
-    <lastmod>2021-07-05T16:27:58+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2021-07-05T16:27:58+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2021-07-05T16:27:58+07:00</lastmod>
   </url>
   
@@ -160,11 +175,6 @@
   <url>
     <loc>https://manhtai.github.io/posts/setup-cors-for-s3-and-cloudfront/</loc>
     <lastmod>2020-12-04T20:53:21+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/react/</loc>
-    <lastmod>2020-11-01T15:10:07+07:00</lastmod>
   </url>
   
   <url>
