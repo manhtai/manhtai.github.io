@@ -190,7 +190,9 @@ table th {
 }
 
 img {
-    width: 100%;
+    width: 90%;
+    border-radius: 10px;
+    padding: 15px 10px;
 }
 
 a {
