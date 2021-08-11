@@ -5,10 +5,28 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 24 Jul 2021 11:00:04 +0700</lastBuildDate>
+    <lastBuildDate>Wed, 11 Aug 2021 21:12:57 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go</title>
+      <link>https://manhtai.github.io/tags/go/</link>
+      <pubDate>Wed, 11 Aug 2021 21:12:57 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pprof</title>
+      <link>https://manhtai.github.io/tags/pprof/</link>
+      <pubDate>Wed, 11 Aug 2021 21:12:57 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/pprof/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>electron</title>
@@ -43,15 +61,6 @@
       <pubDate>Mon, 05 Jul 2021 16:27:58 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/dynamodb/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Go</title>
-      <link>https://manhtai.github.io/tags/go/</link>
-      <pubDate>Mon, 05 Jul 2021 16:27:58 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/go/</guid>
       <description></description>
     </item>
     

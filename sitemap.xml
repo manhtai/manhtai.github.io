@@ -3,6 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/tags/go/</loc>
+    <lastmod>2021-08-11T21:12:57+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/go-pprof-for-detecting-wasted-goroutine/</loc>
+    <lastmod>2021-08-11T21:12:57+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/</loc>
+    <lastmod>2021-08-11T21:12:57+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2021-08-11T21:12:57+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/pprof/</loc>
+    <lastmod>2021-08-11T21:12:57+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2021-08-11T21:12:57+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/tags/electron/</loc>
     <lastmod>2021-07-24T11:00:04+07:00</lastmod>
   </url>
@@ -13,22 +43,7 @@
   </url>
   
   <url>
-    <loc>https://manhtai.github.io/</loc>
-    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://manhtai.github.io/tags/react/</loc>
-    <lastmod>2021-07-24T11:00:04+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2021-07-24T11:00:04+07:00</lastmod>
   </url>
   
@@ -44,11 +59,6 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/dynamodb/</loc>
-    <lastmod>2021-07-05T16:27:58+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/go/</loc>
     <lastmod>2021-07-05T16:27:58+07:00</lastmod>
   </url>
   
