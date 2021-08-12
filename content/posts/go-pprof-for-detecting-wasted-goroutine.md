@@ -57,4 +57,4 @@ After the fix, we get:
 [blank]
 
 Yes, we got nothing, because when idling the app shouldn't do anything,
-hence must consumes nothing.
+hence must consume nothing.
