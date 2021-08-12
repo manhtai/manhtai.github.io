@@ -50,7 +50,7 @@ are paying CPU time for the app to do nothing. Turn out it was a
 &lt;p&gt;After the fix, we get:&lt;/p&gt;
 &lt;p&gt;[blank]&lt;/p&gt;
 &lt;p&gt;Yes, we got nothing, because when idling the app shouldn&amp;rsquo;t do anything,
-hence must consumes nothing.&lt;/p&gt;
+hence must consume nothing.&lt;/p&gt;
 </description>
     </item>
     
