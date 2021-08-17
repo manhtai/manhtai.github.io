@@ -5,10 +5,47 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 11 Aug 2021 21:12:57 +0700</lastBuildDate>
+    <lastBuildDate>Tue, 17 Aug 2021 10:02:17 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Some first lessons in Go</title>
+      <link>https://manhtai.github.io/posts/first-lessons-in-go/</link>
+      <pubDate>Tue, 17 Aug 2021 10:02:17 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/first-lessons-in-go/</guid>
+      <description>&lt;p&gt;Recently I switched to a job in which I am working mostly with the Go
+language. Besides knowing the tiny set of syntax and the old-style
+language flow, I&amp;rsquo;ve learned some first lessons when writing Go.&lt;/p&gt;
+&lt;h2 id=&#34;1-composition-and-interfaces-are-everywhere&#34;&gt;1. Composition and interfaces are everywhere&lt;/h2&gt;
+&lt;p&gt;We use composition because we should prefer composition over
+inheritance and also because Go doesn&amp;rsquo;t have inheritance at all!&lt;/p&gt;
+&lt;p&gt;Go does have interfaces instead, and we use them to make our code more
+abstract and easier to test. The thing I don&amp;rsquo;t really like about them
+is conforming to an interface is implicit, so we need help from our
+IDE to know exactly which interfaces our structs are implementing.&lt;/p&gt;
+&lt;h2 id=&#34;2-using-goroutines-is-not-a-trivial-task&#34;&gt;2. Using Goroutines is not a trivial task&lt;/h2&gt;
+&lt;p&gt;The most important lesson I&amp;rsquo;ve learned is never firing up an arbitrary
+number of Goroutines. You should limit them by using a fan-out pattern
+with a determined set of workers instead.&lt;/p&gt;
+&lt;p&gt;The second lesson is when not working, the Goroutines should not
+consume any CPU resource, if they are, something must be wrong.&lt;/p&gt;
+&lt;h2 id=&#34;3-go-is-not-thread-safe-by-default&#34;&gt;3. Go is not thread-safe by default&lt;/h2&gt;
+&lt;p&gt;Go is fast, it can do many things at once, but we must be careful with
+it or some nasty data result will come up and you don&amp;rsquo;t know why.&lt;/p&gt;
+&lt;p&gt;This brings us to the last lesson.&lt;/p&gt;
+&lt;h2 id=&#34;4-stress-testing-benchmarking-and-profiling-help&#34;&gt;4. Stress testing, benchmarking, and profiling help&lt;/h2&gt;
+&lt;p&gt;Go is shipped with default benchmarking &amp;amp; profiling tools and even more
+excellent community libraries to do the job. Learn to use them properly,
+and never skip the stress test phase before launching your app.&lt;/p&gt;
+&lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;Go is fun, easy to get started, run fast, and have a small footprint,
+but it won&amp;rsquo;t keep you from shooting yourself in the foot. So enjoy
+writing the code, but never put 100% faith in them :)&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Go pprof for detecting wasted Goroutines</title>
