@@ -5,10 +5,49 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 17 Aug 2021 10:02:17 +0700</lastBuildDate>
+    <lastBuildDate>Thu, 19 Aug 2021 14:04:41 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Distribute workload between ECS tasks</title>
+      <link>https://manhtai.github.io/posts/distribute-workload-in-ecs-tasks/</link>
+      <pubDate>Thu, 19 Aug 2021 14:04:41 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/distribute-workload-in-ecs-tasks/</guid>
+      <description>&lt;p&gt;If your ECS tasks are receiving traffic from a load balancer then the workload
+will be equally distributed between them. How about when we are using ECS
+tasks as a worker farm to handle long running jobs? And say, we want some
+workers to work on some partitions of the data but not all of them? Then each
+ECS task must know their identity and the number of tasks that belong to the
+same service as well.&lt;/p&gt;
+&lt;h2 id=&#34;1-get-task-arn&#34;&gt;1. Get task ARN&lt;/h2&gt;
+&lt;p&gt;With &lt;code&gt;${ECS_CONTAINER_METADATA_URI_V4}/task&lt;/code&gt; endpoint, we can get the task ARN
+and metadata about its cluster and family.&lt;/p&gt;
+&lt;p&gt;After sending a GET request from our container, we got:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;Cluster&amp;quot;: &amp;quot;default&amp;quot;,
+    &amp;quot;TaskARN&amp;quot;: &amp;quot;arn:aws:ecs:us-west-2:111122223333:task/default/158d1c8083dd49d6b527399fd6414f5c&amp;quot;,
+    &amp;quot;Family&amp;quot;: &amp;quot;curltest&amp;quot;,
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This request doesn&amp;rsquo;t require any authentication at all, as long as we send it
+from our ECS task.&lt;/p&gt;
+&lt;h2 id=&#34;2-list-all-tasks-in-the-same-service&#34;&gt;2. List all tasks in the same service&lt;/h2&gt;
+&lt;p&gt;With &lt;code&gt;Cluster&lt;/code&gt; and &lt;code&gt;Family&lt;/code&gt; of a task, we can list all running tasks in
+a service using ECS API, in this example we will use Go SDK though:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Go&#34; data-lang=&#34;Go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;list&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ecsClient&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ListTasks&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;TODO&lt;/span&gt;(), &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ecs&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ListTasksInput&lt;/span&gt;{
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;Cluster&lt;/span&gt;:       &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;Family&lt;/span&gt;:        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;curltest&amp;#34;&lt;/span&gt;,
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;DesiredStatus&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;types&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;DesiredStatusRunning&lt;/span&gt;,
+})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;list.TaskArns&lt;/code&gt; contains all ARN of tasks in the service, including the task
+making the request. This request does require authentication nevertheless.&lt;/p&gt;
+&lt;h2 id=&#34;3-distribute-the-workload&#34;&gt;3. Distribute the workload&lt;/h2&gt;
+&lt;p&gt;Now we know how many tasks we got, the problem becomes easy.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Some first lessons in Go</title>

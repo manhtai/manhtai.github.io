@@ -5,15 +5,33 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 17 Aug 2021 10:02:17 +0700</lastBuildDate>
+    <lastBuildDate>Thu, 19 Aug 2021 14:04:41 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>AWS</title>
+      <link>https://manhtai.github.io/tags/aws/</link>
+      <pubDate>Thu, 19 Aug 2021 14:04:41 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ECS</title>
+      <link>https://manhtai.github.io/tags/ecs/</link>
+      <pubDate>Thu, 19 Aug 2021 14:04:41 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/ecs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Go</title>
       <link>https://manhtai.github.io/tags/go/</link>
-      <pubDate>Tue, 17 Aug 2021 10:02:17 +0700</pubDate>
+      <pubDate>Thu, 19 Aug 2021 14:04:41 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/go/</guid>
       <description></description>
@@ -43,15 +61,6 @@
       <pubDate>Sat, 24 Jul 2021 11:00:04 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/react/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AWS</title>
-      <link>https://manhtai.github.io/tags/aws/</link>
-      <pubDate>Mon, 05 Jul 2021 16:27:58 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/aws/</guid>
       <description></description>
     </item>
     
@@ -412,15 +421,6 @@
       <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/celery/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ecs</title>
-      <link>https://manhtai.github.io/tags/ecs/</link>
-      <pubDate>Sun, 15 Apr 2018 10:51:06 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/ecs/</guid>
       <description></description>
     </item>
     
