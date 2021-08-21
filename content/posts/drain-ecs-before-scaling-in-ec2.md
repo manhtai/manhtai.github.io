@@ -1,10 +1,11 @@
 ---
 title: "Drain ECS instances before scaling down in EC2"
 date: 2018-05-21T17:33:18+07:00
+tags: ["AWS", "ECS", "Go"]
 draft: false
 ---
 
-**Problem**:
+## The problem
 
 We have 2 independent auto scaling systems: EC2 auto scaling groups which
 scales instances number & ECS auto scaling which scales tasks number. This
@@ -17,7 +18,7 @@ ECS tasks draining out.
 Actually, ECS instances will not auto drain to be ready for terminating
 instances in EC2, so don't expect anything. We have to set that up manually.
 
-**Solution**:
+## The solution
 
 An AWS official [blog][1] shows us how to do this, and it has a nice demo for
 newly created EC2 & ECS setup. But what if we just want to set up for our
