@@ -1,7 +1,7 @@
 ---
 title: "Drain ECS instances before scaling down in EC2"
 date: 2018-05-21T17:33:18+07:00
-tags: ["AWS", "ECS", "Go"]
+tags: ["AWS", "ECS", "Lambda"]
 draft: false
 ---
 
