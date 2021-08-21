@@ -20,7 +20,7 @@
     <meta name="og:site_name" content="Drain ECS instances before scaling down in EC2">
     <meta name="og:type" content="article">
     
-    <meta name="article:tag" content="">
+    <meta name="article:tag" content="AWS ECS Go ">
     <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
     
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
@@ -91,8 +91,8 @@ window.onload = ready;
 </script>
 
 <div class="content">
-  <h1>Drain ECS instances before scaling down in EC2 <aside></aside></h1>
-  <p><strong>Problem</strong>:</p>
+  <h1>Drain ECS instances before scaling down in EC2 <aside><a href="/tags/aws/">AWS</a>&nbsp;&nbsp;&nbsp;<a href="/tags/ecs/">ECS</a>&nbsp;&nbsp;&nbsp;<a href="/tags/go/">Go</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <h2 id="the-problem">The problem</h2>
 <p>We have 2 independent auto scaling systems: EC2 auto scaling groups which
 scales instances number &amp; ECS auto scaling which scales tasks number. This
 setup may work fine when scaling up. Still, if new tasks need more instances
@@ -101,7 +101,7 @@ to start up, it must wait for them, but it&rsquo;s ok to wait a little.</p>
 ECS tasks draining out.</p>
 <p>Actually, ECS instances will not auto drain to be ready for terminating
 instances in EC2, so don&rsquo;t expect anything. We have to set that up manually.</p>
-<p><strong>Solution</strong>:</p>
+<h2 id="the-solution">The solution</h2>
 <p>An AWS official <a href="https://aws.amazon.com/blogs/compute/how-to-automate-container-instance-draining-in-amazon-ecs/">blog</a> shows us how to do this, and it has a nice demo for
 newly created EC2 &amp; ECS setup. But what if we just want to set up for our
 running ECS instances? Here it is.</p>
