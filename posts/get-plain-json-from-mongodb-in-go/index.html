@@ -92,11 +92,11 @@ window.onload = ready;
 
 <div class="content">
   <h1>Get plain JSON from MongoDB in Go <aside><a href="/tags/mongo/">Mongo</a>&nbsp;&nbsp;&nbsp;<a href="/tags/go/">Go</a>&nbsp;&nbsp;&nbsp;</aside></h1>
-  <p>When reading data from MongoDB using Go, we encounter with a JSON generic
-field that may be an object or an array, which itself may contain nested
+  <p>When reading data from MongoDB using Go, we encounter a struct with a JSON
+generic field that may be an object or an array, which itself may contain nested
 objects or arrays.</p>
 <p>We only need the plain JSON in this case because we already got the parsing
-code to convert generic JSON object to specific structs.</p>
+code to convert the generic JSON object to specific structs.</p>
 <p>To hold unprocessed BSON, we declare our field <code>bson.RawValue</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">object</span> <span style="color:#66d9ef">struct</span> {
         <span style="color:#a6e22e">Data</span> <span style="color:#a6e22e">bson</span>.<span style="color:#a6e22e">RawValue</span> <span style="color:#e6db74">`bson:&#34;data&#34;`</span>
@@ -114,8 +114,8 @@ code to convert generic JSON object to specific structs.</p>
         <span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">object</span>.<span style="color:#a6e22e">Data</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">a</span>)
         <span style="color:#a6e22e">d</span> = <span style="color:#a6e22e">a</span>
 }
-</code></pre></div><p>This should work, but it results in all <code>bson.M</code> object to become <code>Key</code> and
-<code>Value</code> object like this one:</p>
+</code></pre></div><p>This should work, but it results in all <code>bson.M</code> objects becoming <code>Key</code>
+and <code>Value</code> object like this one:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
     <span style="color:#f92672">&#34;Key&#34;</span>: <span style="color:#e6db74">&#34;key&#34;</span>,
     <span style="color:#f92672">&#34;Value&#34;</span>: <span style="color:#e6db74">&#34;value&#34;</span>
@@ -123,7 +123,7 @@ code to convert generic JSON object to specific structs.</p>
 </code></pre></div><p>instead of this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{<span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#e6db74">&#34;value&#34;</span>}
 </code></pre></div><p>This is the behavior of default Mongo decoder registry, so we have to register
-a new entry for <code>bson.M</code>:</p>
+a new entry for <code>bson.M{}</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">rb</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">bson</span>.<span style="color:#a6e22e">NewRegistryBuilder</span>()
 <span style="color:#a6e22e">rb</span>.<span style="color:#a6e22e">RegisterTypeMapEntry</span>(<span style="color:#a6e22e">bsontype</span>.<span style="color:#a6e22e">EmbeddedDocument</span>, <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">TypeOf</span>(<span style="color:#a6e22e">bson</span>.<span style="color:#a6e22e">M</span>{}))
 </code></pre></div><h3 id="final-working-version">Final working version:</h3>
