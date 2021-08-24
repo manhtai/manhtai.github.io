@@ -5,10 +5,70 @@
     <description>Recent content in Go on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 19 Aug 2021 14:04:41 +0700</lastBuildDate>
+    <lastBuildDate>Tue, 24 Aug 2021 11:36:35 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Get plain JSON from MongoDB in Go</title>
+      <link>https://manhtai.github.io/posts/get-plain-json-from-mongodb-in-go/</link>
+      <pubDate>Tue, 24 Aug 2021 11:36:35 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/get-plain-json-from-mongodb-in-go/</guid>
+      <description>&lt;p&gt;When reading data from MongoDB using Go, we encounter with a JSON generic
+field that may be an object or an array, which itself may contain nested
+objects or arrays.&lt;/p&gt;
+&lt;p&gt;We only need the plain JSON in this case because we already got the parsing
+code to convert generic JSON object to specific structs.&lt;/p&gt;
+&lt;p&gt;To hold unprocessed BSON, we declare our field &lt;code&gt;bson.RawValue&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;object&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RawValue&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;`bson:&amp;#34;data&amp;#34;`&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To parse &lt;code&gt;Data&lt;/code&gt; field, we just need to use a trial:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt;{}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;M&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt;
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;object&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Unmarshal&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt;)
+&lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;object&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Unmarshal&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;)
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This should work, but it results in all &lt;code&gt;bson.M&lt;/code&gt; object to become &lt;code&gt;Key&lt;/code&gt; and
+&lt;code&gt;Value&lt;/code&gt; object like this one:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Key&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;key&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Value&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;instead of this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;key&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is the behavior of default Mongo decoder registry, so we have to register
+a new entry for &lt;code&gt;bson.M&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rb&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NewRegistryBuilder&lt;/span&gt;()
+&lt;span style=&#34;color:#a6e22e&#34;&gt;rb&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RegisterTypeMapEntry&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;bsontype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;EmbeddedDocument&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;reflect&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;TypeOf&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;M&lt;/span&gt;{}))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;final-working-version&#34;&gt;Final working version:&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rb&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NewRegistryBuilder&lt;/span&gt;()
+&lt;span style=&#34;color:#a6e22e&#34;&gt;rb&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RegisterTypeMapEntry&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;bsontype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;EmbeddedDocument&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;reflect&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;TypeOf&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;M&lt;/span&gt;{}))
+&lt;span style=&#34;color:#a6e22e&#34;&gt;reg&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rb&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Build&lt;/span&gt;()
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt;{}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;M&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bson&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt;
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;object&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;UnmarshalWithRegistry&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;reg&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt;)
+&lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;object&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;UnmarshalWithRegistry&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;reg&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;)
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
     
     <item>
       <title>Distribute workload between ECS tasks</title>
