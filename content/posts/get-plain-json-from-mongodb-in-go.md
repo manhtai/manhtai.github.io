@@ -5,12 +5,12 @@ tags: ["Mongo", "Go"]
 draft: false
 ---
 
-When reading data from MongoDB using Go, we encounter with a JSON generic
-field that may be an object or an array, which itself may contain nested
+When reading data from MongoDB using Go, we encounter a struct with a JSON
+generic field that may be an object or an array, which itself may contain nested
 objects or arrays.
 
 We only need the plain JSON in this case because we already got the parsing
-code to convert generic JSON object to specific structs.
+code to convert the generic JSON object to specific structs.
 
 
 To hold unprocessed BSON, we declare our field `bson.RawValue`:
@@ -40,8 +40,8 @@ if e != nil {
 }
 ```
 
-This should work, but it results in all `bson.M` object to become `Key` and
-`Value` object like this one:
+This should work, but it results in all `bson.M` objects becoming `Key`
+and `Value` object like this one:
 
 ```json
 {
@@ -57,7 +57,7 @@ instead of this:
 ```
 
 This is the behavior of default Mongo decoder registry, so we have to register
-a new entry for `bson.M`:
+a new entry for `bson.M{}`:
 
 
 ```go
