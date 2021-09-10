@@ -149,8 +149,8 @@ the rules we have defined before in our models.
 ## The end
 
 That's it. All is done without a single line of JavaScript. Visit
-[memoet.com][1] and see the Today collection for yourself!
+[memoet.manhtai.com][1] and see the Today collection for yourself!
 
 
 [0]: https://github.com/memoetapp/memoet
-[1]: https://memoet.com
+[1]: https://memoet.manhtai.com
