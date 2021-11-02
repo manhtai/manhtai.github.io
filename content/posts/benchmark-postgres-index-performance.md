@@ -49,12 +49,12 @@ latency stddev = 0.946 ms
 
 ```sql
 create index bench_a on bench(a);
-create index bench_b on bench(b);
-create index bench_c on bench(c);
-create index bench_d on bench(d);
-create index bench_e on bench(e);
-create index bench_f on bench(f);
 ```
+
+The way you choose indexes here depends on the cardinality or uniqueness of the data.
+We use random data here so one index is enough, and it will perform almost exactly as
+when you index all 6 columns!
+
 
 ### 4. Select with index
 
