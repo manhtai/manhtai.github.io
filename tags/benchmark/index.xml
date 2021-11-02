@@ -39,12 +39,10 @@ indexing all the 6 columns, right? Let&amp;rsquo;s do a benchmark!&lt;/p&gt;
 latency stddev = 0.946 ms
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;3-create-index&#34;&gt;3. Create index&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;create&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt; bench_a &lt;span style=&#34;color:#66d9ef&#34;&gt;on&lt;/span&gt; bench(a);
-&lt;span style=&#34;color:#66d9ef&#34;&gt;create&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt; bench_b &lt;span style=&#34;color:#66d9ef&#34;&gt;on&lt;/span&gt; bench(b);
-&lt;span style=&#34;color:#66d9ef&#34;&gt;create&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt; bench_c &lt;span style=&#34;color:#66d9ef&#34;&gt;on&lt;/span&gt; bench(&lt;span style=&#34;color:#66d9ef&#34;&gt;c&lt;/span&gt;);
-&lt;span style=&#34;color:#66d9ef&#34;&gt;create&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt; bench_d &lt;span style=&#34;color:#66d9ef&#34;&gt;on&lt;/span&gt; bench(d);
-&lt;span style=&#34;color:#66d9ef&#34;&gt;create&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt; bench_e &lt;span style=&#34;color:#66d9ef&#34;&gt;on&lt;/span&gt; bench(e);
-&lt;span style=&#34;color:#66d9ef&#34;&gt;create&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt; bench_f &lt;span style=&#34;color:#66d9ef&#34;&gt;on&lt;/span&gt; bench(f);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;4-select-with-index&#34;&gt;4. Select with index&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The way you choose indexes here depends on the cardinality or uniqueness of the data.
+We use random data here so one index is enough, and it will perform almost exactly as
+when you index all 6 columns!&lt;/p&gt;
+&lt;h3 id=&#34;4-select-with-index&#34;&gt;4. Select with index&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;select * from bench where a = &amp;#39;a&amp;#39; and b = &amp;#39;b&amp;#39; and c = &amp;#39;c&amp;#39; and d = &amp;#39;d&amp;#39; and e = &amp;#39;e&amp;#39; order by f limit 1;&amp;#34;&lt;/span&gt; | pgbench -d postgres -t &lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt; -P &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; -f -
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Result:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;latency average = 0.357 ms

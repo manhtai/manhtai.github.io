@@ -115,12 +115,10 @@ indexing all the 6 columns, right? Let&rsquo;s do a benchmark!</p>
 latency stddev = 0.946 ms
 </code></pre><h3 id="3-create-index">3. Create index</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">index</span> bench_a <span style="color:#66d9ef">on</span> bench(a);
-<span style="color:#66d9ef">create</span> <span style="color:#66d9ef">index</span> bench_b <span style="color:#66d9ef">on</span> bench(b);
-<span style="color:#66d9ef">create</span> <span style="color:#66d9ef">index</span> bench_c <span style="color:#66d9ef">on</span> bench(<span style="color:#66d9ef">c</span>);
-<span style="color:#66d9ef">create</span> <span style="color:#66d9ef">index</span> bench_d <span style="color:#66d9ef">on</span> bench(d);
-<span style="color:#66d9ef">create</span> <span style="color:#66d9ef">index</span> bench_e <span style="color:#66d9ef">on</span> bench(e);
-<span style="color:#66d9ef">create</span> <span style="color:#66d9ef">index</span> bench_f <span style="color:#66d9ef">on</span> bench(f);
-</code></pre></div><h3 id="4-select-with-index">4. Select with index</h3>
+</code></pre></div><p>The way you choose indexes here depends on the cardinality or uniqueness of the data.
+We use random data here so one index is enough, and it will perform almost exactly as
+when you index all 6 columns!</p>
+<h3 id="4-select-with-index">4. Select with index</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">echo <span style="color:#e6db74">&#34;select * from bench where a = &#39;a&#39; and b = &#39;b&#39; and c = &#39;c&#39; and d = &#39;d&#39; and e = &#39;e&#39; order by f limit 1;&#34;</span> | pgbench -d postgres -t <span style="color:#ae81ff">50</span> -P <span style="color:#ae81ff">1</span> -f -
 </code></pre></div><p>Result:</p>
 <pre><code>latency average = 0.357 ms
