@@ -83,8 +83,8 @@ I will have some things to write in the year end post.
 wait!
 
 
-[1]: https://manhtai.github.io/posts/chat-app-in-golang/
-[2]: https://manhtai.github.io/posts/8-weeks-crypto-write-up/
+[1]: /posts/chat-app-in-golang/
+[2]: /posts/8-weeks-crypto-write-up/
 [3]: http://aqicn.org/city/vietnam/hanoi/us-embassy/
 [4]: https://techcamp.vn
 [5]: https://safaribooksonline.com

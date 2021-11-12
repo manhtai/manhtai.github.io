@@ -75,4 +75,4 @@ old. I like the new ones more now, especially the 16, it rocks!
 2021 starts tomorrow. Let's welcome it!
 
 
-[1]: https://manhtai.github.io/posts/2019-in-review
+[1]: /posts/2019-in-review

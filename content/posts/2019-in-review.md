@@ -73,4 +73,4 @@ Hope for a meaningful 2020 to come!
 [5]: https://site.mockito.org/
 [6]: https://www.h2database.com
 [7]: https://flywaydb.org/
-[8]: https://manhtai.github.io/posts/print-unicode-to-thermal-printer-using-react-native/
+[8]: /posts/print-unicode-to-thermal-printer-using-react-native/

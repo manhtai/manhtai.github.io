@@ -16,7 +16,7 @@ same service as well.
 ## 1. Get task ARN
 
 With `${ECS_CONTAINER_METADATA_URI_V4}/task` endpoint, we can get the task ARN
-and metadata about its cluster and family.
+and metadata about its cluster and family. The docs are [here][2].
 
 After sending a GET request from our container, we got:
 
@@ -55,4 +55,8 @@ making the request. This request does require authentication nevertheless.
 ## 3. Distribute the workload
 
 
-Now we know how many tasks we got, the problem becomes easy.
+Now we know how many tasks we got, the problem becomes [easy][1].
+
+
+[1]: /posts/restart-golang-goroutines
+[2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-metadata-endpoint-v4.html
