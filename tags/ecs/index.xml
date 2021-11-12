@@ -24,7 +24,7 @@ ECS task must know their identity and the number of tasks that belong to the
 same service as well.&lt;/p&gt;
 &lt;h2 id=&#34;1-get-task-arn&#34;&gt;1. Get task ARN&lt;/h2&gt;
 &lt;p&gt;With &lt;code&gt;${ECS_CONTAINER_METADATA_URI_V4}/task&lt;/code&gt; endpoint, we can get the task ARN
-and metadata about its cluster and family.&lt;/p&gt;
+and metadata about its cluster and family. The docs are &lt;a href=&#34;https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-metadata-endpoint-v4.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;After sending a GET request from our container, we got:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;{
     &amp;quot;Cluster&amp;quot;: &amp;quot;default&amp;quot;,
@@ -45,7 +45,7 @@ a service using ECS API, in this example we will use Go SDK though:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;list.TaskArns&lt;/code&gt; contains all ARN of tasks in the service, including the task
 making the request. This request does require authentication nevertheless.&lt;/p&gt;
 &lt;h2 id=&#34;3-distribute-the-workload&#34;&gt;3. Distribute the workload&lt;/h2&gt;
-&lt;p&gt;Now we know how many tasks we got, the problem becomes easy.&lt;/p&gt;
+&lt;p&gt;Now we know how many tasks we got, the problem becomes &lt;a href=&#34;https://manhtai.github.io/posts/restart-golang-goroutines&#34;&gt;easy&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     

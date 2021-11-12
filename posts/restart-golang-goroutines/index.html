@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Restart Golang Goroutines</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Restart Golang Goroutines">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Restart Golang Goroutines">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/restart-golang-goroutines/">
+    <meta name="og:site_name" content="Restart Golang Goroutines">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="Go ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Restart Golang Goroutines <aside><a href="/tags/go/">Go</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>In some cases such as <a href="/posts/distribute-workload-in-ecs-tasks">distributing workload between ECS tasks</a>, we need to
+restart our workers, which are Goroutines in our case, base on the number of
+ECS tasks in order to reassign partitions to the Goroutines on the same task.</p>
+<p>Suppose we got 100 database partitions, if we had 1 ECS task, then all the
+workers on that task will be responsible for all 100 partitions. But when we
+scale the service to 20 ECS tasks, each task will be responsible for only
+5 partitions, hence we need to restart the Goroutines and assign them
+5 partitions only.</p>
+<p>How would we do that? Here it is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">w</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">worker</span>) <span style="color:#a6e22e">run</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) {
+	<span style="color:#a6e22e">partitions</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> []<span style="color:#66d9ef">int</span>)
+
+	<span style="color:#75715e">// Partition worker
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">partitionWorker</span>.<span style="color:#a6e22e">start</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">partitions</span>)
+
+	<span style="color:#75715e">// Variable to cancel context
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">partCtx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>
+	<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">partCancel</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">WithCancel</span>(<span style="color:#a6e22e">ctx</span>)
+
+	<span style="color:#66d9ef">for</span> {
+		<span style="color:#66d9ef">select</span> {
+		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">parts</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">partitions</span>:
+			<span style="color:#a6e22e">partCancel</span>()
+			<span style="color:#a6e22e">partCtx</span>, <span style="color:#a6e22e">partCancel</span> = <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">WithCancel</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+			<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">jobWorker</span>.<span style="color:#a6e22e">start</span>(<span style="color:#a6e22e">partCtx</span>, <span style="color:#a6e22e">parts</span>)
+
+		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Done</span>():
+			<span style="color:#a6e22e">partCancel</span>()
+			<span style="color:#75715e">// Wait for jobWorker to finish
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+			<span style="color:#66d9ef">return</span>
+		}
+	}
+}
+
+</code></pre></div><ul>
+<li>
+<p><code>partitionWorker</code> is in charge of determine the partitions that the current
+ECS tasks need to work on, see guide on how to do it <a href="/posts/distribute-workload-in-ecs-tasks">here</a>.</p>
+</li>
+<li>
+<p><code>jobWorker</code> is the one that does the heavy lifting on specific partitions
+and will be restarted whenever the partitions changes.</p>
+</li>
+</ul>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on November 12, 2021.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/restart-golang-goroutines.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2021
+</footer>
+</body>
+</html>
+
