@@ -16,9 +16,9 @@
       <pubDate>Fri, 12 Nov 2021 10:48:34 +0700</pubDate>
       
       <guid>https://manhtai.github.io/posts/restart-golang-goroutines/</guid>
-      <description>&lt;p&gt;In some cases such as &lt;a href=&#34;https://manhtai.github.io/posts/distribute-workload-in-ecs-tasks&#34;&gt;distributing workload between ECS tasks&lt;/a&gt;, we need to
+      <description>&lt;p&gt;In some cases such as &lt;a href=&#34;https://manhtai.github.io/posts/distribute-workload-in-ecs-tasks&#34;&gt;distributing the workload between ECS tasks&lt;/a&gt;, we need to
 restart our workers, which are Goroutines in our case, base on the number of
-ECS tasks in order to reassign partitions to the Goroutines on the same task.&lt;/p&gt;
+ECS tasks to reassign partitions to the Goroutines on the same task.&lt;/p&gt;
 &lt;p&gt;Suppose we got 100 database partitions, if we had 1 ECS task, then all the
 workers on that task will be responsible for all 100 partitions. But when we
 scale the service to 20 ECS tasks, each task will be responsible for only
@@ -53,12 +53,12 @@ scale the service to 20 ECS tasks, each task will be responsible for only
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;code&gt;partitionWorker&lt;/code&gt; is in charge of determine the partitions that the current
-ECS tasks need to work on, see guide on how to do it &lt;a href=&#34;https://manhtai.github.io/posts/distribute-workload-in-ecs-tasks&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;partitionWorker&lt;/code&gt; is in charge of determining the partitions that the current
+ECS tasks need to work on, see the guide on how to do it &lt;a href=&#34;https://manhtai.github.io/posts/distribute-workload-in-ecs-tasks&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;jobWorker&lt;/code&gt; is the one that does the heavy lifting on specific partitions
-and will be restarted whenever the partitions changes.&lt;/p&gt;
+and will be restarted whenever the partitions change.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 </description>

@@ -92,9 +92,9 @@ window.onload = ready;
 
 <div class="content">
   <h1>Restart Golang Goroutines <aside><a href="/tags/go/">Go</a>&nbsp;&nbsp;&nbsp;</aside></h1>
-  <p>In some cases such as <a href="/posts/distribute-workload-in-ecs-tasks">distributing workload between ECS tasks</a>, we need to
+  <p>In some cases such as <a href="/posts/distribute-workload-in-ecs-tasks">distributing the workload between ECS tasks</a>, we need to
 restart our workers, which are Goroutines in our case, base on the number of
-ECS tasks in order to reassign partitions to the Goroutines on the same task.</p>
+ECS tasks to reassign partitions to the Goroutines on the same task.</p>
 <p>Suppose we got 100 database partitions, if we had 1 ECS task, then all the
 workers on that task will be responsible for all 100 partitions. But when we
 scale the service to 20 ECS tasks, each task will be responsible for only
@@ -129,12 +129,12 @@ scale the service to 20 ECS tasks, each task will be responsible for only
 
 </code></pre></div><ul>
 <li>
-<p><code>partitionWorker</code> is in charge of determine the partitions that the current
-ECS tasks need to work on, see guide on how to do it <a href="/posts/distribute-workload-in-ecs-tasks">here</a>.</p>
+<p><code>partitionWorker</code> is in charge of determining the partitions that the current
+ECS tasks need to work on, see the guide on how to do it <a href="/posts/distribute-workload-in-ecs-tasks">here</a>.</p>
 </li>
 <li>
 <p><code>jobWorker</code> is the one that does the heavy lifting on specific partitions
-and will be restarted whenever the partitions changes.</p>
+and will be restarted whenever the partitions change.</p>
 </li>
 </ul>
 
