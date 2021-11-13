@@ -5,9 +5,9 @@ tags: ["Go"]
 draft: false
 ---
 
-In some cases such as [distributing workload between ECS tasks][1], we need to
+In some cases such as [distributing the workload between ECS tasks][1], we need to
 restart our workers, which are Goroutines in our case, base on the number of
-ECS tasks in order to reassign partitions to the Goroutines on the same task.
+ECS tasks to reassign partitions to the Goroutines on the same task.
 
 Suppose we got 100 database partitions, if we had 1 ECS task, then all the
 workers on that task will be responsible for all 100 partitions. But when we
@@ -47,11 +47,11 @@ func (w *worker) run(ctx context.Context) {
 
 ```
 
-- `partitionWorker` is in charge of determine the partitions that the current
-  ECS tasks need to work on, see guide on how to do it [here][1].
+- `partitionWorker` is in charge of determining the partitions that the current
+  ECS tasks need to work on, see the guide on how to do it [here][1].
 
 - `jobWorker` is the one that does the heavy lifting on specific partitions
-  and will be restarted whenever the partitions changes.
+  and will be restarted whenever the partitions change.
 
 
 
