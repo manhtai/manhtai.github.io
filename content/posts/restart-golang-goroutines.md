@@ -2,6 +2,7 @@
 title: "Restart Golang Goroutines"
 date: 2021-11-12T10:48:34+07:00
 tags: ["Go"]
+commentid: 4
 draft: false
 ---
 
