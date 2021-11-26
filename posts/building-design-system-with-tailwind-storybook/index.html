@@ -134,6 +134,92 @@ at scale.</p>
 
 
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript">
+ 
+var CurrentPage = 0;
+
+function ParseLinkHeader(link) {
+    var entries = link && link.split(",") || [];
+    var links = {};
+    for (var i in entries) {
+        var entry = entries[i];
+        var link = {};
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
+}
+
+function DoGithubComments(comment_id, page_id) {
+    var repo_name = "manhtai/manhtai.github.io";
+
+    if (page_id === undefined)
+        page_id = 1;
+
+    var api_url = "https://api.github.com/repos/" + repo_name;
+    var api_issue_url = api_url + "/issues/" + comment_id;
+    var api_comments_url = api_url + "/issues/" + comment_id + "/comments" + "?page=" + page_id;
+
+    var url = "https://github.com/" + repo_name + "/issues/" + comment_id;
+
+    $(document).ready(function () {
+        $.getJSON(api_issue_url, function(data) {
+            NbComments = data.comments;
+        });
+
+        $.ajax(api_comments_url, {
+            headers: {Accept: "application/vnd.github.v3.html+json"},
+            dataType: "json",
+            success: function(comments, textStatus, jqXHR) {
+
+                
+                if (page_id == 1)
+                    $("#gh-comments-list").append("<a href='" + url + "#new_comment_field' rel='nofollow' target='_blank' class='button'>Post new comment</a>");
+
+                
+                $.each(comments, function(i, comment) {
+                    var date = new Date(comment.created_at);
+                    var t = "<div id='gh-comment'>";
+                    
+                    t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a></b>";
+                    t += " posted at ";
+                    t += "<em>" + date.toUTCString() + "</em>";
+                    t += "<hr>";
+                    t += comment.body_html;
+                    t += "</div>";
+                    $("#gh-comments-list").append(t);
+                });
+
+                
+                var links = ParseLinkHeader(jqXHR.getResponseHeader("Link"));
+                if ("next" in links) {
+                    $("#gh-load-comments").attr("onclick", "DoGithubComments(" + comment_id + "," + (page_id + 1) + ");");
+                    $("#gh-load-comments").show();
+                } else {
+                    $("#gh-load-comments").hide();
+                }
+            },
+            error: function() {
+                $("#gh-comments-list").append("<a href='" + url + "' rel='nofollow' target='_blank'class='button'>View all comments</a>");
+            }
+        });
+    });
+}
+
+DoGithubComments( 5 );
+</script>
+
+<div id="gh-comments">
+    <br/><br/>
+    <h4>Comments</h4>
+    <div id="gh-comments-list"></div>
+    <a href="javascript:void(0)" id="gh-load-comments" class="btn" style="display:none">Load more comments</a>
+</div>
+
+
 
 
 
