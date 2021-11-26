@@ -2,6 +2,7 @@
 title: "Building a design system with Tailwind and Storybook"
 date: 2021-05-07T20:52:25+07:00
 tags: ["tailwindcss", "storybook", "design system"]
+commentid: 5
 draft: false
 ---
 
