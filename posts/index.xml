@@ -5,10 +5,52 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 Nov 2021 10:48:34 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 05 Dec 2021 09:42:52 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>2021 in Review</title>
+      <link>https://manhtai.github.io/posts/2021-in-review/</link>
+      <pubDate>Sun, 05 Dec 2021 09:42:52 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/2021-in-review/</guid>
+      <description>&lt;p&gt;Another year has come to an end, and now is the time to reflect,
+and then start anew. I&amp;rsquo;ve made it to the fourth year in a &lt;a href=&#34;https://manhtai.github.io/tags/end-year/&#34;&gt;row&lt;/a&gt;
+and here are some biggest marks this year.&lt;/p&gt;
+&lt;h2 id=&#34;i-write-journals-almost-every-day&#34;&gt;I write journals almost every day&lt;/h2&gt;
+&lt;p&gt;I have written journals since 2016, blogs long before that, but only
+once in a while. After reading &amp;ldquo;Educated&amp;rdquo; by Tara Westover, I&amp;rsquo;ve
+committed to taking notes of everyday stories to capture the memories
+and organize my thoughts. And who knows, someday I might write a memoir
+myself!&lt;/p&gt;
+&lt;h2 id=&#34;i-read-more-non-technical-books&#34;&gt;I read more non-technical books&lt;/h2&gt;
+&lt;p&gt;Good books are contagious, they make me want to read even more good
+books. I mostly read memoirs/biography this year. Now I&amp;rsquo;m going past
+the first thirty-year period of my life, I&amp;rsquo;m curious about how people
+are living or have lived their lives. I might have searched for some
+insights and motivation to live the rest of mine.&lt;/p&gt;
+&lt;h2 id=&#34;i-changed-job-and-moved-to-a-new-city&#34;&gt;I changed job and moved to a new city&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s time for a change, back to what I have longed for, which is to
+run alongside the beach, drink a cup of coffee, eat a loaf of bread
+and start a new day. I also bought a mountain bike, and ride up to
+the mountain in the city each morning. The road is solid, the view is
+impressive, and the feeling when riding downhill with both hands in
+the sky is doped (don&amp;rsquo;t try that yourself though). Because of that,
+despite the COVID situation, I work out more, mostly running and biking.&lt;/p&gt;
+&lt;p&gt;The new job is satisfying. The team is small and excellent at the same
+time. Nothing I would ask for more.&lt;/p&gt;
+&lt;h2 id=&#34;i-earned-my-first-dollars-online&#34;&gt;I earned my first dollars online&lt;/h2&gt;
+&lt;p&gt;It feels good, but I have a long way to go before becoming a true indie
+hacker. Building side projects is fun, it has become my recurring action
+now and then.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve learned an attitude some times ago, which states that when your
+habit has become a routine to improve yourself, your improvement over
+time is inevitable. I guess that&amp;rsquo;s my life&amp;rsquo;s orientation for now.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s hope for another year of improvement!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Restart Golang Goroutines</title>

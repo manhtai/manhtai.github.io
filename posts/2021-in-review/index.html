@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>2021 in Review</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="2021 in Review">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="2021 in Review">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/2021-in-review/">
+    <meta name="og:site_name" content="2021 in Review">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="short end year ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>2021 in Review <aside><a href="/tags/short/">short</a>&nbsp;&nbsp;&nbsp;<a href="/tags/end-year/">end year</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>Another year has come to an end, and now is the time to reflect,
+and then start anew. I&rsquo;ve made it to the fourth year in a <a href="/tags/end-year/">row</a>
+and here are some biggest marks this year.</p>
+<h2 id="i-write-journals-almost-every-day">I write journals almost every day</h2>
+<p>I have written journals since 2016, blogs long before that, but only
+once in a while. After reading &ldquo;Educated&rdquo; by Tara Westover, I&rsquo;ve
+committed to taking notes of everyday stories to capture the memories
+and organize my thoughts. And who knows, someday I might write a memoir
+myself!</p>
+<h2 id="i-read-more-non-technical-books">I read more non-technical books</h2>
+<p>Good books are contagious, they make me want to read even more good
+books. I mostly read memoirs/biography this year. Now I&rsquo;m going past
+the first thirty-year period of my life, I&rsquo;m curious about how people
+are living or have lived their lives. I might have searched for some
+insights and motivation to live the rest of mine.</p>
+<h2 id="i-changed-job-and-moved-to-a-new-city">I changed job and moved to a new city</h2>
+<p>It&rsquo;s time for a change, back to what I have longed for, which is to
+run alongside the beach, drink a cup of coffee, eat a loaf of bread
+and start a new day. I also bought a mountain bike, and ride up to
+the mountain in the city each morning. The road is solid, the view is
+impressive, and the feeling when riding downhill with both hands in
+the sky is doped (don&rsquo;t try that yourself though). Because of that,
+despite the COVID situation, I work out more, mostly running and biking.</p>
+<p>The new job is satisfying. The team is small and excellent at the same
+time. Nothing I would ask for more.</p>
+<h2 id="i-earned-my-first-dollars-online">I earned my first dollars online</h2>
+<p>It feels good, but I have a long way to go before becoming a true indie
+hacker. Building side projects is fun, it has become my recurring action
+now and then.</p>
+<p>I&rsquo;ve learned an attitude some times ago, which states that when your
+habit has become a routine to improve yourself, your improvement over
+time is inevitable. I guess that&rsquo;s my life&rsquo;s orientation for now.</p>
+<p>Let&rsquo;s hope for another year of improvement!</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on December 5, 2021.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/2021-in-review.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2021
+</footer>
+</body>
+</html>
+

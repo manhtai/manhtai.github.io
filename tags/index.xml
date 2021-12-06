@@ -5,10 +5,28 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 Nov 2021 10:48:34 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 05 Dec 2021 09:42:52 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>end year</title>
+      <link>https://manhtai.github.io/tags/end-year/</link>
+      <pubDate>Sun, 05 Dec 2021 09:42:52 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/end-year/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>short</title>
+      <link>https://manhtai.github.io/tags/short/</link>
+      <pubDate>Sun, 05 Dec 2021 09:42:52 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/short/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Go</title>
@@ -223,24 +241,6 @@
       <pubDate>Fri, 07 May 2021 20:52:25 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/tailwindcss/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>end year</title>
-      <link>https://manhtai.github.io/tags/end-year/</link>
-      <pubDate>Thu, 31 Dec 2020 21:10:51 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/end-year/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>short</title>
-      <link>https://manhtai.github.io/tags/short/</link>
-      <pubDate>Thu, 31 Dec 2020 21:10:51 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/short/</guid>
       <description></description>
     </item>
     
