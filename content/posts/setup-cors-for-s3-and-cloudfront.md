@@ -2,6 +2,7 @@
 title: "Setup CORS for S3 and Cloudfront"
 date: 2020-12-04T20:53:21+07:00
 tags: ['s3', 'cloudfront', 'aws']
+commentid: 6
 draft: false
 ---
 
