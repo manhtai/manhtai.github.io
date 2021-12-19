@@ -5,10 +5,64 @@
     <description>Recent content in ECS on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 19 Aug 2021 14:04:41 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 12 Nov 2021 10:48:34 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/ecs/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Restart Golang Goroutines</title>
+      <link>https://manhtai.github.io/posts/restart-golang-goroutines/</link>
+      <pubDate>Fri, 12 Nov 2021 10:48:34 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/restart-golang-goroutines/</guid>
+      <description>&lt;p&gt;In some cases such as &lt;a href=&#34;https://manhtai.github.io/posts/distribute-workload-in-ecs-tasks&#34;&gt;distributing the workload between ECS tasks&lt;/a&gt;, we need to
+restart our workers, which are Goroutines in our case, base on the number of
+ECS tasks to reassign partitions to the Goroutines on the same task.&lt;/p&gt;
+&lt;p&gt;Suppose we got 100 database partitions, if we had 1 ECS task, then all the
+workers on that task will be responsible for all 100 partitions. But when we
+scale the service to 20 ECS tasks, each task will be responsible for only
+5 partitions, hence we need to restart the Goroutines and assign them
+5 partitions only.&lt;/p&gt;
+&lt;p&gt;How would we do that? Here it is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;worker&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;run&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;) {
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;partitions&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; make(&lt;span style=&#34;color:#66d9ef&#34;&gt;chan&lt;/span&gt; []&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)
+
+	&lt;span style=&#34;color:#75715e&#34;&gt;// Partition worker
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;go&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;partitionWorker&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;start&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;partitions&lt;/span&gt;)
+
+	&lt;span style=&#34;color:#75715e&#34;&gt;// Variable to cancel context
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;partCtx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;partCancel&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;WithCancel&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt;)
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; {
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; {
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;parts&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;partitions&lt;/span&gt;:
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;partCancel&lt;/span&gt;()
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;partCtx&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;partCancel&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;WithCancel&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;TODO&lt;/span&gt;())
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;go&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;jobWorker&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;start&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;partCtx&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;parts&lt;/span&gt;)
+
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Done&lt;/span&gt;():
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;partCancel&lt;/span&gt;()
+			&lt;span style=&#34;color:#75715e&#34;&gt;// Wait for jobWorker to finish
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;			&lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Sleep&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Second&lt;/span&gt;)
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;
+		}
+	}
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;partitionWorker&lt;/code&gt; is in charge of determining the partitions that the current
+ECS tasks need to work on, see the guide on how to do it &lt;a href=&#34;https://manhtai.github.io/posts/distribute-workload-in-ecs-tasks&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;jobWorker&lt;/code&gt; is the one that does the heavy lifting on specific partitions
+and will be restarted whenever the partitions change.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Distribute workload between ECS tasks</title>
