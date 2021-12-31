@@ -5,10 +5,64 @@
     <description>Recent content in golang on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 29 Jan 2018 21:19:23 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 31 Dec 2021 20:25:07 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Update partially and return fully in Go</title>
+      <link>https://manhtai.github.io/posts/golang-update-partially-and-return-fully/</link>
+      <pubDate>Fri, 31 Dec 2021 20:25:07 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/golang-update-partially-and-return-fully/</guid>
+      <description>&lt;p&gt;In typical CRUD applications, it&amp;rsquo;s common these days that your update
+APIs work properly on objects in a partial way. You should not enforcing
+the client to send the whole object to update just a field anymore. And with
+Postgres &lt;code&gt;returning&lt;/code&gt; clause, we can return all object data despite being
+updated only some of them.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s say you have to update a Student object, we will define all its fields
+as pointers so when the client doesn&amp;rsquo;t send up anything, it will be nil:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Student&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the database interface, we will choose the fields that need to update and
+return all object data when done, we use &lt;code&gt;pgx&lt;/code&gt; and &lt;code&gt;scany&lt;/code&gt; package here for
+executing query and scanning data back to Go struct:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; (
+      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;os&amp;#34;&lt;/span&gt;
+      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;github.com/jackc/pgx/v4&amp;#34;&lt;/span&gt;
+      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;github.com/georgysavva/scany/pgxscan&amp;#34;&lt;/span&gt;
+)
+
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;conn&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pgx&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Connect&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Background&lt;/span&gt;(), &lt;span style=&#34;color:#a6e22e&#34;&gt;os&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Getenv&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;DATABASE_URL&amp;#34;&lt;/span&gt;))
+
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;`
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      UPDATE students
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      SET
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;          name = CASE WHEN $1 = true THEN $2 ELSE name END,
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;          age = CASE WHEN $3 = true THEN $4 ELSE age END
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      RETURNING
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;          name, age`&lt;/span&gt;
+
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;conn&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Query&lt;/span&gt;(
+         &lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;,
+         &lt;span style=&#34;color:#a6e22e&#34;&gt;student&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;student&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;,
+         &lt;span style=&#34;color:#a6e22e&#34;&gt;student&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;student&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;
+      )
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Close&lt;/span&gt;()
+
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;stud&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Student&lt;/span&gt;{}
+
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Next&lt;/span&gt;() {
+          &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;pgxscan&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ScanRow&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;stud&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;)
+      }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
     
     <item>
       <title>Build a distributed chat app in Golang</title>

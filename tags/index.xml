@@ -5,10 +5,28 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Dec 2021 09:42:52 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 31 Dec 2021 20:25:07 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>golang</title>
+      <link>https://manhtai.github.io/tags/golang/</link>
+      <pubDate>Fri, 31 Dec 2021 20:25:07 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Postgres</title>
+      <link>https://manhtai.github.io/tags/postgres/</link>
+      <pubDate>Fri, 31 Dec 2021 20:25:07 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/postgres/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>end year</title>
@@ -61,15 +79,6 @@
       <pubDate>Tue, 02 Nov 2021 14:42:35 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/benchmark/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Postgres</title>
-      <link>https://manhtai.github.io/tags/postgres/</link>
-      <pubDate>Tue, 02 Nov 2021 14:42:35 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/postgres/</guid>
       <description></description>
     </item>
     
@@ -520,15 +529,6 @@
       <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/chat/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>golang</title>
-      <link>https://manhtai.github.io/tags/golang/</link>
-      <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/golang/</guid>
       <description></description>
     </item>
     
