@@ -23,6 +23,13 @@ type Student struct {
 }
 ```
 
+We must use pointers here because otherwise, we can't differ default zero values
+with not-set values that are sent from the client. To update the record, we
+come up with two answers.
+
+
+## 1. CASE WHEN... with RETURNING
+
 In the database interface, we will choose the fields that need to update and
 return all object data when done, we use `pgx` and `scany` package here for
 executing query and scanning data back to Go struct:
@@ -61,3 +68,18 @@ func main() {
       }
 }
 ```
+
+This solution looks OK, but we can't validate the object with all fields
+available at the same time before updating into the database. Hence the
+second approach.
+
+
+## 2. SELECT first, UPDATE later
+
+
+No code is needed to explain this method. First you retrieve the object from
+the database, then change those fields that need updating (non-nil fields),
+do whatever validation required, and then write the whole object back.
+
+Despite we must always do a SELECT before an UPDATE, this should be the
+preferred solution.
