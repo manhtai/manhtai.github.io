@@ -27,7 +27,11 @@ as pointers so when the client doesn&amp;rsquo;t send up anything, it will be ni
       &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
       &lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the database interface, we will choose the fields that need to update and
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We must use pointers here because otherwise, we can&amp;rsquo;t differ default zero values
+with not-set values that are sent from the client. To update the record, we
+come up with two answers.&lt;/p&gt;
+&lt;h2 id=&#34;1-case-when-with-returning&#34;&gt;1. CASE WHEN&amp;hellip; with RETURNING&lt;/h2&gt;
+&lt;p&gt;In the database interface, we will choose the fields that need to update and
 return all object data when done, we use &lt;code&gt;pgx&lt;/code&gt; and &lt;code&gt;scany&lt;/code&gt; package here for
 executing query and scanning data back to Go struct:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; (
@@ -61,7 +65,16 @@ executing query and scanning data back to Go struct:&lt;/p&gt;
           &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;pgxscan&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ScanRow&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;stud&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;)
       }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This solution looks OK, but we can&amp;rsquo;t validate the object with all fields
+available at the same time before updating into the database. Hence the
+second approach.&lt;/p&gt;
+&lt;h2 id=&#34;2-select-first-update-later&#34;&gt;2. SELECT first, UPDATE later&lt;/h2&gt;
+&lt;p&gt;No code is needed to explain this method. First you retrieve the object from
+the database, then change those fields that need updating (non-nil fields),
+do whatever validation required, and then write the whole object back.&lt;/p&gt;
+&lt;p&gt;Despite we must always do a SELECT before an UPDATE, this should be the
+preferred solution.&lt;/p&gt;
+</description>
     </item>
     
     <item>

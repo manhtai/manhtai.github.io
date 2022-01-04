@@ -103,7 +103,11 @@ as pointers so when the client doesn&rsquo;t send up anything, it will be nil:</
       <span style="color:#a6e22e">Name</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">string</span>
       <span style="color:#a6e22e">Age</span>  <span style="color:#f92672">*</span><span style="color:#66d9ef">int</span>
 }
-</code></pre></div><p>In the database interface, we will choose the fields that need to update and
+</code></pre></div><p>We must use pointers here because otherwise, we can&rsquo;t differ default zero values
+with not-set values that are sent from the client. To update the record, we
+come up with two answers.</p>
+<h2 id="1-case-when-with-returning">1. CASE WHEN&hellip; with RETURNING</h2>
+<p>In the database interface, we will choose the fields that need to update and
 return all object data when done, we use <code>pgx</code> and <code>scany</code> package here for
 executing query and scanning data back to Go struct:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">import</span> (
@@ -137,7 +141,16 @@ executing query and scanning data back to Go struct:</p>
           <span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">pgxscan</span>.<span style="color:#a6e22e">ScanRow</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">stud</span>, <span style="color:#a6e22e">rows</span>)
       }
 }
-</code></pre></div>
+</code></pre></div><p>This solution looks OK, but we can&rsquo;t validate the object with all fields
+available at the same time before updating into the database. Hence the
+second approach.</p>
+<h2 id="2-select-first-update-later">2. SELECT first, UPDATE later</h2>
+<p>No code is needed to explain this method. First you retrieve the object from
+the database, then change those fields that need updating (non-nil fields),
+do whatever validation required, and then write the whole object back.</p>
+<p>Despite we must always do a SELECT before an UPDATE, this should be the
+preferred solution.</p>
+
 </div>
 
 
@@ -158,7 +171,7 @@ executing query and scanning data back to Go struct:</p>
 
 
 <footer>
-    <span class="copyleft">&copy;</span> 2018 - 2021
+    <span class="copyleft">&copy;</span> 2018 - 2022
 </footer>
 </body>
 </html>
