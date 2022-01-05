@@ -5,10 +5,60 @@
     <description>Recent content in Go on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 Nov 2021 10:48:34 +0700</lastBuildDate>
+    <lastBuildDate>Wed, 05 Jan 2022 19:19:55 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Partial update nullable fields in Go</title>
+      <link>https://manhtai.github.io/posts/golang-partial-update-nullable-fields/</link>
+      <pubDate>Wed, 05 Jan 2022 19:19:55 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/golang-partial-update-nullable-fields/</guid>
+      <description>&lt;p&gt;Using pointers and SELECT before UPDATE, we &lt;a href=&#34;https://manhtai.github.io/posts/golang-update-partially-and-return-fully/&#34;&gt;solved&lt;/a&gt; the partial
+update problem, but leave out a minor detail: how do we set nullable
+fields to NULL when the pointer will be &lt;code&gt;nil&lt;/code&gt; whether we set it to
+&lt;code&gt;null&lt;/code&gt; or &lt;code&gt;undefined&lt;/code&gt; (i.e. not send the field at all)?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Answer&lt;/strong&gt;: Use blank value as null value!&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s say we got a struct like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Student&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;OnboardedAt&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Time&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;1-for-null-string&#34;&gt;1. For null string&lt;/h2&gt;
+&lt;p&gt;To set the &lt;code&gt;Name&lt;/code&gt; field to NULL, set it to an empty string and update
+the field to NULL when that condition is satisfied. Simple enough.&lt;/p&gt;
+&lt;h2 id=&#34;2-for-null-time&#34;&gt;2. For null time&lt;/h2&gt;
+&lt;p&gt;To set &lt;code&gt;OnboardedAt&lt;/code&gt; field to NULL, set it to empty string, and your
+code will&amp;hellip; panic! Because an empty string is not a valid time. It&amp;rsquo;s
+a little bit tricky here because time doesn&amp;rsquo;t have a &amp;ldquo;blank&amp;rdquo; value,
+but fortunately, it has a zero one.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s create a custom blank time instead:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;BlankTime&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Time&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;n&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;BlankTime&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;UnmarshalJSON&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;b&lt;/span&gt; []&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; string(&lt;span style=&#34;color:#a6e22e&#34;&gt;b&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;`&amp;#34;&amp;#34;`&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;zero&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Time&lt;/span&gt;{}
+        &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;n&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;BlankTime&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;zero&lt;/span&gt;}
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;
+    }
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;tt&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Parse&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`&amp;#34;`&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RFC3339&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&amp;#34;`&lt;/span&gt;, string(&lt;span style=&#34;color:#a6e22e&#34;&gt;b&lt;/span&gt;))
+    &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;n&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;BlankTime&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;tt&lt;/span&gt;}
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And rewrite our struct:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Student&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;OnboardedAt&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;BlankTime&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now whenever we set the time field to an empty string, it will
+get a zero value, do a check to set NULL for your time field.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Restart Golang Goroutines</title>

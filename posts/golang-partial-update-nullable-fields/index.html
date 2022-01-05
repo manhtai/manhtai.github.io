@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Partial update nullable fields in Go</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Partial update nullable fields in Go">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Partial update nullable fields in Go">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/golang-partial-update-nullable-fields/">
+    <meta name="og:site_name" content="Partial update nullable fields in Go">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="Go SQL ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Partial update nullable fields in Go <aside><a href="/tags/go/">Go</a>&nbsp;&nbsp;&nbsp;<a href="/tags/sql/">SQL</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>Using pointers and SELECT before UPDATE, we <a href="/posts/golang-update-partially-and-return-fully/">solved</a> the partial
+update problem, but leave out a minor detail: how do we set nullable
+fields to NULL when the pointer will be <code>nil</code> whether we set it to
+<code>null</code> or <code>undefined</code> (i.e. not send the field at all)?</p>
+<p><strong>Answer</strong>: Use blank value as null value!</p>
+<p>Let&rsquo;s say we got a struct like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Student</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">Name</span>        <span style="color:#f92672">*</span><span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">OnboardedAt</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>
+}
+</code></pre></div><h2 id="1-for-null-string">1. For null string</h2>
+<p>To set the <code>Name</code> field to NULL, set it to an empty string and update
+the field to NULL when that condition is satisfied. Simple enough.</p>
+<h2 id="2-for-null-time">2. For null time</h2>
+<p>To set <code>OnboardedAt</code> field to NULL, set it to empty string, and your
+code will&hellip; panic! Because an empty string is not a valid time. It&rsquo;s
+a little bit tricky here because time doesn&rsquo;t have a &ldquo;blank&rdquo; value,
+but fortunately, it has a zero one.</p>
+<p>Let&rsquo;s create a custom blank time instead:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">BlankTime</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">BlankTime</span>) <span style="color:#a6e22e">UnmarshalJSON</span>(<span style="color:#a6e22e">b</span> []<span style="color:#66d9ef">byte</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">if</span> string(<span style="color:#a6e22e">b</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">`&#34;&#34;`</span> {
+        <span style="color:#a6e22e">zero</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>{}
+        <span style="color:#f92672">*</span><span style="color:#a6e22e">n</span> = <span style="color:#a6e22e">BlankTime</span>{<span style="color:#a6e22e">zero</span>}
+        <span style="color:#66d9ef">return</span>
+    }
+
+    <span style="color:#a6e22e">tt</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Parse</span>(<span style="color:#e6db74">`&#34;`</span><span style="color:#f92672">+</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">RFC3339</span><span style="color:#f92672">+</span><span style="color:#e6db74">`&#34;`</span>, string(<span style="color:#a6e22e">b</span>))
+    <span style="color:#f92672">*</span><span style="color:#a6e22e">n</span> = <span style="color:#a6e22e">BlankTime</span>{<span style="color:#a6e22e">tt</span>}
+    <span style="color:#66d9ef">return</span>
+}
+</code></pre></div><p>And rewrite our struct:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Student</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">Name</span>        <span style="color:#f92672">*</span><span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">OnboardedAt</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">BlankTime</span>
+}
+</code></pre></div><p>Now whenever we set the time field to an empty string, it will
+get a zero value, do a check to set NULL for your time field.</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on January 5, 2022.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/golang-partial-update-nullable-fields.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2022
+</footer>
+</body>
+</html>
+

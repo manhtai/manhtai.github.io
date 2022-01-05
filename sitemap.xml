@@ -3,8 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/tags/go/</loc>
+    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2021-12-31T20:25:07+07:00</lastmod>
+    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/golang-partial-update-nullable-fields/</loc>
+    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/sql/</loc>
+    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
   </url>
   
   <url>
@@ -14,16 +39,6 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/postgres/</loc>
-    <lastmod>2021-12-31T20:25:07+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2021-12-31T20:25:07+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2021-12-31T20:25:07+07:00</lastmod>
   </url>
   
@@ -54,11 +69,6 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/ecs/</loc>
-    <lastmod>2021-11-12T10:48:34+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/go/</loc>
     <lastmod>2021-11-12T10:48:34+07:00</lastmod>
   </url>
   
@@ -294,11 +304,6 @@
   
   <url>
     <loc>https://manhtai.github.io/tags/jpa/</loc>
-    <lastmod>2019-10-30T23:03:19+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/sql/</loc>
     <lastmod>2019-10-30T23:03:19+07:00</lastmod>
   </url>
   
