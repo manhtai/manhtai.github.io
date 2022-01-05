@@ -1,7 +1,7 @@
 ---
 title: "Update partially and return fully in Go"
 date: 2021-12-31T20:25:07+07:00
-tags: ["Golang", "Postgres"]
+tags: ["Golang", "Postgres", "SQL"]
 draft: false
 ---
 
