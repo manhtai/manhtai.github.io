@@ -3,13 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/posts/auto-ssl-for-custom-domains-at-scale/</loc>
+    <lastmod>2022-01-10T21:07:10+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/tags/go/</loc>
-    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
+    <lastmod>2022-01-10T21:07:10+07:00</lastmod>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
+    <lastmod>2022-01-10T21:07:10+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2022-01-10T21:07:10+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/ssl/</loc>
+    <lastmod>2022-01-10T21:07:10+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2022-01-10T21:07:10+07:00</lastmod>
   </url>
   
   <url>
@@ -18,17 +38,7 @@
   </url>
   
   <url>
-    <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://manhtai.github.io/tags/sql/</loc>
-    <lastmod>2022-01-05T19:19:55+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2022-01-05T19:19:55+07:00</lastmod>
   </url>
   

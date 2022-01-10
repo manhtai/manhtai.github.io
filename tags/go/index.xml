@@ -5,10 +5,79 @@
     <description>Recent content in Go on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 05 Jan 2022 19:19:55 +0700</lastBuildDate>
+    <lastBuildDate>Mon, 10 Jan 2022 21:07:10 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Auto SSL for custom domains at scale</title>
+      <link>https://manhtai.github.io/posts/auto-ssl-for-custom-domains-at-scale/</link>
+      <pubDate>Mon, 10 Jan 2022 21:07:10 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/auto-ssl-for-custom-domains-at-scale/</guid>
+      <description>&lt;p&gt;Up to some scale, your &lt;a href=&#34;https://en.wikipedia.org/wiki/Software_as_a_service&#34;&gt;SaaS&lt;/a&gt; will have to support white-label
+customers with their custom domains. And enabling &lt;a href=&#34;https://en.wikipedia.org/wiki/Transport_Layer_Security&#34;&gt;SSL&lt;/a&gt; (TLS now
+actually) for them is a must. How to automate this process and
+support a large number of custom domains at scale? Behold for
+Caddy will come and save your day!&lt;/p&gt;
+&lt;h2 id=&#34;1-what-is-caddy&#34;&gt;1. What is Caddy?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://caddyserver.com/&#34;&gt;Caddy&lt;/a&gt; is an open-source web server with automatic HTTPS written in Go.
+Besides automatic HTTPS, it can also do HTTPS on demand and scale
+horizontally when using a shared storage system for certificates. Popular
+choices are Redis, Consul, S3 or DynamoDB.&lt;/p&gt;
+&lt;h2 id=&#34;2-how-do-caddy-work&#34;&gt;2. How do Caddy work?&lt;/h2&gt;
+&lt;p&gt;Our request flow will look like this:&lt;/p&gt;
+&lt;p&gt;Client (browsers) =&amp;gt; Caddy server (auto &amp;amp; on-demand SSL) =&amp;gt; Your proxy server (forward requests based on custom domains) =&amp;gt; Your target server (do the real work)&lt;/p&gt;
+&lt;p&gt;Simple enough, eh? On localhost, Caddyfile looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://
+
+tls internal {
+	on_demand
+}
+
+reverse_proxy 127.0.0.1:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Our proxy server looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; (
+	&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;net/http&amp;#34;&lt;/span&gt;
+	&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;net/http/httputil&amp;#34;&lt;/span&gt;
+	&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;net/url&amp;#34;&lt;/span&gt;
+)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;remotes&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;map&lt;/span&gt;[&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;]&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;{
+		&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;:          &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.google.com&amp;#34;&lt;/span&gt;,
+	}
+
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ResponseWriter&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Request&lt;/span&gt;) {
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;rawURL&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;remotes&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Host&lt;/span&gt;]
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;remote&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Parse&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;rawURL&lt;/span&gt;)
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
+			panic(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
+		}
+
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Header&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;Set&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;User-Custom-Domain&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Host&lt;/span&gt;)
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Host&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;remote&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Host&lt;/span&gt;
+
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;proxy&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;httputil&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NewSingleHostReverseProxy&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;remote&lt;/span&gt;)
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;proxy&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ServeHTTP&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;)
+	}
+
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;HandleFunc&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;)
+
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ListenAndServe&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;:8080&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;)
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
+		panic(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
+	}
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The target server here is google.com.&lt;/p&gt;
+&lt;p&gt;Now when you visit https://localhost, it will show google.com website. Google
+just got another custom domain from us with SSL!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Partial update nullable fields in Go</title>
