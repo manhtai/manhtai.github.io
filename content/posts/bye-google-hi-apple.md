@@ -5,7 +5,7 @@ tags: ["short"]
 draft: false
 ---
 
-Since Google [no longer provide][0] G Suite free edition
+Since Google [no longer provides][0] G Suite free edition
 as from May 2022, I start to migrate all my data from Google
 to Apple today.
 
@@ -47,6 +47,10 @@ Obsidian desktop works.
 
 I use Apple Photos Mac app to import photos from exported photos folders
 from Google, and then wait for it to sync up to iCloud.
+
+
+That's it! I've thought I could never live on the net without Google,
+turn out it's not that hard.
 
 
 
