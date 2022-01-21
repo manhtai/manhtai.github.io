@@ -5,10 +5,48 @@
     <description>Recent content in short on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Dec 2021 09:42:52 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 21 Jan 2022 22:37:48 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/short/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Bye Google! Hi Apple!</title>
+      <link>https://manhtai.github.io/posts/bye-google-hi-apple/</link>
+      <pubDate>Fri, 21 Jan 2022 22:37:48 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/bye-google-hi-apple/</guid>
+      <description>&lt;p&gt;Since Google &lt;a href=&#34;https://support.google.com/a/answer/2855120&#34;&gt;no longer provide&lt;/a&gt; G Suite free edition
+as from May 2022, I start to migrate all my data from Google
+to Apple today.&lt;/p&gt;
+&lt;p&gt;My most used Google services are Mail, Keep and Photos. The
+fact that you can &lt;a href=&#34;https://support.google.com/accounts/answer/3024190&#34;&gt;take out&lt;/a&gt; all your Google data makes it
+very easy to move into Apple services. After downloading all
+your data to your local machine, the next steps are:&lt;/p&gt;
+&lt;h2 id=&#34;1-migrate-emails-from-gmail-to-apple-mail&#34;&gt;1. Migrate emails from Gmail to Apple Mail&lt;/h2&gt;
+&lt;p&gt;I use some custom domain emails, so naturally I now use custom
+domain for emails in iCloud for that purpose. The &lt;a href=&#34;https://support.apple.com/en-us/HT212514&#34;&gt;instruction&lt;/a&gt;
+is straight forward.&lt;/p&gt;
+&lt;p&gt;To import old emails, I use Mail Mac app to import &lt;code&gt;mbox&lt;/code&gt; file
+which was exported from Google. It will default import emails to your
+local Mac, you need to drag and drop it into iCloud tab in order to
+sync with other devices.&lt;/p&gt;
+&lt;h2 id=&#34;2-migrate-notes-from-google-keep-to-icloud-drive&#34;&gt;2. Migrate notes from Google Keep to iCloud Drive&lt;/h2&gt;
+&lt;p&gt;Initially I intend to use Apple Notes to replace Google Keep, but
+it is not a trivial process. Along the way I discover &lt;a href=&#34;https://logseq.com/&#34;&gt;Logseq&lt;/a&gt; and
+immediately feel in love with that.&lt;/p&gt;
+&lt;p&gt;I use Google Keep mostly to write journals, and Logseq is more than
+that, it is a &lt;a href=&#34;https://en.wikipedia.org/wiki/Personal_knowledge_management&#34;&gt;personal knowledge management system&lt;/a&gt; (PKMS), just
+like a second brain of yours. The Logseq desktop app is brilliant but
+it doesn&amp;rsquo;t have a mobile app yet. Fortunately, we can make &lt;a href=&#34;https://obsidian.md/&#34;&gt;Obsidian&lt;/a&gt;
+mobile app to play nice with it, all sync up using iCloud drive!&lt;/p&gt;
+&lt;p&gt;By the way Obsidian itself is another PKMS, I just don&amp;rsquo;t like the way
+Obsidian desktop works.&lt;/p&gt;
+&lt;h2 id=&#34;3-migrate-photos-from-google-photos-to-apple-photos&#34;&gt;3. Migrate photos from Google Photos to Apple Photos&lt;/h2&gt;
+&lt;p&gt;I use Apple Photos Mac app to import photos from exported photos folders
+from Google, and then wait for it to sync up to iCloud.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>2021 in Review</title>
