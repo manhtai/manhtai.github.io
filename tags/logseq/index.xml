@@ -1,0 +1,55 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>logseq on Go slowly</title>
+    <link>https://manhtai.github.io/tags/logseq/</link>
+    <description>Recent content in logseq on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 25 Feb 2022 12:12:00 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/logseq/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Logseq Journal on this day</title>
+      <link>https://manhtai.github.io/posts/logseq-journal-on-this-day/</link>
+      <pubDate>Fri, 25 Feb 2022 12:12:00 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/logseq-journal-on-this-day/</guid>
+      <description>&lt;p&gt;Recently I &lt;a href=&#34;https://manhtai.github.io/posts/bye-google-hi-apple&#34;&gt;moved&lt;/a&gt; my journals to &lt;a href=&#34;https://github.com/logseq/logseq&#34;&gt;Logseq&lt;/a&gt; and I like it very much.
+I use it almost everyday now. Core features are good, and the plugins market
+place surpasses my expectation.&lt;/p&gt;
+&lt;p&gt;Oh and I&amp;rsquo;ve written journals for the last 6 years, sometimes I want to know on
+this day of some years before, what was happenning and what was I thinking. Lo
+and behold, Logseq has advanced queries feature for just that!&lt;/p&gt;
+&lt;p&gt;Create new page and paste this content into it:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#+BEGIN_QUERY
+{:title &amp;quot;On this day some years before&amp;quot;
+ :query [:find (pull ?b [*])
+       :in $ ?today
+       :where
+       [?b :block/page ?p]
+       [?p :page/journal-day ?d]
+       [(str ?d) ?ds]
+       [(subs ?ds 4 8) ?md1]
+       [(str ?today) ?td]
+       [(subs ?td 4 8) ?md2]
+       [(= ?md1 ?md2)]
+       [(&amp;lt; ?d ?today)]
+]
+:inputs [:today]}
+#+END_QUERY
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Logseq use &lt;a href=&#34;https://github.com/tonsky/datascript&#34;&gt;Datascript&lt;/a&gt; for database and &lt;a href=&#34;http://www.learndatalogtoday.org&#34;&gt;Datalog&lt;/a&gt; for query engine.
+What I&amp;rsquo;ve done above can be translated to normal language as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Scan all pages, in each page, get the journal date attribute.&lt;/li&gt;
+&lt;li&gt;Convert that attribute to string, you will get something like &amp;ldquo;20220225&amp;rdquo;
+which is in &amp;ldquo;yyyyMMdd&amp;rdquo; format.&lt;/li&gt;
+&lt;li&gt;Take just the &amp;ldquo;MMdd&amp;rdquo; part, and compare that part with today&amp;rsquo;s &amp;ldquo;MMdd&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;Return all blocks that match today&amp;rsquo;s and having the date less than today.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
