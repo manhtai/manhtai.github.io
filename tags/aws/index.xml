@@ -5,10 +5,61 @@
     <description>Recent content in AWS on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 Nov 2021 10:48:34 +0700</lastBuildDate>
+    <lastBuildDate>Wed, 02 Mar 2022 19:08:23 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Redshift for customer-facing apps</title>
+      <link>https://manhtai.github.io/posts/redshift-as-a-database-for-customer-facing-app/</link>
+      <pubDate>Wed, 02 Mar 2022 19:08:23 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/redshift-as-a-database-for-customer-facing-app/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/redshift/&#34;&gt;Redshift&lt;/a&gt; is an OLAP database from AWS, so for data warehouse purpose, it&amp;rsquo;s
+a viable option. The question is, can we use it as an OLTP database for
+customer-facing applications?&lt;/p&gt;
+&lt;p&gt;Short answer: No, for generic OLTP use case, and Yes for specific functions,
+such as analytics or building dashboards. The reasons are, firstly, analytic
+jobs usually do aggregation on a large chunk of data which would run very slow
+on row-based OLTP databases, and secondly, analytic features are usually the
+low traffic parts on the system. Those requirements align very well with
+Redshift features.&lt;/p&gt;
+&lt;h2 id=&#34;1-concurrency-connections&#34;&gt;1. Concurrency connections&lt;/h2&gt;
+&lt;p&gt;As of now, Redshift &lt;a href=&#34;https://docs.aws.amazon.com/redshift/latest/dg/cm-c-defining-query-queues.html#cm-c-defining-query-queues-concurrency-level&#34;&gt;supports&lt;/a&gt; up to 50 concurrency connections by default.
+Although we can get &lt;a href=&#34;https://docs.aws.amazon.com/redshift/latest/dg/concurrency-scaling.html&#34;&gt;concurrency scaling&lt;/a&gt; feature by paying more, we need
+to keep the query latency in the 1-5 seconds range to be usable. Let&amp;rsquo;s say we
+get an average of 1 second per query, then we can serve up to 50 requests per
+second (RPS), if the analytic APIs only serve 10 RPS, then we&amp;rsquo;re good to go.&lt;/p&gt;
+&lt;h2 id=&#34;2-query-latency&#34;&gt;2. Query latency&lt;/h2&gt;
+&lt;p&gt;The catch now is how will we keep our query latency to only seconds, or
+even better, sub-second? Redshift is very powerful, but for a huge amount of
+data, it need to be tuned correctly for fast query.&lt;/p&gt;
+&lt;p&gt;Enter the Redshift&amp;rsquo;s DIST key and SORT key couple!&lt;/p&gt;
+&lt;p&gt;Since Redshift is a columnar database and is designed to keep a massive
+volume, it doesn&amp;rsquo;t have indexes as normal database, it only has 2 kinds of
+key for distributing and sorting data into desired locations.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;DIST key: for distributing data between compute nodes. It will affect
+joins and aggregations performance. We should choose a high cardinality
+column for this key.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;SORT key: for sorting data on disk. It will affect your &amp;ldquo;where&amp;rdquo; performance.
+There are 2 types of sort key: COMPOUND and INTERLEAVED, but we can only
+choose only one of them for the table sort key.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Refer to AWS best practice for designing table &lt;a href=&#34;https://docs.aws.amazon.com/redshift/latest/dg/c_designing-tables-best-practices.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;3-benchmark&#34;&gt;3. Benchmark&lt;/h2&gt;
+&lt;p&gt;We&amp;rsquo;ve done some benchmarks using &lt;a href=&#34;https://k6.io/&#34;&gt;k6&lt;/a&gt; on our toy APIs that use Redshift
+ra3.xlplus (4 vCPU, 32 GB RAM, 3 compute nodes) as the main database and the
+results are as good as promised: if you keep your query latency to 1 second,
+you get 50 RPS, if it goes down to 500 ms, you get 100 RPS.&lt;/p&gt;
+&lt;p&gt;The math works out!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Restart Golang Goroutines</title>

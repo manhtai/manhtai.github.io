@@ -4,23 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <title>Logseq journal: On this day</title>
+    <title>Redshift for customer-facing apps</title>
     
     <meta name="description" content="">
     <meta name="image" content="">
     
-    <meta itemprop="name" content="Logseq journal: On this day">
+    <meta itemprop="name" content="Redshift for customer-facing apps">
     <meta itemprop="description" content="">
     <meta itemprop="image" content="">
     
-    <meta name="og:title" content="Logseq journal: On this day">
+    <meta name="og:title" content="Redshift for customer-facing apps">
     <meta name="og:description" content="">
     
-    <meta name="og:url" content="https://manhtai.github.io/posts/logseq-journal-on-this-day/">
-    <meta name="og:site_name" content="Logseq journal: On this day">
+    <meta name="og:url" content="https://manhtai.github.io/posts/redshift-as-a-database-for-customer-facing-app/">
+    <meta name="og:site_name" content="Redshift for customer-facing apps">
     <meta name="og:type" content="article">
     
-    <meta name="article:tag" content="logseq ">
+    <meta name="article:tag" content="AWS Redshift ">
     <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
     
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
@@ -91,39 +91,49 @@ window.onload = ready;
 </script>
 
 <div class="content">
-  <h1>Logseq journal: On this day <aside><a href="/tags/logseq/">logseq</a>&nbsp;&nbsp;&nbsp;</aside></h1>
-  <p>Recently I <a href="/posts/bye-google-hi-apple">moved</a> my journals to <a href="https://github.com/logseq/logseq">Logseq</a> and I like it very much.
-I use it almost everyday now. Core features are good, and the plugins market
-place surpasses my expectation.</p>
-<p>Oh and I&rsquo;ve written journals for the last 6 years, sometimes I want to know on
-this day of some years before, what was happenning and what was I thinking. Lo
-and behold, Logseq has advanced queries feature for just that!</p>
-<p>Create new page and paste this content into it:</p>
-<pre><code>#+BEGIN_QUERY
-{:title &quot;On this day some years before&quot;
- :query [:find (pull ?b [*])
-       :in $ ?today
-       :where
-       [?b :block/page ?p]
-       [?p :page/journal-day ?d]
-       [(str ?d) ?ds]
-       [(subs ?ds 4 8) ?md1]
-       [(str ?today) ?td]
-       [(subs ?td 4 8) ?md2]
-       [(= ?md1 ?md2)]
-       [(&lt; ?d ?today)]
-]
-:inputs [:today]}
-#+END_QUERY
-</code></pre><p>Logseq use <a href="https://github.com/tonsky/datascript">Datascript</a> for database and <a href="http://www.learndatalogtoday.org">Datalog</a> for query engine.
-What I&rsquo;ve done above can be translated to normal language as:</p>
+  <h1>Redshift for customer-facing apps <aside><a href="/tags/aws/">AWS</a>&nbsp;&nbsp;&nbsp;<a href="/tags/redshift/">Redshift</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p><a href="https://aws.amazon.com/redshift/">Redshift</a> is an OLAP database from AWS, so for data warehouse purpose, it&rsquo;s
+a viable option. The question is, can we use it as an OLTP database for
+customer-facing applications?</p>
+<p>Short answer: No, for generic OLTP use case, and Yes for specific functions,
+such as analytics or building dashboards. The reasons are, firstly, analytic
+jobs usually do aggregation on a large chunk of data which would run very slow
+on row-based OLTP databases, and secondly, analytic features are usually the
+low traffic parts on the system. Those requirements align very well with
+Redshift features.</p>
+<h2 id="1-concurrency-connections">1. Concurrency connections</h2>
+<p>As of now, Redshift <a href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-defining-query-queues.html#cm-c-defining-query-queues-concurrency-level">supports</a> up to 50 concurrency connections by default.
+Although we can get <a href="https://docs.aws.amazon.com/redshift/latest/dg/concurrency-scaling.html">concurrency scaling</a> feature by paying more, we need
+to keep the query latency in the 1-5 seconds range to be usable. Let&rsquo;s say we
+get an average of 1 second per query, then we can serve up to 50 requests per
+second (RPS), if the analytic APIs only serve 10 RPS, then we&rsquo;re good to go.</p>
+<h2 id="2-query-latency">2. Query latency</h2>
+<p>The catch now is how will we keep our query latency to only seconds, or
+even better, sub-second? Redshift is very powerful, but for a huge amount of
+data, it need to be tuned correctly for fast query.</p>
+<p>Enter the Redshift&rsquo;s DIST key and SORT key couple!</p>
+<p>Since Redshift is a columnar database and is designed to keep a massive
+volume, it doesn&rsquo;t have indexes as normal database, it only has 2 kinds of
+key for distributing and sorting data into desired locations.</p>
 <ul>
-<li>Scan all pages, in each page, get the journal date attribute.</li>
-<li>Convert that attribute to string, you will get something like &ldquo;20220225&rdquo;
-which is in &ldquo;yyyyMMdd&rdquo; format.</li>
-<li>Take just the &ldquo;MMdd&rdquo; part, and compare that part with today&rsquo;s &ldquo;MMdd&rdquo;.</li>
-<li>Return all blocks that match today&rsquo;s and having the date less than today.</li>
+<li>
+<p>DIST key: for distributing data between compute nodes. It will affect
+joins and aggregations performance. We should choose a high cardinality
+column for this key.</p>
+</li>
+<li>
+<p>SORT key: for sorting data on disk. It will affect your &ldquo;where&rdquo; performance.
+There are 2 types of sort key: COMPOUND and INTERLEAVED, but we can only
+choose only one of them for the table sort key.</p>
+</li>
 </ul>
+<p>Refer to AWS best practice for designing table <a href="https://docs.aws.amazon.com/redshift/latest/dg/c_designing-tables-best-practices.html">here</a>.</p>
+<h2 id="3-benchmark">3. Benchmark</h2>
+<p>We&rsquo;ve done some benchmarks using <a href="https://k6.io/">k6</a> on our toy APIs that use Redshift
+ra3.xlplus (4 vCPU, 32 GB RAM, 3 compute nodes) as the main database and the
+results are as good as promised: if you keep your query latency to 1 second,
+you get 50 RPS, if it goes down to 500 ms, you get 100 RPS.</p>
+<p>The math works out!</p>
 
 </div>
 
@@ -131,8 +141,8 @@ which is in &ldquo;yyyyMMdd&rdquo; format.</li>
   <p>
     <small>
       <em>
-        Written on February 25, 2022.
-        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/logseq-journal-on-this-day.md">
+        Written on March 2, 2022.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/redshift-as-a-database-for-customer-facing-app.md">
           <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
         </a>
       </em>
