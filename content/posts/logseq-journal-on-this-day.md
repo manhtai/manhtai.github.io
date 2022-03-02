@@ -1,5 +1,5 @@
 ---
-title: "Logseq Journal on this day"
+title: "Logseq journal: On this day"
 date: 2022-02-25T12:12:00+07:00
 tags: ["logseq"]
 draft: false
