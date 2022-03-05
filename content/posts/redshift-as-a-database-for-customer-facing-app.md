@@ -29,7 +29,7 @@ second (RPS), if the analytic APIs only serve 10 RPS, then we're good to go.
 
 The catch now is how will we keep our query latency to only seconds, or
 even better, sub-second? Redshift is very powerful, but for a huge amount of
-data, it need to be tuned correctly for fast query.
+data, it must be tuned correctly for fast query.
 
 Enter the Redshift's DIST key and SORT key couple!
 
