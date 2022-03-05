@@ -34,7 +34,7 @@ second (RPS), if the analytic APIs only serve 10 RPS, then we&amp;rsquo;re good 
 &lt;h2 id=&#34;2-query-latency&#34;&gt;2. Query latency&lt;/h2&gt;
 &lt;p&gt;The catch now is how will we keep our query latency to only seconds, or
 even better, sub-second? Redshift is very powerful, but for a huge amount of
-data, it must be tuned correctly for fast query.&lt;/p&gt;
+data, it must be tuned correctly for fast queries.&lt;/p&gt;
 &lt;p&gt;Enter the Redshift&amp;rsquo;s DIST key and SORT key couple!&lt;/p&gt;
 &lt;p&gt;Since Redshift is a columnar database and is designed to keep a massive
 volume, it doesn&amp;rsquo;t have indexes as normal database, it only has 2 kinds of
