@@ -54,9 +54,10 @@ choose only one of them for the table sort key.&lt;/p&gt;
 &lt;p&gt;Refer to AWS best practice for designing table &lt;a href=&#34;https://docs.aws.amazon.com/redshift/latest/dg/c_designing-tables-best-practices.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;3-benchmark&#34;&gt;3. Benchmark&lt;/h2&gt;
 &lt;p&gt;We&amp;rsquo;ve done some benchmarks using &lt;a href=&#34;https://k6.io/&#34;&gt;k6&lt;/a&gt; on our toy APIs that use Redshift
-ra3.xlplus (4 vCPU, 32 GB RAM, 3 compute nodes) as the main database and the
-results are as good as promised: if you keep your query latency to 1 second,
-you get 50 RPS, if it goes down to 500 ms, you get 100 RPS.&lt;/p&gt;
+ra3.xlplus (4 vCPU, 32 GB RAM, 3 compute nodes) with ~1TB of data in each
+table, as the main database and the results are as good as promised: if you
+keep your query latency to 1 second, you get 50 RPS, if it goes down to 500
+ms, you get 100 RPS.&lt;/p&gt;
 &lt;p&gt;The math works out!&lt;/p&gt;
 </description>
     </item>
