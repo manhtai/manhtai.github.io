@@ -51,9 +51,10 @@ Refer to AWS best practice for designing table [here][4].
 ## 3. Benchmark
 
 We've done some benchmarks using [k6][5] on our toy APIs that use Redshift
-ra3.xlplus (4 vCPU, 32 GB RAM, 3 compute nodes) as the main database and the
-results are as good as promised: if you keep your query latency to 1 second,
-you get 50 RPS, if it goes down to 500 ms, you get 100 RPS.
+ra3.xlplus (4 vCPU, 32 GB RAM, 3 compute nodes) with ~1TB of data in each
+table, as the main database and the results are as good as promised: if you
+keep your query latency to 1 second, you get 50 RPS, if it goes down to 500
+ms, you get 100 RPS.
 
 The math works out!
 
