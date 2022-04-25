@@ -5,10 +5,44 @@
     <description>Recent content in Postgres on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 31 Dec 2021 20:25:07 +0700</lastBuildDate>
+    <lastBuildDate>Mon, 25 Apr 2022 17:12:38 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/postgres/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Postgres: Update object items on JSONB array</title>
+      <link>https://manhtai.github.io/posts/postgres-update-object-item-on-jsonb-array/</link>
+      <pubDate>Mon, 25 Apr 2022 17:12:38 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/postgres-update-object-item-on-jsonb-array/</guid>
+      <description>&lt;h2 id=&#34;problem&#34;&gt;Problem:&lt;/h2&gt;
+&lt;p&gt;We have a table with a JSONB array column &lt;code&gt;data&lt;/code&gt; which contains many objects:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;[
+  {&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dog&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dog-1&amp;#34;&lt;/span&gt;},
+  {&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cat&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cat-1&amp;#34;&lt;/span&gt;}
+]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;How do we change the name field from &lt;code&gt;&amp;quot;type&amp;quot;&lt;/code&gt; into &lt;code&gt;&amp;quot;kind&amp;quot;&lt;/code&gt; and keep all related data?&lt;/p&gt;
+&lt;p&gt;Let a assume table &lt;code&gt;animals&lt;/code&gt; has 2 columns: &lt;code&gt;id&lt;/code&gt; and &lt;code&gt;data&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;answer&#34;&gt;Answer:&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;UPDATE&lt;/span&gt; animals
+&lt;span style=&#34;color:#66d9ef&#34;&gt;SET&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; (
+         &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; id,
+                jsonb_agg(
+                        jsonb_build_object(
+                                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;, elem &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;,
+                                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;kind&amp;#39;&lt;/span&gt;, elem &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;type&amp;#39;&lt;/span&gt;
+                            )
+                    ) &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;
+         &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; animals,
+              jsonb_array_elements(&lt;span style=&#34;color:#66d9ef&#34;&gt;CASE&lt;/span&gt; jsonb_typeof(&lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;WHEN&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;array&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THEN&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;ELSE&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[]&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;END&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; elem
+         &lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;kind&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;IS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;
+         &lt;span style=&#34;color:#66d9ef&#34;&gt;GROUP&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; animals.id
+     ) &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; animals.id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;.id;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
     
     <item>
       <title>Update partially and return fully in Go</title>
