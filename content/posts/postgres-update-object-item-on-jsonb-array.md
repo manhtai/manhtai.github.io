@@ -19,7 +19,7 @@ We have a table with a JSONB array column `data` which contains many objects:
 
 How do we change the name field from `"type"` into `"kind"` and keep all related data?
 
-Let a assume table `animals` has 2 columns: `id` and `data`.
+Let's assume table `animals` has 2 columns: `id` and `data`.
 
 
 ## Answer:
