@@ -23,7 +23,7 @@
   {&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cat&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cat-1&amp;#34;&lt;/span&gt;}
 ]
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;How do we change the name field from &lt;code&gt;&amp;quot;type&amp;quot;&lt;/code&gt; into &lt;code&gt;&amp;quot;kind&amp;quot;&lt;/code&gt; and keep all related data?&lt;/p&gt;
-&lt;p&gt;Let a assume table &lt;code&gt;animals&lt;/code&gt; has 2 columns: &lt;code&gt;id&lt;/code&gt; and &lt;code&gt;data&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s assume table &lt;code&gt;animals&lt;/code&gt; has 2 columns: &lt;code&gt;id&lt;/code&gt; and &lt;code&gt;data&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;answer&#34;&gt;Answer:&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;UPDATE&lt;/span&gt; animals
 &lt;span style=&#34;color:#66d9ef&#34;&gt;SET&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;

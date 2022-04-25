@@ -99,7 +99,7 @@ window.onload = ready;
   {<span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;cat&#34;</span>, <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;cat-1&#34;</span>}
 ]
 </code></pre></div><p>How do we change the name field from <code>&quot;type&quot;</code> into <code>&quot;kind&quot;</code> and keep all related data?</p>
-<p>Let a assume table <code>animals</code> has 2 columns: <code>id</code> and <code>data</code>.</p>
+<p>Let&rsquo;s assume table <code>animals</code> has 2 columns: <code>id</code> and <code>data</code>.</p>
 <h2 id="answer">Answer:</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">UPDATE</span> animals
 <span style="color:#66d9ef">SET</span> <span style="color:#66d9ef">data</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span>.<span style="color:#66d9ef">data</span>
