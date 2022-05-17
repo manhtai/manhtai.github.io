@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Handle Unicode in Golang and Javascript</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Handle Unicode in Golang and Javascript">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Handle Unicode in Golang and Javascript">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/golang-vs-javascript-unicode/">
+    <meta name="og:site_name" content="Handle Unicode in Golang and Javascript">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="Golang Javascript ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Handle Unicode in Golang and Javascript <aside><a href="/tags/golang/">Golang</a>&nbsp;&nbsp;&nbsp;<a href="/tags/javascript/">Javascript</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>Currently I&rsquo;m working on some basic security stuffs between server side written
+in Golang and client side written in, well, Javascript.</p>
+<h2 id="code-point">Code point</h2>
+<p>A character is not the same as a code point.</p>
+<p>The Unicode standard uses the term &ldquo;code point&rdquo; to refer to the item represented
+by a single value. A character may be represented by a number of different
+sequences of code points, and therefore different sequences of UTF-8 bytes.</p>
+<p>In Go, a code point is called <code>rune</code>, when using <code>range</code> on a string, it will
+result in a rune at a time. Read more about strings in Go <a href="https://go.dev/blog/strings">here</a>.</p>
+<p>In Javascript, when using <code>String.prototype.split()</code>, it will result in a UTF-16
+code unit. To separate the text into code points, use <code>for..of</code> or <code>Array.from</code>
+instead. Read more about string split in Javascript <a href="https://stackoverflow.com/questions/4547609">here</a>. To get UTF-16
+code unit, use <code>String.prototype.charCodeAt()</code>, to get code point, use
+<code>String.prototype.codePointAt()</code>.</p>
+<h2 id="escape-unicode-characters">Escape Unicode characters</h2>
+<p>When working with Unicode strings in cryptography, we wouldn&rsquo;t want to deal
+with vary size code point in Unicode characters. To make our life easier,
+escape them first, and then working on ASCII.</p>
+<p>In Golang, we have <code>url.QueryEscape()</code> and in Javascript, we got
+<code>encodeURIComponent()</code>.</p>
+<p><code>url.QueryEscape()</code> escapes the string so it can be safely placed inside a
+URL query.</p>
+<p>The <code>encodeURIComponent()</code> function encodes a URI by replacing each instance
+of certain characters by one, two, three, or four escape sequences representing
+the UTF-8 encoding of the character.</p>
+<p>So in theory, <code>encodeURIComponent()</code> and <code>QueryEscape()</code> should be the same,
+but in practice, they are not. Both of them try to follow <a href="https://datatracker.ietf.org/doc/html/rfc3986">RFC 3986</a> until
+they don&rsquo;t. Depend on what you are working on, they might behave the same on
+the same kind of string. So you can use <code>QueryEscape()</code> on server side and
+<code>decodeURIComponent()</code> on client side with a high level of confidence.</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on May 17, 2022.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/golang-vs-javascript-unicode.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2022
+</footer>
+</body>
+</html>
+

@@ -5,10 +5,49 @@
     <description>Recent content in golang on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 31 Dec 2021 20:25:07 +0700</lastBuildDate>
+    <lastBuildDate>Tue, 17 May 2022 16:51:30 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Handle Unicode in Golang and Javascript</title>
+      <link>https://manhtai.github.io/posts/golang-vs-javascript-unicode/</link>
+      <pubDate>Tue, 17 May 2022 16:51:30 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/golang-vs-javascript-unicode/</guid>
+      <description>&lt;p&gt;Currently I&amp;rsquo;m working on some basic security stuffs between server side written
+in Golang and client side written in, well, Javascript.&lt;/p&gt;
+&lt;h2 id=&#34;code-point&#34;&gt;Code point&lt;/h2&gt;
+&lt;p&gt;A character is not the same as a code point.&lt;/p&gt;
+&lt;p&gt;The Unicode standard uses the term &amp;ldquo;code point&amp;rdquo; to refer to the item represented
+by a single value. A character may be represented by a number of different
+sequences of code points, and therefore different sequences of UTF-8 bytes.&lt;/p&gt;
+&lt;p&gt;In Go, a code point is called &lt;code&gt;rune&lt;/code&gt;, when using &lt;code&gt;range&lt;/code&gt; on a string, it will
+result in a rune at a time. Read more about strings in Go &lt;a href=&#34;https://go.dev/blog/strings&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In Javascript, when using &lt;code&gt;String.prototype.split()&lt;/code&gt;, it will result in a UTF-16
+code unit. To separate the text into code points, use &lt;code&gt;for..of&lt;/code&gt; or &lt;code&gt;Array.from&lt;/code&gt;
+instead. Read more about string split in Javascript &lt;a href=&#34;https://stackoverflow.com/questions/4547609&#34;&gt;here&lt;/a&gt;. To get UTF-16
+code unit, use &lt;code&gt;String.prototype.charCodeAt()&lt;/code&gt;, to get code point, use
+&lt;code&gt;String.prototype.codePointAt()&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;escape-unicode-characters&#34;&gt;Escape Unicode characters&lt;/h2&gt;
+&lt;p&gt;When working with Unicode strings in cryptography, we wouldn&amp;rsquo;t want to deal
+with vary size code point in Unicode characters. To make our life easier,
+escape them first, and then working on ASCII.&lt;/p&gt;
+&lt;p&gt;In Golang, we have &lt;code&gt;url.QueryEscape()&lt;/code&gt; and in Javascript, we got
+&lt;code&gt;encodeURIComponent()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;url.QueryEscape()&lt;/code&gt; escapes the string so it can be safely placed inside a
+URL query.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;encodeURIComponent()&lt;/code&gt; function encodes a URI by replacing each instance
+of certain characters by one, two, three, or four escape sequences representing
+the UTF-8 encoding of the character.&lt;/p&gt;
+&lt;p&gt;So in theory, &lt;code&gt;encodeURIComponent()&lt;/code&gt; and &lt;code&gt;QueryEscape()&lt;/code&gt; should be the same,
+but in practice, they are not. Both of them try to follow &lt;a href=&#34;https://datatracker.ietf.org/doc/html/rfc3986&#34;&gt;RFC 3986&lt;/a&gt; until
+they don&amp;rsquo;t. Depend on what you are working on, they might behave the same on
+the same kind of string. So you can use &lt;code&gt;QueryEscape()&lt;/code&gt; on server side and
+&lt;code&gt;decodeURIComponent()&lt;/code&gt; on client side with a high level of confidence.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Update partially and return fully in Go</title>
