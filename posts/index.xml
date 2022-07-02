@@ -5,10 +5,57 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 17 May 2022 16:51:30 +0700</lastBuildDate>
+    <lastBuildDate>Mon, 20 Jun 2022 07:32:27 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Upgrade Postgres major version with near-zero-downtime</title>
+      <link>https://manhtai.github.io/posts/upgrade-postgres-major-version-with-near-zero-downtime/</link>
+      <pubDate>Mon, 20 Jun 2022 07:32:27 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/upgrade-postgres-major-version-with-near-zero-downtime/</guid>
+      <description>&lt;p&gt;Our system have a typical facing API and some workers which do jobs on the
+background. All of them have read/write access to the Postgres instance. Our
+instance is not very big, but when we try to upgrade using AWS console on the
+clone, it takes more than 20 minutes and that&amp;rsquo;s not acceptable.
+Hence we were looking elsewhere, and find &lt;a href=&#34;https://aws.amazon.com/blogs/database/achieving-minimum-downtime-for-major-version-upgrades-in-amazon-aurora-for-postgresql-using-aws-dms/&#34;&gt;a solution&lt;/a&gt; from AWS using DMS.
+It worked out pretty well for us.&lt;/p&gt;
+&lt;h2 id=&#34;step-by-step&#34;&gt;Step by step&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Clone a new instance from our current database, truncate all tables and
+upgrade the new database to the latest version.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Full load and then CDC sync between the old database and the new one.
+Monitor the latency as well as table statistics.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Stop all writing tasks (API &amp;amp; workers) to old database.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Stop DMS job.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Switch database connection to the new one and restart all writing tasks.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Verify, then clean up old resources.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;catches&#34;&gt;Catches&lt;/h2&gt;
+&lt;p&gt;Current DMS engine (3.4.6) has some problems with some column types. But we
+can resolve them quickly thanks to clear error logs:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;varchar&lt;/code&gt; (without n), we have to convert it to &lt;code&gt;text&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;jsonb not null&lt;/code&gt;, we have to make it nullable&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;But in overall the upgrade process is smooth, we still got some downtime but
+it&amp;rsquo;s insignificant.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Handle Unicode in Golang and Javascript</title>
