@@ -5,10 +5,30 @@
     <description>Recent content in short on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 21 Jan 2022 22:37:48 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 03 Jul 2022 08:46:51 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/short/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Bye Feedly! Hi NetNewsWire!</title>
+      <link>https://manhtai.github.io/posts/bye-feedly-hi-netnewswire/</link>
+      <pubDate>Sun, 03 Jul 2022 08:46:51 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/bye-feedly-hi-netnewswire/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve read news from RSS feeds since forever. After Google discontinued Google
+Reader, I&amp;rsquo;ve switched to Feedly and use it happily ever since. Until now.&lt;/p&gt;
+&lt;p&gt;I just discover the NetNewsWire RSS reader app which is both on macOS and iOS,
+and data can be synchronized using iCloud. Offline-first and cloud-sync is the
+best duo ever. That&amp;rsquo;s the main reason I love using Logseq, Apple Mail, Apple
+Photos, and some more of Apple products. &amp;ldquo;Your data only exists on our cloud&amp;rdquo;
+doesn&amp;rsquo;t convince me to stay with cloud products anymore.&lt;/p&gt;
+&lt;p&gt;The migration is quite seamlessly, you just need to export &lt;code&gt;.opml&lt;/code&gt; file from
+Feedly and then import it to NetNewsWire using iCloud account. Then you&amp;rsquo;re
+set.&lt;/p&gt;
+&lt;p&gt;Good riddance, Feedly, and thanks for all the fish!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Bye Google! Hi Apple!</title>
