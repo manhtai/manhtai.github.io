@@ -5,10 +5,44 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 03 Jul 2022 08:46:51 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 08 Jul 2022 15:59:47 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Shell fuzzy search using fzf on Fish</title>
+      <link>https://manhtai.github.io/posts/shell-fuzzy-search-using-fzf-on-fish/</link>
+      <pubDate>Fri, 08 Jul 2022 15:59:47 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/shell-fuzzy-search-using-fzf-on-fish/</guid>
+      <description>&lt;p&gt;I mostly use an IDE for coding these days, but vim keybindings mode will be on
+and the terminal window with a proper shell must always be opened.&lt;/p&gt;
+&lt;p&gt;I wouldn&amp;rsquo;t want to code without CLI, and Fish shell with fzf fuzzy search
+brought it up to another level. In combination with many fancy things that
+are developed for the CLI recently makes me very excited. Another reason to
+believe that CLI will live on forever!&lt;/p&gt;
+&lt;p&gt;Now for my new setup with Fish and fzf.&lt;/p&gt;
+&lt;p&gt;1, &lt;a href=&#34;https://github.com/fish-shell/fish-shell&#34;&gt;Fish&lt;/a&gt; first&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;brew install fish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;2, Then &lt;a href=&#34;https://github.com/jorgebucaran/fisher&#34;&gt;fisher&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;curl -sL https://git.io/fisher | source &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; fisher install jorgebucaran/fisher
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;3, Then &lt;a href=&#34;https://github.com/PatrickF1/fzf.fish&#34;&gt;fzf.fish&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;fisher install PatrickF1/fzf.fish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;4, And multiple &lt;a href=&#34;https://github.com/sharkdp/bat&#34;&gt;fancy&lt;/a&gt; &lt;a href=&#34;https://github.com/sharkdp/fd&#34;&gt;small&lt;/a&gt; &lt;a href=&#34;https://github.com/Peltoche/lsd&#34;&gt;stuff&lt;/a&gt;s&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;cargo install bat fd-find lsd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;5, Then config some key bindings&lt;/p&gt;
+&lt;p&gt;Mine are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Ctrl + T&lt;/code&gt;: Search directories&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ctrl + K&lt;/code&gt;: Search processes&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ctrl + R&lt;/code&gt;: Search history (default)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ctrl + V&lt;/code&gt;: search variables (default)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;fzf_configure_bindings --directory=\ct --processes=\ck
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enjoy the magic of CLI!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Bye Feedly! Hi NetNewsWire!</title>
