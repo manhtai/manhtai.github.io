@@ -10,8 +10,8 @@ and the terminal window with a proper shell must always be opened.
 
 I wouldn't want to code without CLI, and Fish shell with fzf fuzzy search
 brought it up to another level. In combination with many fancy things that
-are developed for the CLI recently, which make me very excited. Another
-reason to believe that CLI will live on forever!
+are developed for the CLI recently, I feel very excited. Another reason to
+believe that CLI will live on forever!
 
 Now for my new setup with Fish and fzf.
 
