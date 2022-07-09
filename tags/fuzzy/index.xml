@@ -20,8 +20,8 @@
 and the terminal window with a proper shell must always be opened.&lt;/p&gt;
 &lt;p&gt;I wouldn&amp;rsquo;t want to code without CLI, and Fish shell with fzf fuzzy search
 brought it up to another level. In combination with many fancy things that
-are developed for the CLI recently makes me very excited. Another reason to
-believe that CLI will live on forever!&lt;/p&gt;
+are developed for the CLI recently, which make me very excited. Another
+reason to believe that CLI will live on forever!&lt;/p&gt;
 &lt;p&gt;Now for my new setup with Fish and fzf.&lt;/p&gt;
 &lt;p&gt;1, &lt;a href=&#34;https://github.com/fish-shell/fish-shell&#34;&gt;Fish&lt;/a&gt; first&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;brew install fish
