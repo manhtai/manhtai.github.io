@@ -31,7 +31,7 @@ believe that CLI will live on forever!&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;fisher install PatrickF1/fzf.fish
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;4, And multiple &lt;a href=&#34;https://github.com/sharkdp/bat&#34;&gt;fancy&lt;/a&gt; &lt;a href=&#34;https://github.com/sharkdp/fd&#34;&gt;small&lt;/a&gt; &lt;a href=&#34;https://github.com/Peltoche/lsd&#34;&gt;stuff&lt;/a&gt;s&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;cargo install bat fd-find lsd
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;5, Then config some key bindings&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;5, Then configure the key bindings&lt;/p&gt;
 &lt;p&gt;Mine are:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;Ctrl + T&lt;/code&gt;: Search directories&lt;/li&gt;
