@@ -40,7 +40,7 @@ fisher install PatrickF1/fzf.fish
 cargo install bat fd-find lsd
 ```
 
-5, Then config some key bindings
+5, Then configure the key bindings
 
 Mine are:
 
