@@ -5,10 +5,169 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Jul 2022 15:59:47 +0700</lastBuildDate>
+    <lastBuildDate>Thu, 28 Jul 2022 10:57:01 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Domain-Driven Design in Action</title>
+      <link>https://manhtai.github.io/posts/domain-driven-design-in-action/</link>
+      <pubDate>Thu, 28 Jul 2022 10:57:01 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/domain-driven-design-in-action/</guid>
+      <description>&lt;h2 id=&#34;1-ddd&#34;&gt;1. DDD&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Domain-driven_design&#34;&gt;Domain-driven design&lt;/a&gt; (DDD) is a software design approach focusing on
+modelling software to match a domain according to input from that domain&amp;rsquo;s
+experts.&lt;/p&gt;
+&lt;h3 id=&#34;11-domain&#34;&gt;1.1 Domain&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Domain&lt;/strong&gt; is the subject area to which the user applies a program.&lt;/p&gt;
+&lt;h3 id=&#34;12-model&#34;&gt;1.2 Model&lt;/h3&gt;
+&lt;p&gt;A domain contains one or many &lt;strong&gt;domain models&lt;/strong&gt; which are systems of
+abstractions that describes selected aspects of a domain and can be
+used to solve problems related to that domain.&lt;/p&gt;
+&lt;p&gt;Domain models can be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;An entity&lt;/li&gt;
+&lt;li&gt;A value object&lt;/li&gt;
+&lt;li&gt;An aggregate&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;13-entity&#34;&gt;1.3 Entity&lt;/h3&gt;
+&lt;p&gt;Now to begin the &amp;ldquo;in action&amp;rdquo; part, let&amp;rsquo;s say we have to implement an
+e-commerce system with Products, buyers can create Orders to buy things
+which are those Products.&lt;/p&gt;
+&lt;p&gt;We define 3 entities here to hold corresponding model data:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Product&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;ID&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Order&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;ID&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Email&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;OrderItem&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;ID&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;OrderID&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;ProductID&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Those entities may reside on the &lt;code&gt;entity&lt;/code&gt; subfolder or on the root of your
+current service.&lt;/p&gt;
+&lt;h2 id=&#34;2-n-tier-architecture&#34;&gt;2. N-tier architecture&lt;/h2&gt;
+&lt;p&gt;DDD is all about making the business domain a part of your code, we&amp;rsquo;ve done
+just that using entities. For better unit-testing and seperation of concerns,
+we will organize our code using &lt;a href=&#34;https://en.wikipedia.org/wiki/Multitier_architecture&#34;&gt;3-tier architecture&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;21-data-layer&#34;&gt;2.1 Data layer&lt;/h3&gt;
+&lt;p&gt;This is where we store our data. Repositories only know about persist and
+retrieve entities from storage, simple as that, no business logic here.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ProductRepository&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Create&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;prd&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;entity&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Product&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Retrieve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;prd&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;entity&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Product&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;)
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;OrderRepository&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Create&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;ord&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;entity&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Order&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Retrieve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;entity&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Order&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The storage may be a SQL or a NoSQL database, it&amp;rsquo;s not the responsibility
+of interfaces. That&amp;rsquo;s the implementation detail.&lt;/p&gt;
+&lt;p&gt;Repositories could be put on the &lt;code&gt;data&lt;/code&gt; or &lt;code&gt;store&lt;/code&gt; folder.&lt;/p&gt;
+&lt;h3 id=&#34;22-application-layer&#34;&gt;2.2 Application layer&lt;/h3&gt;
+&lt;p&gt;This is where the business logic happens. We can list some of the logic for
+our e-commerce use case here:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create, Retrieve, List, Update, Delete a Product&lt;/li&gt;
+&lt;li&gt;Create, Pay for, Retrieve an Order&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We can see 2 kinds of action here: read-only actions and write (and/or read)
+actions. We can separate them into 2 interfaces, or just combine them into
+one.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ProductService&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Create&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;prs&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;entity&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ProductParams&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Retrieve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;entity&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Product&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;)
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;OrderService&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Create&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;ord&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;entity&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;OrderParams&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Retrieve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;entity&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Order&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Pay&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Context&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Services will call to Repositories or other Services to do their job. They
+don&amp;rsquo;t talk directly with store layer.&lt;/p&gt;
+&lt;p&gt;Services should be on the &lt;code&gt;app&lt;/code&gt; folder.&lt;/p&gt;
+&lt;h3 id=&#34;23-presentation-layer&#34;&gt;2.3 Presentation layer&lt;/h3&gt;
+&lt;p&gt;This is the window from our application to the outside world and vice versa.&lt;/p&gt;
+&lt;p&gt;For http web applications, this place is where we define routes, validate
+authentication, map from &lt;code&gt;http.Request&lt;/code&gt; to internal parameters which are used
+to call the Services, then get the results and map them back to &lt;code&gt;http.Response&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For task workers, this is where we define worker pool size and fire up child
+processes to do the work. They all call to Services, no funny logic here.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s define the API interface for our e-commerce website:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ProductAPI&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Create&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ResponseWriter&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Request&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Retrieve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ResponseWriter&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Request&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;OrderAPI&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Create&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ResponseWriter&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Request&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Retrieve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ResponseWriter&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Request&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Pay&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ResponseWriter&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Request&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And then maker some routes from them, we use &lt;a href=&#34;https://github.com/go-chi/chi&#34;&gt;chi&lt;/a&gt; router here for simple
+routing:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewProductRouter&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ProductAPI&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;mux&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Router&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;chi&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NewRouter&lt;/span&gt;()
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Post&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Create&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/{id}&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Retrieve&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewOrderRouter&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;OrderAPI&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;mux&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Router&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;chi&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NewRouter&lt;/span&gt;()
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Post&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Create&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/{id}&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Retrieve&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Post&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/{id}&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Pay&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;r&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;APIs should go to &lt;code&gt;api&lt;/code&gt; folder, workers, well, the &lt;code&gt;worker&lt;/code&gt; one.&lt;/p&gt;
+&lt;h3 id=&#34;24-wire-them-all-together&#34;&gt;2.4 Wire them all together&lt;/h3&gt;
+&lt;p&gt;After defining all the necessary interfaces, our Go code will compile just
+fine. And we can use &lt;a href=&#34;https://goswagger.io/generate/spec.html&#34;&gt;Go Swagger&lt;/a&gt; to generate the Swagger specification
+first. And then work on the implementation later.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s wire our APIs together in the main package:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;postgresPool&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewPostgresPool&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;productRepo&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewProductRepository&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;postgresPool&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;orderRepo&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewOrderRepository&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;postgresPool&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;productSvc&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewProductService&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;productRepo&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;orderSvc&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewOrderService&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;productRepo&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;orderRepo&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;productAPI&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewProductAPI&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;productSvc&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;orderAPI&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewOrderAPI&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;orderSvc&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;productRouter&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewProductRouter&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;productAPI&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;orderRouter&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NewOrderRouter&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;orderAPI&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;router&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;chi&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NewRouter&lt;/span&gt;()
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;router&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Mount&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/products&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;productRouter&lt;/span&gt;)
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;router&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Mount&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/orders&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;orderRouter&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ListenAndServe&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost:8080&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;router&lt;/span&gt;)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s it! The most simple full-fledged DDD program ever! It may look
+tedious for simple program, but when things get big, DDD with separated layers
+really help.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Shell fuzzy search using fzf on Fish</title>

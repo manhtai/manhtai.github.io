@@ -1,13 +1,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>golang on Go slowly</title>
-    <link>https://manhtai.github.io/tags/golang/</link>
-    <description>Recent content in golang on Go slowly</description>
+    <title>N-tier on Go slowly</title>
+    <link>https://manhtai.github.io/tags/n-tier/</link>
+    <description>Recent content in N-tier on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 28 Jul 2022 10:57:01 +0700</lastBuildDate>
     
-        <atom:link href="https://manhtai.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://manhtai.github.io/tags/n-tier/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -166,147 +166,6 @@ first. And then work on the implementation later.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s it! The most simple full-fledged DDD program ever! It may look
 tedious for simple program, but when things get big, DDD with separated layers
 really help.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Handle Unicode in Golang and Javascript</title>
-      <link>https://manhtai.github.io/posts/golang-vs-javascript-unicode/</link>
-      <pubDate>Tue, 17 May 2022 16:51:30 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/golang-vs-javascript-unicode/</guid>
-      <description>&lt;p&gt;Currently I&amp;rsquo;m working on some basic security stuffs between server side written
-in Golang and client side written in, well, Javascript.&lt;/p&gt;
-&lt;h2 id=&#34;code-point&#34;&gt;Code point&lt;/h2&gt;
-&lt;p&gt;A character is not the same as a code point.&lt;/p&gt;
-&lt;p&gt;The Unicode standard uses the term &amp;ldquo;code point&amp;rdquo; to refer to the item represented
-by a single value. A character may be represented by a number of different
-sequences of code points, and therefore different sequences of UTF-8 bytes.&lt;/p&gt;
-&lt;p&gt;In Go, a code point is called &lt;code&gt;rune&lt;/code&gt;, when using &lt;code&gt;range&lt;/code&gt; on a string, it will
-result in a rune at a time. Read more about strings in Go &lt;a href=&#34;https://go.dev/blog/strings&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In Javascript, when using &lt;code&gt;String.prototype.split()&lt;/code&gt;, it will result in a UTF-16
-code unit. To separate the text into code points, use &lt;code&gt;for..of&lt;/code&gt; or &lt;code&gt;Array.from&lt;/code&gt;
-instead. Read more about string split in Javascript &lt;a href=&#34;https://stackoverflow.com/questions/4547609&#34;&gt;here&lt;/a&gt;. To get UTF-16
-code unit, use &lt;code&gt;String.prototype.charCodeAt()&lt;/code&gt;, to get code point, use
-&lt;code&gt;String.prototype.codePointAt()&lt;/code&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;escape-unicode-characters&#34;&gt;Escape Unicode characters&lt;/h2&gt;
-&lt;p&gt;When working with Unicode strings in cryptography, we wouldn&amp;rsquo;t want to deal
-with vary size code point in Unicode characters. To make our life easier,
-escape them first, and then working on ASCII.&lt;/p&gt;
-&lt;p&gt;In Golang, we have &lt;code&gt;url.QueryEscape()&lt;/code&gt; and in Javascript, we got
-&lt;code&gt;encodeURIComponent()&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;url.QueryEscape()&lt;/code&gt; escapes the string so it can be safely placed inside a
-URL query.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;encodeURIComponent()&lt;/code&gt; function encodes a URI by replacing each instance
-of certain characters by one, two, three, or four escape sequences representing
-the UTF-8 encoding of the character.&lt;/p&gt;
-&lt;p&gt;So in theory, &lt;code&gt;encodeURIComponent()&lt;/code&gt; and &lt;code&gt;QueryEscape()&lt;/code&gt; should be the same,
-but in practice, they are not. Both of them try to follow &lt;a href=&#34;https://datatracker.ietf.org/doc/html/rfc3986&#34;&gt;RFC 3986&lt;/a&gt; until
-they don&amp;rsquo;t. Depend on what you are working on, they might behave the same on
-the same kind of string. So you can use &lt;code&gt;QueryEscape()&lt;/code&gt; on server side and
-&lt;code&gt;decodeURIComponent()&lt;/code&gt; on client side with a high level of confidence.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Update partially and return fully in Go</title>
-      <link>https://manhtai.github.io/posts/golang-update-partially-and-return-fully/</link>
-      <pubDate>Fri, 31 Dec 2021 20:25:07 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/golang-update-partially-and-return-fully/</guid>
-      <description>&lt;p&gt;In typical CRUD applications, it&amp;rsquo;s common these days that your update
-APIs work properly on objects in a partial way. You should not enforcing
-the client to send the whole object to update just a field anymore. And with
-Postgres &lt;code&gt;returning&lt;/code&gt; clause, we can return all object data despite being
-updated only some of them.&lt;/p&gt;
-&lt;p&gt;Let&amp;rsquo;s say you have to update a Student object, we will define all its fields
-as pointers so when the client doesn&amp;rsquo;t send up anything, it will be nil:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Student&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We must use pointers here because otherwise, we can&amp;rsquo;t differ default zero values
-with not-set values that are sent from the client. To update the record, we
-come up with two answers.&lt;/p&gt;
-&lt;h2 id=&#34;1-case-when-with-returning&#34;&gt;1. CASE WHEN&amp;hellip; with RETURNING&lt;/h2&gt;
-&lt;p&gt;In the database interface, we will choose the fields that need to update and
-return all object data when done, we use &lt;code&gt;pgx&lt;/code&gt; and &lt;code&gt;scany&lt;/code&gt; package here for
-executing query and scanning data back to Go struct:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; (
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;os&amp;#34;&lt;/span&gt;
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;github.com/jackc/pgx/v4&amp;#34;&lt;/span&gt;
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;github.com/georgysavva/scany/pgxscan&amp;#34;&lt;/span&gt;
-)
-
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;conn&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pgx&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Connect&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Background&lt;/span&gt;(), &lt;span style=&#34;color:#a6e22e&#34;&gt;os&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Getenv&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;DATABASE_URL&amp;#34;&lt;/span&gt;))
-
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;`
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      UPDATE students
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      SET
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;          name = CASE WHEN $1 = true THEN $2 ELSE name END,
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;          age = CASE WHEN $3 = true THEN $4 ELSE age END
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      RETURNING
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;          name, age`&lt;/span&gt;
-
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;conn&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Query&lt;/span&gt;(
-         &lt;span style=&#34;color:#a6e22e&#34;&gt;ctx&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;,
-         &lt;span style=&#34;color:#a6e22e&#34;&gt;student&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;student&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;,
-         &lt;span style=&#34;color:#a6e22e&#34;&gt;student&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;student&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;
-      )
-      &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Close&lt;/span&gt;()
-
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;stud&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Student&lt;/span&gt;{}
-
-      &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Next&lt;/span&gt;() {
-          &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;pgxscan&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ScanRow&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;stud&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;rows&lt;/span&gt;)
-      }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This solution looks OK, but we can&amp;rsquo;t validate the object with all fields
-available at the same time before updating into the database. Hence the
-second approach.&lt;/p&gt;
-&lt;h2 id=&#34;2-select-first-update-later&#34;&gt;2. SELECT first, UPDATE later&lt;/h2&gt;
-&lt;p&gt;No code is needed to explain this method. First you retrieve the object from
-the database, then change those fields that need updating (non-nil fields),
-do whatever validation required, and then write the whole object back.&lt;/p&gt;
-&lt;p&gt;Despite we must always do a SELECT before an UPDATE, this should be the
-preferred solution.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Build a distributed chat app in Golang</title>
-      <link>https://manhtai.github.io/posts/chat-app-in-golang/</link>
-      <pubDate>Mon, 29 Jan 2018 21:19:23 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/chat-app-in-golang/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve built a &lt;a href=&#34;https://github.com/manhtai/golang-mongodb-chat&#34;&gt;demo&lt;/a&gt; chat app in Go before, using Go channels to broadcast
-messages, data is saved to MongoDB. It&amp;rsquo;s quite a fun learning experience,
-but when you want a chat app at scale, you need more. Yes I am looking at
-you: &lt;strong&gt;microservices&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;Now I know one thing or two about microservices and distributed systems,
-I think at least these three are in need:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;ol&gt;
-&lt;li&gt;A service for saving messages to DB&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;A service for handling messages from clients&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;A proper message queue, for the talkings between services&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Now we&amp;rsquo;ll start to build one.&lt;/p&gt;
-&lt;p&gt;(Some time after&amp;hellip;)&lt;/p&gt;
-&lt;p&gt;It&amp;rsquo;s on &lt;a href=&#34;https://github.com/manhtai/golang-nsq-chat&#34;&gt;GitHub&lt;/a&gt; now. The README should be enough to explain the idea.&lt;/p&gt;
 </description>
     </item>
     

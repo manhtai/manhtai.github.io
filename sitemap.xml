@@ -3,17 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://manhtai.github.io/tags/fuzzy/</loc>
-    <lastmod>2022-07-08T15:59:47+07:00</lastmod>
+    <loc>https://manhtai.github.io/tags/ddd/</loc>
+    <lastmod>2022-07-28T10:57:01+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/domain-driven-design-in-action/</loc>
+    <lastmod>2022-07-28T10:57:01+07:00</lastmod>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/</loc>
-    <lastmod>2022-07-08T15:59:47+07:00</lastmod>
+    <lastmod>2022-07-28T10:57:01+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/golang/</loc>
+    <lastmod>2022-07-28T10:57:01+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/n-tier/</loc>
+    <lastmod>2022-07-28T10:57:01+07:00</lastmod>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2022-07-28T10:57:01+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2022-07-28T10:57:01+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/fuzzy/</loc>
     <lastmod>2022-07-08T15:59:47+07:00</lastmod>
   </url>
   
@@ -24,11 +49,6 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/shell-fuzzy-search-using-fzf-on-fish/</loc>
-    <lastmod>2022-07-08T15:59:47+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2022-07-08T15:59:47+07:00</lastmod>
   </url>
   
@@ -55,11 +75,6 @@
   <url>
     <loc>https://manhtai.github.io/posts/upgrade-postgres-major-version-with-near-zero-downtime/</loc>
     <lastmod>2022-06-20T07:32:27+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/golang/</loc>
-    <lastmod>2022-05-17T16:51:30+07:00</lastmod>
   </url>
   
   <url>

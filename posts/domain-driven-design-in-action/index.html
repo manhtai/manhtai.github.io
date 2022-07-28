@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Domain-Driven Design in Action</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Domain-Driven Design in Action">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Domain-Driven Design in Action">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/domain-driven-design-in-action/">
+    <meta name="og:site_name" content="Domain-Driven Design in Action">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="DDD N-tier Golang ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Domain-Driven Design in Action <aside><a href="/tags/ddd/">DDD</a>&nbsp;&nbsp;&nbsp;<a href="/tags/n-tier/">N-tier</a>&nbsp;&nbsp;&nbsp;<a href="/tags/golang/">Golang</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <h2 id="1-ddd">1. DDD</h2>
+<p><a href="https://en.wikipedia.org/wiki/Domain-driven_design">Domain-driven design</a> (DDD) is a software design approach focusing on
+modelling software to match a domain according to input from that domain&rsquo;s
+experts.</p>
+<h3 id="11-domain">1.1 Domain</h3>
+<p><strong>Domain</strong> is the subject area to which the user applies a program.</p>
+<h3 id="12-model">1.2 Model</h3>
+<p>A domain contains one or many <strong>domain models</strong> which are systems of
+abstractions that describes selected aspects of a domain and can be
+used to solve problems related to that domain.</p>
+<p>Domain models can be:</p>
+<ul>
+<li>An entity</li>
+<li>A value object</li>
+<li>An aggregate</li>
+</ul>
+<h3 id="13-entity">1.3 Entity</h3>
+<p>Now to begin the &ldquo;in action&rdquo; part, let&rsquo;s say we have to implement an
+e-commerce system with Products, buyers can create Orders to buy things
+which are those Products.</p>
+<p>We define 3 entities here to hold corresponding model data:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Product</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">ID</span>    <span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">Name</span>  <span style="color:#66d9ef">string</span>
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Order</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">ID</span>    <span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">Email</span> <span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">Name</span>  <span style="color:#66d9ef">string</span>
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">OrderItem</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">ID</span>        <span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">OrderID</span>   <span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">ProductID</span> <span style="color:#66d9ef">string</span>
+}
+</code></pre></div><p>Those entities may reside on the <code>entity</code> subfolder or on the root of your
+current service.</p>
+<h2 id="2-n-tier-architecture">2. N-tier architecture</h2>
+<p>DDD is all about making the business domain a part of your code, we&rsquo;ve done
+just that using entities. For better unit-testing and seperation of concerns,
+we will organize our code using <a href="https://en.wikipedia.org/wiki/Multitier_architecture">3-tier architecture</a>.</p>
+<h3 id="21-data-layer">2.1 Data layer</h3>
+<p>This is where we store our data. Repositories only know about persist and
+retrieve entities from storage, simple as that, no business logic here.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ProductRepository</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">prd</span> <span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">Product</span>) <span style="color:#66d9ef">error</span>
+    <span style="color:#a6e22e">Retrieve</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">prd</span> <span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">Product</span>, <span style="color:#66d9ef">error</span>)
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">OrderRepository</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">ord</span> <span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">Order</span>) <span style="color:#66d9ef">error</span>
+    <span style="color:#a6e22e">Retrieve</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">Order</span>, <span style="color:#66d9ef">error</span>)
+}
+</code></pre></div><p>The storage may be a SQL or a NoSQL database, it&rsquo;s not the responsibility
+of interfaces. That&rsquo;s the implementation detail.</p>
+<p>Repositories could be put on the <code>data</code> or <code>store</code> folder.</p>
+<h3 id="22-application-layer">2.2 Application layer</h3>
+<p>This is where the business logic happens. We can list some of the logic for
+our e-commerce use case here:</p>
+<ul>
+<li>Create, Retrieve, List, Update, Delete a Product</li>
+<li>Create, Pay for, Retrieve an Order</li>
+</ul>
+<p>We can see 2 kinds of action here: read-only actions and write (and/or read)
+actions. We can separate them into 2 interfaces, or just combine them into
+one.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ProductService</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">prs</span> <span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">ProductParams</span>) <span style="color:#66d9ef">error</span>
+    <span style="color:#a6e22e">Retrieve</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">Product</span>, <span style="color:#66d9ef">error</span>)
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">OrderService</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">ord</span> <span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">OrderParams</span>) <span style="color:#66d9ef">error</span>
+    <span style="color:#a6e22e">Retrieve</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">Order</span>, <span style="color:#66d9ef">error</span>)
+    <span style="color:#a6e22e">Pay</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span>
+}
+</code></pre></div><p>Services will call to Repositories or other Services to do their job. They
+don&rsquo;t talk directly with store layer.</p>
+<p>Services should be on the <code>app</code> folder.</p>
+<h3 id="23-presentation-layer">2.3 Presentation layer</h3>
+<p>This is the window from our application to the outside world and vice versa.</p>
+<p>For http web applications, this place is where we define routes, validate
+authentication, map from <code>http.Request</code> to internal parameters which are used
+to call the Services, then get the results and map them back to <code>http.Response</code>.</p>
+<p>For task workers, this is where we define worker pool size and fire up child
+processes to do the work. They all call to Services, no funny logic here.</p>
+<p>Let&rsquo;s define the API interface for our e-commerce website:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ProductAPI</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) <span style="color:#66d9ef">error</span>
+    <span style="color:#a6e22e">Retrieve</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) <span style="color:#66d9ef">error</span>
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">OrderAPI</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) <span style="color:#66d9ef">error</span>
+    <span style="color:#a6e22e">Retrieve</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) <span style="color:#66d9ef">error</span>
+    <span style="color:#a6e22e">Pay</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) <span style="color:#66d9ef">error</span>
+}
+</code></pre></div><p>And then maker some routes from them, we use <a href="https://github.com/go-chi/chi">chi</a> router here for simple
+routing:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewProductRouter</span>(<span style="color:#a6e22e">api</span> <span style="color:#a6e22e">ProductAPI</span>) <span style="color:#a6e22e">mux</span>.<span style="color:#a6e22e">Router</span> {
+    <span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">chi</span>.<span style="color:#a6e22e">NewRouter</span>()
+
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Post</span>(<span style="color:#e6db74">&#34;/&#34;</span>, <span style="color:#a6e22e">api</span>.<span style="color:#a6e22e">Create</span>)
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;/{id}&#34;</span>, <span style="color:#a6e22e">api</span>.<span style="color:#a6e22e">Retrieve</span>)
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">r</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewOrderRouter</span>(<span style="color:#a6e22e">api</span> <span style="color:#a6e22e">OrderAPI</span>) <span style="color:#a6e22e">mux</span>.<span style="color:#a6e22e">Router</span> {
+    <span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">chi</span>.<span style="color:#a6e22e">NewRouter</span>()
+
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Post</span>(<span style="color:#e6db74">&#34;/&#34;</span>, <span style="color:#a6e22e">api</span>.<span style="color:#a6e22e">Create</span>)
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;/{id}&#34;</span>, <span style="color:#a6e22e">api</span>.<span style="color:#a6e22e">Retrieve</span>)
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Post</span>(<span style="color:#e6db74">&#34;/{id}&#34;</span>, <span style="color:#a6e22e">api</span>.<span style="color:#a6e22e">Pay</span>)
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">r</span>
+}
+</code></pre></div><p>APIs should go to <code>api</code> folder, workers, well, the <code>worker</code> one.</p>
+<h3 id="24-wire-them-all-together">2.4 Wire them all together</h3>
+<p>After defining all the necessary interfaces, our Go code will compile just
+fine. And we can use <a href="https://goswagger.io/generate/spec.html">Go Swagger</a> to generate the Swagger specification
+first. And then work on the implementation later.</p>
+<p>Let&rsquo;s wire our APIs together in the main package:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+    <span style="color:#a6e22e">postgresPool</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewPostgresPool</span>(<span style="color:#f92672">...</span>)
+
+    <span style="color:#a6e22e">productRepo</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewProductRepository</span>(<span style="color:#a6e22e">postgresPool</span>)
+    <span style="color:#a6e22e">orderRepo</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewOrderRepository</span>(<span style="color:#a6e22e">postgresPool</span>)
+
+    <span style="color:#a6e22e">productSvc</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewProductService</span>(<span style="color:#a6e22e">productRepo</span>)
+    <span style="color:#a6e22e">orderSvc</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewOrderService</span>(<span style="color:#a6e22e">productRepo</span>, <span style="color:#a6e22e">orderRepo</span>)
+
+    <span style="color:#a6e22e">productAPI</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewProductAPI</span>(<span style="color:#a6e22e">productSvc</span>)
+    <span style="color:#a6e22e">orderAPI</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewOrderAPI</span>(<span style="color:#a6e22e">orderSvc</span>)
+
+    <span style="color:#a6e22e">productRouter</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewProductRouter</span>(<span style="color:#a6e22e">productAPI</span>)
+    <span style="color:#a6e22e">orderRouter</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewOrderRouter</span>(<span style="color:#a6e22e">orderAPI</span>)
+
+    <span style="color:#a6e22e">router</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">chi</span>.<span style="color:#a6e22e">NewRouter</span>()
+
+    <span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#e6db74">&#34;/products&#34;</span>, <span style="color:#a6e22e">productRouter</span>)
+    <span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#e6db74">&#34;/orders&#34;</span>, <span style="color:#a6e22e">orderRouter</span>)
+
+    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#e6db74">&#34;localhost:8080&#34;</span>, <span style="color:#a6e22e">router</span>)
+}
+</code></pre></div><p>That&rsquo;s it! The most simple full-fledged DDD program ever! It may look
+tedious for simple program, but when things get big, DDD with separated layers
+really help.</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on July 28, 2022.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/domain-driven-design-in-action.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2022
+</footer>
+</body>
+</html>
+
