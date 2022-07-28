@@ -10,7 +10,7 @@ and the terminal window with a proper shell must always be opened.
 
 I wouldn't want to code without CLI, and Fish shell with fzf fuzzy search
 brought it up to another level. In combination with many fancy things that
-are developed for the CLI recently makes me very excited. Another reason to
+are developed for the CLI recently, I feel very excited. Another reason to
 believe that CLI will live on forever!
 
 Now for my new setup with Fish and fzf.
@@ -40,7 +40,7 @@ fisher install PatrickF1/fzf.fish
 cargo install bat fd-find lsd
 ```
 
-5, Then config some key bindings
+5, Then configure the key bindings
 
 Mine are:
 
