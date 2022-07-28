@@ -1,16 +1,22 @@
 ---
 title: "Domain-Driven Design in Action"
-date: 2022-07-27T10:57:01+07:00
-tags: ["DDD", "Golang"]
+date: 2022-07-28T10:57:01+07:00
+tags: ["DDD", "N-tier", "Golang"]
 draft: false
 ---
 
+## 1. DDD
 
-## 1. Domain
+[Domain-driven design][0] (DDD) is a software design approach focusing on
+modelling software to match a domain according to input from that domain's
+experts.
+
+
+### 1.1 Domain
 
 **Domain** is the subject area to which the user applies a program.
 
-## 2. Model
+### 1.2 Model
 
 A domain contains one or many **domain models** which are systems of
 abstractions that describes selected aspects of a domain and can be
@@ -22,10 +28,7 @@ Domain models can be:
 - A value object
 - An aggregate
 
-You can read more about DDD on the [Wikipedia][0] page.
-
-
-## 3. Entity
+### 1.3 Entity
 
 Now to begin the "in action" part, let's say we have to implement an
 e-commerce system with Products, buyers can create Orders to buy things
@@ -57,9 +60,16 @@ Those entities may reside on the `entity` subfolder or on the root of your
 current service.
 
 
-## 4. Repository
+## 2. N-tier architecture
 
-This will be the store layer. Repositories only know about persist and
+DDD is all about making the business domain a part of your code, we've done
+just that using entities. For better unit-testing and seperation of concerns,
+we will organize our code using [3-tier architecture][3].
+
+
+### 2.1 Data layer
+
+This is where we store our data. Repositories only know about persist and
 retrieve entities from storage, simple as that, no business logic here.
 
 
@@ -78,10 +88,10 @@ type OrderRepository interface {
 The storage may be a SQL or a NoSQL database, it's not the responsibility
 of interfaces. That's the implementation detail.
 
-Repositories will be on the `store` folder.
+Repositories could be put on the `data` or `store` folder.
 
 
-## 5. Service
+### 2.2 Application layer
 
 This is where the business logic happens. We can list some of the logic for
 our e-commerce use case here:
@@ -110,10 +120,10 @@ type OrderService interface {
 Services will call to Repositories or other Services to do their job. They
 don't talk directly with store layer.
 
-Services should be on the `svc` folder.
+Services should be on the `app` folder.
 
 
-## 6. Presentation
+### 2.3 Presentation layer
 
 This is the window from our application to the outside world and vice versa.
 
@@ -167,7 +177,7 @@ func NewOrderRouter(api OrderAPI) mux.Router {
 APIs should go to `api` folder, workers, well, the `worker` one.
 
 
-## 7. Wire them all together
+### 2.4 Wire them all together
 
 After defining all the necessary interfaces, our Go code will compile just
 fine. And we can use [Go Swagger][1] to generate the Swagger specification
@@ -209,3 +219,4 @@ really help.
 [0]: https://en.wikipedia.org/wiki/Domain-driven_design
 [1]: https://goswagger.io/generate/spec.html
 [2]: https://github.com/go-chi/chi
+[3]: https://en.wikipedia.org/wiki/Multitier_architecture
