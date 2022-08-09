@@ -5,10 +5,19 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Jul 2022 10:57:01 +0700</lastBuildDate>
+    <lastBuildDate>Tue, 09 Aug 2022 17:14:17 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go</title>
+      <link>https://manhtai.github.io/tags/go/</link>
+      <pubDate>Tue, 09 Aug 2022 17:14:17 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/go/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>DDD</title>
@@ -106,15 +115,6 @@
       <pubDate>Fri, 25 Feb 2022 12:12:00 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/logseq/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Go</title>
-      <link>https://manhtai.github.io/tags/go/</link>
-      <pubDate>Mon, 10 Jan 2022 21:07:10 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/go/</guid>
       <description></description>
     </item>
     

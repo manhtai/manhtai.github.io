@@ -5,10 +5,73 @@
     <description>Recent content in Go on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 10 Jan 2022 21:07:10 +0700</lastBuildDate>
+    <lastBuildDate>Tue, 09 Aug 2022 17:14:17 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Sort by Multiple Keys</title>
+      <link>https://manhtai.github.io/posts/sort-by-multiple-keys/</link>
+      <pubDate>Tue, 09 Aug 2022 17:14:17 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/sort-by-multiple-keys/</guid>
+      <description>&lt;h2 id=&#34;problem&#34;&gt;Problem:&lt;/h2&gt;
+&lt;p&gt;We have a list of users:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;User&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#a6e22e&#34;&gt;User&lt;/span&gt;{
+    {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;:  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;A&amp;#34;&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;:   &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt;,
+    },
+    {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;:  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;B&amp;#34;&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;:   &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;,
+    },
+    {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;:  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;C&amp;#34;&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;:   &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;,
+    },
+    {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;:  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;D&amp;#34;&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;:   &lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt;,
+    },
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We want to sort by &lt;code&gt;Valid&lt;/code&gt; first, then &lt;code&gt;Age&lt;/code&gt; in descending order.
+The solution should be &lt;code&gt;B C D A&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;wrong-solution&#34;&gt;Wrong solution:&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sort&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Slice&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; !&lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt; &amp;gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;
+})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This solution returns &lt;code&gt;D B C A&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;right-solution&#34;&gt;Right solution:&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sort&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Slice&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; !&lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Valid&lt;/span&gt;
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt; &amp;gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listUsers&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;Age&lt;/span&gt;
+})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This solution returns &lt;code&gt;B C D A&lt;/code&gt;. As expected.&lt;/p&gt;
+&lt;h2 id=&#34;how-so&#34;&gt;How so?&lt;/h2&gt;
+&lt;p&gt;The wrong one forgot the case when &lt;code&gt;listUsers[i].Valid&lt;/code&gt; is &lt;code&gt;false&lt;/code&gt; and
+&lt;code&gt;listUsers[j].Valid&lt;/code&gt; is &lt;code&gt;true&lt;/code&gt;. It should return &lt;code&gt;false&lt;/code&gt; in that case
+instead of fallback to &lt;code&gt;Age&lt;/code&gt; comparision.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Auto SSL for custom domains at scale</title>
