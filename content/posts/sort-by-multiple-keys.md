@@ -1,5 +1,5 @@
 ---
-title: "Golang sort by multiple keys"
+title: "Sort by multiple keys in Golang"
 date: 2022-08-09T17:14:17+07:00
 tags: ["Go"]
 draft: false
