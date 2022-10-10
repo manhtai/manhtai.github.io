@@ -5,10 +5,57 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 Aug 2022 17:14:17 +0700</lastBuildDate>
+    <lastBuildDate>Mon, 10 Oct 2022 14:31:15 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Auto Skip Intro on Netflix</title>
+      <link>https://manhtai.github.io/posts/skip-intro-netflix/</link>
+      <pubDate>Mon, 10 Oct 2022 14:31:15 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/skip-intro-netflix/</guid>
+      <description>&lt;p&gt;I have read about &lt;a href=&#34;https://en.wikipedia.org/wiki/Userscript&#34;&gt;userscript&lt;/a&gt; before, but never found the needs for it.
+Until recently I watch too much anime on Netflix and hate to skip intro
+every 20 minutes. Oh and I like to watch on Safari these day.&lt;/p&gt;
+&lt;h2 id=&#34;first-attempt-safari-extensions&#34;&gt;First attempt: Safari extensions&lt;/h2&gt;
+&lt;p&gt;Someone must think about this and already make an extension for me. And I
+tried multiple apps, both paid and free apps from mac Appstore, nothing
+works.&lt;/p&gt;
+&lt;p&gt;Why is that? Should the job be simple as check for the &amp;ldquo;Skip Intro&amp;rdquo; text and
+click the button for me? I feel disappointed by not finding any extentions
+that works properly on this simple matter.&lt;/p&gt;
+&lt;h2 id=&#34;second-attemp-userscripts&#34;&gt;Second attemp: userscripts&lt;/h2&gt;
+&lt;p&gt;I have to write the extension myself then. But how? Turn out some guys on the
+net develop an open-source &lt;a href=&#34;https://github.com/quoid/userscripts&#34;&gt;extension&lt;/a&gt; to manage user scripts. And we can
+run whatever pieces of code we like on whatever web pages we want. And it&amp;rsquo;s
+even free!&lt;/p&gt;
+&lt;p&gt;Here is my code for skipping intro on Netflix. Feel free to paste this onto
+your userscripts editor.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// ==UserScript==
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// @name         Netflix Auto-Skip Intro
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// @match        https://www.netflix.com/watch/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// ==/UserScript==
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;() {
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;use strict&amp;#39;&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;setInterval&lt;/span&gt;(() =&amp;gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;skip&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; document.&lt;span style=&#34;color:#a6e22e&#34;&gt;querySelector&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;.watch-video--skip-content-button&amp;#39;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;skip&lt;/span&gt;){
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;skip&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;click&lt;/span&gt;();
+        }
+    }, &lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+})();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A catch here is the class name &lt;code&gt;.watch-video--skip-content-button&lt;/code&gt; may change
+from time to time. So when it doesn&amp;rsquo;t work anymore, inspect the &amp;ldquo;Skip Intro&amp;rdquo;
+button and update the script yourself.&lt;/p&gt;
+&lt;h2 id=&#34;other-browsers&#34;&gt;Other browsers&lt;/h2&gt;
+&lt;p&gt;Firefox, Chrome and other browsers have its own userscript manager extensions:
+&lt;a href=&#34;https://www.tampermonkey.net/&#34;&gt;Tampermonkey&lt;/a&gt;, &lt;a href=&#34;https://www.greasespot.net/&#34;&gt;Greasemonkey&lt;/a&gt;, etc. Use the one you like.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Sort by multiple keys in Golang</title>
