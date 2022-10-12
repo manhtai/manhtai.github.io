@@ -35,7 +35,7 @@ your userscripts editor.
 ```js
 // ==UserScript==
 // @name         Netflix Auto-Skip Intro
-// @match        https://www.netflix.com/watch/*
+// @match        https://www.netflix.com/*
 // ==/UserScript==
 
 (function() {
