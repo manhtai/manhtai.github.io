@@ -35,7 +35,7 @@ even free!&lt;/p&gt;
 your userscripts editor.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// ==UserScript==
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// @name         Netflix Auto-Skip Intro
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// @match        https://www.netflix.com/watch/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// @match        https://www.netflix.com/*
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// ==/UserScript==
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;() {
