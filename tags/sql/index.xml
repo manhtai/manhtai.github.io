@@ -5,10 +5,45 @@
     <description>Recent content in SQL on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 05 Jan 2022 19:19:55 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 21 Oct 2022 09:27:59 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/sql/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Create unique index on non-unique data</title>
+      <link>https://manhtai.github.io/posts/sql-create-unique-index-on-non-unique-data/</link>
+      <pubDate>Fri, 21 Oct 2022 09:27:59 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/sql-create-unique-index-on-non-unique-data/</guid>
+      <description>&lt;p&gt;The title is a clickbait. You can&amp;rsquo;t do that unless some data migrations were
+done.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s say we have a font variant table with below schema:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CREATE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;TABLE&lt;/span&gt; font_variants (
+  family  VARCHAR(&lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;)  &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+  weight  INT           &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+  style   VARCHAR(&lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;)  &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+  user_id UUID          &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;
+);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;All is good until after a while, we realize that a variant is unique by
+(&lt;code&gt;family&lt;/code&gt;, &lt;code&gt;weight&lt;/code&gt;, &lt;code&gt;style&lt;/code&gt;) and we should enforce that on database level.
+The problem is old data were filled up with not unique rows, when we try to
+create an unique index like this, it will fail:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CREATE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;UNIQUE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;INDEX&lt;/span&gt; font_variants_family_weight_style_idx &lt;span style=&#34;color:#66d9ef&#34;&gt;ON&lt;/span&gt;
+font_variants(user_id, family, weight, style);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can&amp;rsquo;t make those rows unique unless we change the row data. Fortunately,
+browsers are &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#fallback_weights&#34;&gt;handling&lt;/a&gt; font-weight gracefully and we can do the migration
+by changing the weight without huge impact on font display, even if you using
+the weight on database for rendering font CSS directly.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s increase weight by the duplication number on each duplicated row:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;UPDATE&lt;/span&gt; font_variants
+&lt;span style=&#34;color:#66d9ef&#34;&gt;SET&lt;/span&gt; weight &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; weight &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; rn &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; id, row_number() OVER (PARTITION &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; user_id, family, weight, style) rn
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; font_variants) fv
+&lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; font_variants.id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fv.id;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We&amp;rsquo;re good to do the unique index creation now.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Partial update nullable fields in Go</title>
