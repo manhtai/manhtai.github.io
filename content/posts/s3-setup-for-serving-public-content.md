@@ -2,7 +2,7 @@
 title: "S3 Setup for Serving Public Content"
 date: 2023-01-13T22:49:31+07:00
 tags: ["AWS", "S3"]
-draft: true
+draft: false
 ---
 
 ## IAM policy
