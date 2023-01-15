@@ -5,10 +5,46 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 29 Dec 2022 20:16:59 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 15 Jan 2023 16:03:00 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Electron</title>
+      <link>https://manhtai.github.io/tags/electron/</link>
+      <pubDate>Sun, 15 Jan 2023 16:03:00 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/electron/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MAS</title>
+      <link>https://manhtai.github.io/tags/mas/</link>
+      <pubDate>Sun, 15 Jan 2023 16:03:00 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/mas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AWS</title>
+      <link>https://manhtai.github.io/tags/aws/</link>
+      <pubDate>Fri, 13 Jan 2023 22:49:31 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>S3</title>
+      <link>https://manhtai.github.io/tags/s3/</link>
+      <pubDate>Fri, 13 Jan 2023 22:49:31 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/s3/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>end year</title>
@@ -110,15 +146,6 @@
     </item>
     
     <item>
-      <title>AWS</title>
-      <link>https://manhtai.github.io/tags/aws/</link>
-      <pubDate>Mon, 20 Jun 2022 07:32:27 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/aws/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Javascript</title>
       <link>https://manhtai.github.io/tags/javascript/</link>
       <pubDate>Tue, 17 May 2022 16:51:30 +0700</pubDate>
@@ -187,15 +214,6 @@
       <pubDate>Wed, 11 Aug 2021 21:12:57 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/pprof/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>electron</title>
-      <link>https://manhtai.github.io/tags/electron/</link>
-      <pubDate>Sat, 24 Jul 2021 11:00:04 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/electron/</guid>
       <description></description>
     </item>
     
@@ -349,15 +367,6 @@
       <pubDate>Fri, 04 Dec 2020 20:53:21 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/cloudfront/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>s3</title>
-      <link>https://manhtai.github.io/tags/s3/</link>
-      <pubDate>Fri, 04 Dec 2020 20:53:21 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/s3/</guid>
       <description></description>
     </item>
     

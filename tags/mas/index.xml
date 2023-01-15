@@ -1,13 +1,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Electron on Go slowly</title>
-    <link>https://manhtai.github.io/tags/electron/</link>
-    <description>Recent content in Electron on Go slowly</description>
+    <title>MAS on Go slowly</title>
+    <link>https://manhtai.github.io/tags/mas/</link>
+    <description>Recent content in MAS on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 15 Jan 2023 16:03:00 +0700</lastBuildDate>
     
-        <atom:link href="https://manhtai.github.io/tags/electron/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://manhtai.github.io/tags/mas/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -157,50 +157,6 @@ enabled and 1 &lt;code&gt;mas.inherit.plist&lt;/code&gt;, same as &lt;code&gt;.m
 open the &lt;code&gt;.pkg&lt;/code&gt; app in your local machine, you need TestFlight to do that. Make sure the app work as
 expected before submitting for review.&lt;/p&gt;
 &lt;p&gt;Oh and the app I submitted to Mac App Store is &lt;a href=&#34;https://pdfmailmerger.manhtai.com/&#34;&gt;PDF Mail Merger&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Electron with React: How to open a native dialog</title>
-      <link>https://manhtai.github.io/posts/electron-react-open-native-dialog/</link>
-      <pubDate>Sat, 24 Jul 2021 11:00:04 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/posts/electron-react-open-native-dialog/</guid>
-      <description>&lt;p&gt;Recently I&amp;rsquo;m building a desktop app for developers who are working with
-plain text: &lt;a href=&#34;https://github.com/plainbelt/plainbelt&#34;&gt;PlainBelt&lt;/a&gt;. It uses Electron with React &lt;a href=&#34;https://github.com/electron-react-boilerplate/electron-react-boilerplate&#34;&gt;boilerplate&lt;/a&gt;
-(ERB), and the old mighty &lt;strong&gt;remote&lt;/strong&gt; module &lt;a href=&#34;https://github.com/electron/electron/issues/21408&#34;&gt;won&amp;rsquo;t work&lt;/a&gt; anymore.&lt;/p&gt;
-&lt;p&gt;So how can we open a native dialog without the &lt;strong&gt;remote&lt;/strong&gt; module?&lt;/p&gt;
-&lt;h3 id=&#34;register-event-handler-on-the-main-process&#34;&gt;Register event handler on the Main process&lt;/h3&gt;
-&lt;p&gt;In ERB, the Main filename happens to be &lt;code&gt;main.dev.ts&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ipcMain&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt;(
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;open-file&amp;#39;&lt;/span&gt;,
-  &lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;_event&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;IpcMainInvokeEvent&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;filters&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;FileFilter&lt;/span&gt;[]) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;files&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dialog&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;showOpenDialog&lt;/span&gt;({
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;properties&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;openFile&amp;#39;&lt;/span&gt;],
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;filters&lt;/span&gt;,
-    });
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;files&lt;/span&gt;) {
-      &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;buffer&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;promisify&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;fs&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;readFile&lt;/span&gt;)(&lt;span style=&#34;color:#a6e22e&#34;&gt;files&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;filePaths&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]);
-      &lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;buffer&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;toString&lt;/span&gt;();
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt;;
-  }
-);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This function will open a native dialog with options that you define on
-&lt;code&gt;filters&lt;/code&gt; and return an object that contains a list of file paths.
-We just read the first file content and return it to the renderer.&lt;/p&gt;
-&lt;h3 id=&#34;invoke-from-renderer-process&#34;&gt;Invoke from Renderer process&lt;/h3&gt;
-&lt;p&gt;From a React component, we can invoke the registered handler in Main:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setContent&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;()
-
-  &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handleOpen&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; () &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;filters&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [{ &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Text Files&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;extensions&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;txt&amp;#39;&lt;/span&gt;] }];
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ipcRenderer&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;invoke&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;open-file&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;filters&lt;/span&gt;);
-    &lt;span style=&#34;color:#a6e22e&#34;&gt;setContent&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt;);
-  };
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We get the content back, now do whatever you want with it!&lt;/p&gt;
 </description>
     </item>
     

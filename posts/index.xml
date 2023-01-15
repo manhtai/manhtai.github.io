@@ -5,10 +5,229 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 29 Dec 2022 20:16:59 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 15 Jan 2023 16:03:00 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Electron Build for Mac App Store</title>
+      <link>https://manhtai.github.io/posts/electron-build-mas/</link>
+      <pubDate>Sun, 15 Jan 2023 16:03:00 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/electron-build-mas/</guid>
+      <description>&lt;p&gt;There are 2 ways to publish a macOS Electron app: on the Mac App Store and outside of it.
+And they need different configurations to build successfully.&lt;/p&gt;
+&lt;h2 id=&#34;outside-of-app-store&#34;&gt;Outside of App Store&lt;/h2&gt;
+&lt;p&gt;The &lt;a href=&#34;https://www.electron.build/code-signing&#34;&gt;docs&lt;/a&gt; for packaging macOS app to be installed outside Mac App Store is pretty clear.
+All you need are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Build with a hardened runtime&lt;/li&gt;
+&lt;li&gt;Sign with a valid developer ID&lt;/li&gt;
+&lt;li&gt;Notarize your app&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;hardened-runtime&#34;&gt;Hardened runtime&lt;/h3&gt;
+&lt;p&gt;You need to set &lt;code&gt;&amp;quot;hardenedRuntime&amp;quot;: true&lt;/code&gt; in your build config, along with a &lt;code&gt;mac.plist&lt;/code&gt;
+file with these entitlements:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;plist&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;version=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.cs.allow-unsigned-executable-memory&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.cs.allow-jit&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The complete build config for &amp;ldquo;mac&amp;rdquo; should be:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mac&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; {
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;hardenedRuntime&amp;#34;&lt;/span&gt; : &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;,
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;gatekeeperAssess&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;,
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;entitlements&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;build/entitlements.mac.plist&amp;#34;&lt;/span&gt;,
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;entitlementsInherit&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;build/entitlements.mac.plist&amp;#34;&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;sign&#34;&gt;Sign&lt;/h3&gt;
+&lt;p&gt;You can use a free development account ID to sign the app. But for notarizing, you need
+a paid developer account. It costs $99 per year.&lt;/p&gt;
+&lt;h3 id=&#34;notarize&#34;&gt;Notarize&lt;/h3&gt;
+&lt;p&gt;To notarize the app, you need to create an app specific password on your iCloud account, and
+then use &lt;code&gt;electron-notarize&lt;/code&gt; after signing the app:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;afterSign&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;build/notarize.js&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;,&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// build/notarize.js
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; { &lt;span style=&#34;color:#a6e22e&#34;&gt;notarize&lt;/span&gt; } &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;electron-notarize&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; { &lt;span style=&#34;color:#a6e22e&#34;&gt;build&lt;/span&gt; } &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;../package.json&amp;#39;&lt;/span&gt;);
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;exports&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;notarizeMacos&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; { &lt;span style=&#34;color:#a6e22e&#34;&gt;electronPlatformName&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;appOutDir&lt;/span&gt; } &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;electronPlatformName&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;darwin&amp;#39;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+  }
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;appName&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;packager&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;appInfo&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;productFilename&lt;/span&gt;;
+
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;notarize&lt;/span&gt;({
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;appBundleId&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;build&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;appId&lt;/span&gt;,
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;appPath&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;appOutDir&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;appName&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;.app`&lt;/span&gt;,
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;appleId&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;env&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;APPLE_ID&lt;/span&gt;,
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;appleIdPassword&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;env&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;APPLE_ID_PASS&lt;/span&gt;,
+  });
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;through-mac-app-store-mas&#34;&gt;Through Mac App Store (MAS)&lt;/h2&gt;
+&lt;p&gt;The &lt;a href=&#34;https://www.electronjs.org/docs/latest/tutorial/mac-app-store-submission-guide&#34;&gt;guide&lt;/a&gt; for MAS submission should work, but it wasn&amp;rsquo;t enough for me.
+Anyway, for MAS, you need:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Build &lt;strong&gt;without&lt;/strong&gt; a hardened runtime and &lt;strong&gt;without&lt;/strong&gt; notarizing&lt;/li&gt;
+&lt;li&gt;Sign with a distribution key, a provision profile and proper entitlements&lt;/li&gt;
+&lt;li&gt;Upload to App Center using Transporter app and test your app before submitting using TestFlight&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For #1, just disable the corresponding configurations.&lt;/p&gt;
+&lt;h3 id=&#34;sign-1&#34;&gt;Sign&lt;/h3&gt;
+&lt;h4 id=&#34;distribution-certificates&#34;&gt;Distribution certificates&lt;/h4&gt;
+&lt;p&gt;You will need a pair of &amp;ldquo;3rd Party Mac Developer Installer&amp;rdquo; and &amp;ldquo;Apple Distribution&amp;rdquo;
+keys. Create new certificates from XCode then select and export both of them from
+Keychain Access into a &lt;code&gt;.p12&lt;/code&gt; key should do the work.&lt;/p&gt;
+&lt;h4 id=&#34;provision-profile&#34;&gt;Provision profile&lt;/h4&gt;
+&lt;p&gt;This profile is created and downloaded from the App Developer account. You need to create
+an App ID for submission and a distribution certificate before creating a profile to attach
+to it.&lt;/p&gt;
+&lt;h4 id=&#34;entitlements&#34;&gt;Entitlements&lt;/h4&gt;
+&lt;p&gt;MAS app requireds &lt;a href=&#34;https://developer.apple.com/documentation/security/app_sandbox&#34;&gt;App Sandbox&lt;/a&gt;, so you need 2 entitlements, 1 &lt;code&gt;mas.plist&lt;/code&gt; with sandbox
+enabled and 1 &lt;code&gt;mas.inherit.plist&lt;/code&gt;, same as &lt;code&gt;.mas.plist&lt;/code&gt; but for frameworks and bundles.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;entitlements.mas.plist&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;plist&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;version=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.app-sandbox&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.cs.allow-jit&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.cs.allow-unsigned-executable-memory&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.cs.disable-library-validation&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.files.user-selected.read-only&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.files.user-selected.read-write&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.network.client&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;entitlements.mas.inherit.plist&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;plist&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;version=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.app-sandbox&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.inherit&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.cs.allow-unsigned-executable-memory&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;com.apple.security.cs.disable-library-validation&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The final build configuration for #1 and #2 steps should be:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+    &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;...&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;afterSign&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;DoNothing.js&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;mac&amp;#34;&lt;/span&gt;: {
+      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;target&amp;#34;&lt;/span&gt;: [
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mas&amp;#34;&lt;/span&gt;
+      ],
+      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;distribution&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;gatekeeperAssess&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+    },
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;mas&amp;#34;&lt;/span&gt;: {
+      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;entitlements&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;entitlements.mas.plist&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;entitlementsInherit&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;entitlements.mas.inherit.plist&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;provisioningProfile&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;embedded.provisionprofile&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;hardenedRuntime&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+    }
+    &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;...&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;upload-and-test&#34;&gt;Upload and Test&lt;/h3&gt;
+&lt;p&gt;After building into a &lt;code&gt;.pkg&lt;/code&gt; files, verify and then upload the app into App Center. Because you can&amp;rsquo;t
+open the &lt;code&gt;.pkg&lt;/code&gt; app in your local machine, you need TestFlight to do that. Make sure the app work as
+expected before submitting for review.&lt;/p&gt;
+&lt;p&gt;Oh and the app I submitted to Mac App Store is &lt;a href=&#34;https://pdfmailmerger.manhtai.com/&#34;&gt;PDF Mail Merger&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>S3 Setup for Serving Public Content</title>
+      <link>https://manhtai.github.io/posts/s3-setup-for-serving-public-content/</link>
+      <pubDate>Fri, 13 Jan 2023 22:49:31 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/s3-setup-for-serving-public-content/</guid>
+      <description>&lt;h2 id=&#34;iam-policy&#34;&gt;IAM policy&lt;/h2&gt;
+&lt;p&gt;Create a specific IAM user to interact with S3 bucket, and Cloudfront if you
+use a CDN:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Version&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;2012-10-17&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Statement&amp;#34;&lt;/span&gt;: [
+        {
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: [
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;s3:*&amp;#34;&lt;/span&gt;
+            ],
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Resource&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;arn:aws:s3:::assets.example.com/*&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Effect&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Allow&amp;#34;&lt;/span&gt;
+        },
+        {
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: [
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cloudfront:CreateInvalidation&amp;#34;&lt;/span&gt;
+            ],
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Resource&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Effect&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Allow&amp;#34;&lt;/span&gt;
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;bucket-policy&#34;&gt;Bucket policy&lt;/h2&gt;
+&lt;p&gt;You should allow public objects, ACLs, and add a get public object policy for
+the bucket:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Version&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;2008-10-17&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Statement&amp;#34;&lt;/span&gt;: [
+        {
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Sid&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PublicReadGetObject&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Effect&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Allow&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Principal&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;s3:GetObject&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Resource&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;arn:aws:s3:::assets.example.com/*&amp;#34;&lt;/span&gt;
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;bucket-cors&#34;&gt;Bucket CORS&lt;/h2&gt;
+&lt;p&gt;Allow CORS if you intend to use your assets cross domains:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;[
+    {
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;AllowedHeaders&amp;#34;&lt;/span&gt;: [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;
+        ],
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;AllowedMethods&amp;#34;&lt;/span&gt;: [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GET&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PUT&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;HEAD&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;,
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;DELETE&amp;#34;&lt;/span&gt;
+        ],
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;AllowedOrigins&amp;#34;&lt;/span&gt;: [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;
+        ],
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;ExposeHeaders&amp;#34;&lt;/span&gt;: [
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ETag&amp;#34;&lt;/span&gt;
+        ],
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;MaxAgeSeconds&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;3000&lt;/span&gt;
+    }
+]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
     
     <item>
       <title>2022 in Review</title>

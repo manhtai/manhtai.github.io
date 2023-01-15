@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Electron Build for Mac App Store</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Electron Build for Mac App Store">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Electron Build for Mac App Store">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/electron-build-mas/">
+    <meta name="og:site_name" content="Electron Build for Mac App Store">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="Electron MAS ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Electron Build for Mac App Store <aside><a href="/tags/electron/">Electron</a>&nbsp;&nbsp;&nbsp;<a href="/tags/mas/">MAS</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>There are 2 ways to publish a macOS Electron app: on the Mac App Store and outside of it.
+And they need different configurations to build successfully.</p>
+<h2 id="outside-of-app-store">Outside of App Store</h2>
+<p>The <a href="https://www.electron.build/code-signing">docs</a> for packaging macOS app to be installed outside Mac App Store is pretty clear.
+All you need are:</p>
+<ol>
+<li>Build with a hardened runtime</li>
+<li>Sign with a valid developer ID</li>
+<li>Notarize your app</li>
+</ol>
+<h3 id="hardened-runtime">Hardened runtime</h3>
+<p>You need to set <code>&quot;hardenedRuntime&quot;: true</code> in your build config, along with a <code>mac.plist</code>
+file with these entitlements:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#75715e">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#f92672">&lt;plist</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">&gt;</span>
+  <span style="color:#f92672">&lt;dict&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.cs.allow-unsigned-executable-memory<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.cs.allow-jit<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+  <span style="color:#f92672">&lt;/dict&gt;</span>
+<span style="color:#f92672">&lt;/plist&gt;</span>
+</code></pre></div><p>The complete build config for &ldquo;mac&rdquo; should be:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;mac&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+  <span style="color:#f92672">&#34;hardenedRuntime&#34;</span> : <span style="color:#66d9ef">true</span>,
+  <span style="color:#f92672">&#34;gatekeeperAssess&#34;</span>: <span style="color:#66d9ef">false</span>,
+  <span style="color:#f92672">&#34;entitlements&#34;</span>: <span style="color:#e6db74">&#34;build/entitlements.mac.plist&#34;</span>,
+  <span style="color:#f92672">&#34;entitlementsInherit&#34;</span>: <span style="color:#e6db74">&#34;build/entitlements.mac.plist&#34;</span>
+}
+</code></pre></div><h3 id="sign">Sign</h3>
+<p>You can use a free development account ID to sign the app. But for notarizing, you need
+a paid developer account. It costs $99 per year.</p>
+<h3 id="notarize">Notarize</h3>
+<p>To notarize the app, you need to create an app specific password on your iCloud account, and
+then use <code>electron-notarize</code> after signing the app:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;afterSign&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#e6db74">&#34;build/notarize.js&#34;</span><span style="color:#960050;background-color:#1e0010">,</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// build/notarize.js
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">notarize</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;electron-notarize&#39;</span>);
+<span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">build</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;../package.json&#39;</span>);
+
+<span style="color:#a6e22e">exports</span>.<span style="color:#66d9ef">default</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">notarizeMacos</span>(<span style="color:#a6e22e">context</span>) {
+  <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">electronPlatformName</span>, <span style="color:#a6e22e">appOutDir</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">context</span>;
+  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">electronPlatformName</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#39;darwin&#39;</span>) {
+    <span style="color:#66d9ef">return</span>;
+  }
+
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">appName</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">packager</span>.<span style="color:#a6e22e">appInfo</span>.<span style="color:#a6e22e">productFilename</span>;
+
+  <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">notarize</span>({
+    <span style="color:#a6e22e">appBundleId</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">build</span>.<span style="color:#a6e22e">appId</span>,
+    <span style="color:#a6e22e">appPath</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">appOutDir</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">appName</span><span style="color:#e6db74">}</span><span style="color:#e6db74">.app`</span>,
+    <span style="color:#a6e22e">appleId</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">APPLE_ID</span>,
+    <span style="color:#a6e22e">appleIdPassword</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">APPLE_ID_PASS</span>,
+  });
+};
+</code></pre></div><h2 id="through-mac-app-store-mas">Through Mac App Store (MAS)</h2>
+<p>The <a href="https://www.electronjs.org/docs/latest/tutorial/mac-app-store-submission-guide">guide</a> for MAS submission should work, but it wasn&rsquo;t enough for me.
+Anyway, for MAS, you need:</p>
+<ol>
+<li>Build <strong>without</strong> a hardened runtime and <strong>without</strong> notarizing</li>
+<li>Sign with a distribution key, a provision profile and proper entitlements</li>
+<li>Upload to App Center using Transporter app and test your app before submitting using TestFlight</li>
+</ol>
+<p>For #1, just disable the corresponding configurations.</p>
+<h3 id="sign-1">Sign</h3>
+<h4 id="distribution-certificates">Distribution certificates</h4>
+<p>You will need a pair of &ldquo;3rd Party Mac Developer Installer&rdquo; and &ldquo;Apple Distribution&rdquo;
+keys. Create new certificates from XCode then select and export both of them from
+Keychain Access into a <code>.p12</code> key should do the work.</p>
+<h4 id="provision-profile">Provision profile</h4>
+<p>This profile is created and downloaded from the App Developer account. You need to create
+an App ID for submission and a distribution certificate before creating a profile to attach
+to it.</p>
+<h4 id="entitlements">Entitlements</h4>
+<p>MAS app requireds <a href="https://developer.apple.com/documentation/security/app_sandbox">App Sandbox</a>, so you need 2 entitlements, 1 <code>mas.plist</code> with sandbox
+enabled and 1 <code>mas.inherit.plist</code>, same as <code>.mas.plist</code> but for frameworks and bundles.</p>
+<ul>
+<li><code>entitlements.mas.plist</code></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#75715e">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#f92672">&lt;plist</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">&gt;</span>
+  <span style="color:#f92672">&lt;dict&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.app-sandbox<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.cs.allow-jit<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.cs.allow-unsigned-executable-memory<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.cs.disable-library-validation<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.files.user-selected.read-only<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.files.user-selected.read-write<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.network.client<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+  <span style="color:#f92672">&lt;/dict&gt;</span>
+<span style="color:#f92672">&lt;/plist&gt;</span>
+</code></pre></div><ul>
+<li><code>entitlements.mas.inherit.plist</code></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#75715e">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#f92672">&lt;plist</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">&gt;</span>
+  <span style="color:#f92672">&lt;dict&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.app-sandbox<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.inherit<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.cs.allow-unsigned-executable-memory<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+    <span style="color:#f92672">&lt;key&gt;</span>com.apple.security.cs.disable-library-validation<span style="color:#f92672">&lt;/key&gt;</span>
+    <span style="color:#f92672">&lt;true/&gt;</span>
+  <span style="color:#f92672">&lt;/dict&gt;</span>
+<span style="color:#f92672">&lt;/plist&gt;</span>
+</code></pre></div><p>The final build configuration for #1 and #2 steps should be:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#960050;background-color:#1e0010">...</span>
+    <span style="color:#f92672">&#34;afterSign&#34;</span>: <span style="color:#e6db74">&#34;DoNothing.js&#34;</span>,
+    <span style="color:#f92672">&#34;mac&#34;</span>: {
+      <span style="color:#f92672">&#34;target&#34;</span>: [
+        <span style="color:#e6db74">&#34;mas&#34;</span>
+      ],
+      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;distribution&#34;</span>,
+      <span style="color:#f92672">&#34;gatekeeperAssess&#34;</span>: <span style="color:#66d9ef">false</span>
+    },
+    <span style="color:#f92672">&#34;mas&#34;</span>: {
+      <span style="color:#f92672">&#34;entitlements&#34;</span>: <span style="color:#e6db74">&#34;entitlements.mas.plist&#34;</span>,
+      <span style="color:#f92672">&#34;entitlementsInherit&#34;</span>: <span style="color:#e6db74">&#34;entitlements.mas.inherit.plist&#34;</span>,
+      <span style="color:#f92672">&#34;provisioningProfile&#34;</span>: <span style="color:#e6db74">&#34;embedded.provisionprofile&#34;</span>,
+      <span style="color:#f92672">&#34;hardenedRuntime&#34;</span>: <span style="color:#66d9ef">false</span>
+    }
+    <span style="color:#960050;background-color:#1e0010">...</span>
+}
+</code></pre></div><h3 id="upload-and-test">Upload and Test</h3>
+<p>After building into a <code>.pkg</code> files, verify and then upload the app into App Center. Because you can&rsquo;t
+open the <code>.pkg</code> app in your local machine, you need TestFlight to do that. Make sure the app work as
+expected before submitting for review.</p>
+<p>Oh and the app I submitted to Mac App Store is <a href="https://pdfmailmerger.manhtai.com/">PDF Mail Merger</a>.</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on January 15, 2023.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/electron-build-mas.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2023
+</footer>
+</body>
+</html>
+

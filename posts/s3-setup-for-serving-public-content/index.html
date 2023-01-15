@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>S3 Setup for Serving Public Content</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="S3 Setup for Serving Public Content">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="S3 Setup for Serving Public Content">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/s3-setup-for-serving-public-content/">
+    <meta name="og:site_name" content="S3 Setup for Serving Public Content">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="AWS S3 ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>S3 Setup for Serving Public Content <aside><a href="/tags/aws/">AWS</a>&nbsp;&nbsp;&nbsp;<a href="/tags/s3/">S3</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <h2 id="iam-policy">IAM policy</h2>
+<p>Create a specific IAM user to interact with S3 bucket, and Cloudfront if you
+use a CDN:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+    <span style="color:#f92672">&#34;Statement&#34;</span>: [
+        {
+            <span style="color:#f92672">&#34;Action&#34;</span>: [
+                <span style="color:#e6db74">&#34;s3:*&#34;</span>
+            ],
+            <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::assets.example.com/*&#34;</span>,
+            <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>
+        },
+        {
+            <span style="color:#f92672">&#34;Action&#34;</span>: [
+                <span style="color:#e6db74">&#34;cloudfront:CreateInvalidation&#34;</span>
+            ],
+            <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>,
+            <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>
+        }
+    ]
+}
+</code></pre></div><h2 id="bucket-policy">Bucket policy</h2>
+<p>You should allow public objects, ACLs, and add a get public object policy for
+the bucket:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2008-10-17&#34;</span>,
+    <span style="color:#f92672">&#34;Statement&#34;</span>: [
+        {
+            <span style="color:#f92672">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;PublicReadGetObject&#34;</span>,
+            <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+            <span style="color:#f92672">&#34;Principal&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>,
+            <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;s3:GetObject&#34;</span>,
+            <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::assets.example.com/*&#34;</span>
+        }
+    ]
+}
+</code></pre></div><h2 id="bucket-cors">Bucket CORS</h2>
+<p>Allow CORS if you intend to use your assets cross domains:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">[
+    {
+        <span style="color:#f92672">&#34;AllowedHeaders&#34;</span>: [
+            <span style="color:#e6db74">&#34;*&#34;</span>
+        ],
+        <span style="color:#f92672">&#34;AllowedMethods&#34;</span>: [
+            <span style="color:#e6db74">&#34;GET&#34;</span>,
+            <span style="color:#e6db74">&#34;PUT&#34;</span>,
+            <span style="color:#e6db74">&#34;HEAD&#34;</span>,
+            <span style="color:#e6db74">&#34;POST&#34;</span>,
+            <span style="color:#e6db74">&#34;DELETE&#34;</span>
+        ],
+        <span style="color:#f92672">&#34;AllowedOrigins&#34;</span>: [
+            <span style="color:#e6db74">&#34;*&#34;</span>
+        ],
+        <span style="color:#f92672">&#34;ExposeHeaders&#34;</span>: [
+            <span style="color:#e6db74">&#34;ETag&#34;</span>
+        ],
+        <span style="color:#f92672">&#34;MaxAgeSeconds&#34;</span>: <span style="color:#ae81ff">3000</span>
+    }
+]
+</code></pre></div>
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on January 13, 2023.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/s3-setup-for-serving-public-content.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2023
+</footer>
+</body>
+</html>
+
