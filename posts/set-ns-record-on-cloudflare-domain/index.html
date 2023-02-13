@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Set NS Record for Cloudflare Domains</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="Set NS Record for Cloudflare Domains">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="Set NS Record for Cloudflare Domains">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/set-ns-record-on-cloudflare-domain/">
+    <meta name="og:site_name" content="Set NS Record for Cloudflare Domains">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="Cloudflare domain ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Set NS Record for Cloudflare Domains <aside><a href="/tags/cloudflare/">Cloudflare</a>&nbsp;&nbsp;&nbsp;<a href="/tags/domain/">domain</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>You can&rsquo;t set your NS record for your root domain on Cloudflare dashboard, surprise!</p>
+<p>We have to use the <a href="https://api.cloudflare.com">Cloudflare API</a> for that. What a hassle!</p>
+<p>First thing first, you need an API token. Go to your <a href="https://dash.cloudflare.com/profile/api-tokens">profile</a> on the
+dashboard to get it. The key we need is under Global API key label.</p>
+<p>Next, list out all your Cloudflare accounts, ideally this API return 1:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -X GET <span style="color:#e6db74">&#34;https://api.cloudflare.com/client/v4/accounts?page=1&amp;per_page=20&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     -H <span style="color:#e6db74">&#34;X-Auth-Email: user@example.com&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     -H <span style="color:#e6db74">&#34;X-Auth-Key: c2547eb745079dac9320b638f5e225cf483cc5cfdda41&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     -H <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span>
+</code></pre></div><p>Then, change the NS:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -X PUT <span style="color:#e6db74">&#34;https://api.cloudflare.com/client/v4/accounts/your_account_id/registrar/domains/your_domain.com&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     -H <span style="color:#e6db74">&#34;X-Auth-Email: user@example.com&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     -H <span style="color:#e6db74">&#34;X-Auth-Key: c2547eb745079dac9320b638f5e225cf483cc5cfdda41&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     -H <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     --data <span style="color:#e6db74">&#39;{&#34;name_servers&#34;:[&#34;your1.ns.wtf.com&#34;,&#34;your2.ns.wtf.com&#34;]}&#39;</span>
+</code></pre></div><p>Keep up the good work Cloudflare! Very creative and user friendly, we love it!</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on February 13, 2023.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/set-ns-record-on-cloudflare-domain.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2023
+</footer>
+</body>
+</html>
+

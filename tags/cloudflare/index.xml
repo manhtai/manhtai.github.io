@@ -1,0 +1,39 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cloudflare on Go slowly</title>
+    <link>https://manhtai.github.io/tags/cloudflare/</link>
+    <description>Recent content in Cloudflare on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 13 Feb 2023 20:51:06 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/cloudflare/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Set NS Record for Cloudflare Domains</title>
+      <link>https://manhtai.github.io/posts/set-ns-record-on-cloudflare-domain/</link>
+      <pubDate>Mon, 13 Feb 2023 20:51:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/set-ns-record-on-cloudflare-domain/</guid>
+      <description>&lt;p&gt;You can&amp;rsquo;t set your NS record for your root domain on Cloudflare dashboard, surprise!&lt;/p&gt;
+&lt;p&gt;We have to use the &lt;a href=&#34;https://api.cloudflare.com&#34;&gt;Cloudflare API&lt;/a&gt; for that. What a hassle!&lt;/p&gt;
+&lt;p&gt;First thing first, you need an API token. Go to your &lt;a href=&#34;https://dash.cloudflare.com/profile/api-tokens&#34;&gt;profile&lt;/a&gt; on the
+dashboard to get it. The key we need is under Global API key label.&lt;/p&gt;
+&lt;p&gt;Next, list out all your Cloudflare accounts, ideally this API return 1:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;curl -X GET &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://api.cloudflare.com/client/v4/accounts?page=1&amp;amp;per_page=20&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;     -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X-Auth-Email: user@example.com&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;     -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X-Auth-Key: c2547eb745079dac9320b638f5e225cf483cc5cfdda41&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;     -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, change the NS:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;curl -X PUT &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://api.cloudflare.com/client/v4/accounts/your_account_id/registrar/domains/your_domain.com&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;     -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X-Auth-Email: user@example.com&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;     -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X-Auth-Key: c2547eb745079dac9320b638f5e225cf483cc5cfdda41&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;     -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;     --data &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;name_servers&amp;#34;:[&amp;#34;your1.ns.wtf.com&amp;#34;,&amp;#34;your2.ns.wtf.com&amp;#34;]}&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Keep up the good work Cloudflare! Very creative and user friendly, we love it!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
