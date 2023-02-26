@@ -156,7 +156,7 @@ enabled and 1 &lt;code&gt;mas.inherit.plist&lt;/code&gt;, same as &lt;code&gt;.m
 &lt;p&gt;After building into a &lt;code&gt;.pkg&lt;/code&gt; files, verify and then upload the app into App Center. Because you can&amp;rsquo;t
 open the &lt;code&gt;.pkg&lt;/code&gt; app in your local machine, you need TestFlight to do that. Make sure the app work as
 expected before submitting for review.&lt;/p&gt;
-&lt;p&gt;Oh and the app I submitted to Mac App Store is &lt;a href=&#34;https://pdfmailmerger.manhtai.com/&#34;&gt;PDF Mail Merger&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Oh and the app I submitted to Mac App Store is &lt;a href=&#34;https://pdfmailmerger.github.io/&#34;&gt;PDF Mail Merger&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     
