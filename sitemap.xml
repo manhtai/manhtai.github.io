@@ -3,6 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://manhtai.github.io/</loc>
+    <lastmod>2023-02-22T17:31:03+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/postgres/</loc>
+    <lastmod>2023-02-22T17:31:03+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2023-02-22T17:31:03+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/sql/</loc>
+    <lastmod>2023-02-22T17:31:03+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/sql-group-by-top-5/</loc>
+    <lastmod>2023-02-22T17:31:03+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2023-02-22T17:31:03+07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://manhtai.github.io/tags/cloudflare/</loc>
     <lastmod>2023-02-13T20:51:06+07:00</lastmod>
   </url>
@@ -13,22 +43,7 @@
   </url>
   
   <url>
-    <loc>https://manhtai.github.io/</loc>
-    <lastmod>2023-02-13T20:51:06+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/posts/</loc>
-    <lastmod>2023-02-13T20:51:06+07:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://manhtai.github.io/posts/set-ns-record-on-cloudflare-domain/</loc>
-    <lastmod>2023-02-13T20:51:06+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2023-02-13T20:51:06+07:00</lastmod>
   </url>
   
@@ -79,16 +94,6 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/sql-create-unique-index-on-non-unique-data/</loc>
-    <lastmod>2022-10-21T09:27:59+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/postgres/</loc>
-    <lastmod>2022-10-21T09:27:59+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/sql/</loc>
     <lastmod>2022-10-21T09:27:59+07:00</lastmod>
   </url>
   
