@@ -193,7 +193,7 @@ expected before submitting for review.
 Oh and the app I submitted to Mac App Store is [PDF Mail Merger][0].
 
 
-[0]: https://pdfmailmerger.manhtai.com/
+[0]: https://pdfmailmerger.github.io/
 [1]: https://www.electron.build/code-signing
 [2]: https://www.electronjs.org/docs/latest/tutorial/mac-app-store-submission-guide
 [3]: https://developer.apple.com/documentation/security/app_sandbox
