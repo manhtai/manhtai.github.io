@@ -5,10 +5,73 @@
     <description>Recent content in SQL on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 22 Feb 2023 17:31:03 +0700</lastBuildDate>
+    <lastBuildDate>Tue, 09 May 2023 15:53:36 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/sql/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>SQL: Aggregation by Date</title>
+      <link>https://manhtai.github.io/posts/sql-aggregation-by-date/</link>
+      <pubDate>Tue, 09 May 2023 15:53:36 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/sql-aggregation-by-date/</guid>
+      <description>&lt;p&gt;In previous post about &lt;a href=&#34;https://manhtai.github.io/posts/sql-group-by-top-5&#34;&gt;group by top 5&lt;/a&gt;, we&amp;rsquo;re trying to find the top
+5 buyers on a daily basis and we&amp;rsquo;re using the date bucket technique to
+aggregate data for each day, like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;WITH&lt;/span&gt; buckets &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-01T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; date
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-02T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-03T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-04T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-05T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-06T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-07T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-08T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-09T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;UNION&lt;/span&gt;
+                 &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2023-01-10T00:00:00Z&amp;#39;&lt;/span&gt;::&lt;span style=&#34;color:#66d9ef&#34;&gt;TIMESTAMP&lt;/span&gt;),
+[...]
+&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; buckets b
+         &lt;span style=&#34;color:#66d9ef&#34;&gt;LEFT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;JOIN&lt;/span&gt; groups &lt;span style=&#34;color:#66d9ef&#34;&gt;g&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;ON&lt;/span&gt; b.date &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;g&lt;/span&gt;.date &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; b.date &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; INTERVAL &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;-1 day&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;g&lt;/span&gt;.date
+&lt;span style=&#34;color:#66d9ef&#34;&gt;GROUP&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; b.date, &lt;span style=&#34;color:#66d9ef&#34;&gt;g&lt;/span&gt;.email
+&lt;span style=&#34;color:#66d9ef&#34;&gt;ORDER&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; date;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This query works. But the problem is we have to do a JOIN between &lt;code&gt;buckets&lt;/code&gt;
+and &lt;code&gt;groups&lt;/code&gt;. If &lt;code&gt;groups&lt;/code&gt; is a very big table then the query will be too slow
+to run. For big data in general, not moving data around is the key to boost
+the query performance.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s make the above query better by not JOINing the big table with others
+(hence not moving it). Instead try to aggregate the data in-place.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;WITH&lt;/span&gt; dates &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; id,
+                      DATE_TRUNC(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;day&amp;#39;&lt;/span&gt;, date) &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; date,
+                      email,
+                      amount
+               &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; orders),
+     ranks &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; email                                       &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; email,
+                      ROW_NUMBER() OVER (&lt;span style=&#34;color:#66d9ef&#34;&gt;ORDER&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;COUNT&lt;/span&gt;(id) &lt;span style=&#34;color:#66d9ef&#34;&gt;DESC&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; email_rank
+               &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; dates
+               &lt;span style=&#34;color:#66d9ef&#34;&gt;GROUP&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; email),
+     groups &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; id,
+                       &lt;span style=&#34;color:#66d9ef&#34;&gt;CASE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;WHEN&lt;/span&gt; r.email_rank &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THEN&lt;/span&gt; o.email &lt;span style=&#34;color:#66d9ef&#34;&gt;ELSE&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Other&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;END&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; email,
+                       date
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; dates o
+                         &lt;span style=&#34;color:#66d9ef&#34;&gt;LEFT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;JOIN&lt;/span&gt; ranks r &lt;span style=&#34;color:#66d9ef&#34;&gt;ON&lt;/span&gt; o.email &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r.email)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; date,
+       email,
+       &lt;span style=&#34;color:#66d9ef&#34;&gt;COUNT&lt;/span&gt;(id) &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;count&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; groups
+&lt;span style=&#34;color:#66d9ef&#34;&gt;GROUP&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; date, email
+&lt;span style=&#34;color:#66d9ef&#34;&gt;ORDER&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; date;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result should be the &lt;a href=&#34;https://manhtai.github.io/posts/sql-group-by-top-5&#34;&gt;same&lt;/a&gt;, but without any JOINs, hence it runs way faster.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>SQL: Group by Top 5</title>

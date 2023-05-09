@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>SQL: Aggregation by Date</title>
+    
+    <meta name="description" content="">
+    <meta name="image" content="">
+    
+    <meta itemprop="name" content="SQL: Aggregation by Date">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="">
+    
+    <meta name="og:title" content="SQL: Aggregation by Date">
+    <meta name="og:description" content="">
+    
+    <meta name="og:url" content="https://manhtai.github.io/posts/sql-aggregation-by-date/">
+    <meta name="og:site_name" content="SQL: Aggregation by Date">
+    <meta name="og:type" content="article">
+    
+    <meta name="article:tag" content="SQL Postgres ">
+    <link rel="stylesheet" type="text/css" href="https://manhtai.github.io/css/style.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+    
+    <a href="https://manhtai.github.io/" style="float: left;color:#777;"><strong>Go slowly</strong></a>
+    
+    &nbsp;&nbsp;<a href="https://manhtai.github.io/about/" style="color:#777;"><strong>About</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/contact/" style="color:#777;"><strong>Contact</strong></a>&nbsp;&nbsp;<a href="https://manhtai.github.io/archives/" style="color:#777;"><strong>Archives</strong></a>
+    
+    
+    
+    <a href="https://manhtai.github.io/posts/index.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>SQL: Aggregation by Date <aside><a href="/tags/sql/">SQL</a>&nbsp;&nbsp;&nbsp;<a href="/tags/postgres/">Postgres</a>&nbsp;&nbsp;&nbsp;</aside></h1>
+  <p>In previous post about <a href="/posts/sql-group-by-top-5">group by top 5</a>, we&rsquo;re trying to find the top
+5 buyers on a daily basis and we&rsquo;re using the date bucket technique to
+aggregate data for each day, like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">WITH</span> buckets <span style="color:#66d9ef">AS</span> (<span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-01T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span> <span style="color:#66d9ef">as</span> date
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-02T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-03T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-04T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-05T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-06T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-07T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-08T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-09T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>
+                 <span style="color:#66d9ef">UNION</span>
+                 <span style="color:#66d9ef">SELECT</span> <span style="color:#e6db74">&#39;2023-01-10T00:00:00Z&#39;</span>::<span style="color:#66d9ef">TIMESTAMP</span>),
+[...]
+<span style="color:#66d9ef">FROM</span> buckets b
+         <span style="color:#66d9ef">LEFT</span> <span style="color:#66d9ef">JOIN</span> groups <span style="color:#66d9ef">g</span> <span style="color:#66d9ef">ON</span> b.date <span style="color:#f92672">&gt;=</span> <span style="color:#66d9ef">g</span>.date <span style="color:#66d9ef">AND</span> b.date <span style="color:#f92672">+</span> INTERVAL <span style="color:#e6db74">&#39;-1 day&#39;</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">g</span>.date
+<span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> b.date, <span style="color:#66d9ef">g</span>.email
+<span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> date;
+</code></pre></div><p>This query works. But the problem is we have to do a JOIN between <code>buckets</code>
+and <code>groups</code>. If <code>groups</code> is a very big table then the query will be too slow
+to run. For big data in general, not moving data around is the key to boost
+the query performance.</p>
+<p>Let&rsquo;s make the above query better by not JOINing the big table with others
+(hence not moving it). Instead try to aggregate the data in-place.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">WITH</span> dates <span style="color:#66d9ef">AS</span> (<span style="color:#66d9ef">SELECT</span> id,
+                      DATE_TRUNC(<span style="color:#e6db74">&#39;day&#39;</span>, date) <span style="color:#66d9ef">as</span> date,
+                      email,
+                      amount
+               <span style="color:#66d9ef">FROM</span> orders),
+     ranks <span style="color:#66d9ef">AS</span> (<span style="color:#66d9ef">SELECT</span> email                                       <span style="color:#66d9ef">AS</span> email,
+                      ROW_NUMBER() OVER (<span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">COUNT</span>(id) <span style="color:#66d9ef">DESC</span>) <span style="color:#66d9ef">AS</span> email_rank
+               <span style="color:#66d9ef">FROM</span> dates
+               <span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> email),
+     groups <span style="color:#66d9ef">AS</span> (<span style="color:#66d9ef">SELECT</span> id,
+                       <span style="color:#66d9ef">CASE</span> <span style="color:#66d9ef">WHEN</span> r.email_rank <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">5</span> <span style="color:#66d9ef">THEN</span> o.email <span style="color:#66d9ef">ELSE</span> <span style="color:#e6db74">&#39;Other&#39;</span> <span style="color:#66d9ef">END</span> <span style="color:#66d9ef">AS</span> email,
+                       date
+                <span style="color:#66d9ef">FROM</span> dates o
+                         <span style="color:#66d9ef">LEFT</span> <span style="color:#66d9ef">JOIN</span> ranks r <span style="color:#66d9ef">ON</span> o.email <span style="color:#f92672">=</span> r.email)
+<span style="color:#66d9ef">SELECT</span> date,
+       email,
+       <span style="color:#66d9ef">COUNT</span>(id) <span style="color:#66d9ef">AS</span> <span style="color:#66d9ef">count</span>
+<span style="color:#66d9ef">FROM</span> groups
+<span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> date, email
+<span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> date;
+</code></pre></div><p>The result should be the <a href="/posts/sql-group-by-top-5">same</a>, but without any JOINs, hence it runs way faster.</p>
+
+</div>
+
+
+  <p>
+    <small>
+      <em>
+        Written on May 9, 2023.
+        <a href="https://github.com/manhtai/manhtai.github.io/blob/develop/content/posts/sql-aggregation-by-date.md">
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </em>
+    </small>
+  </p>
+
+
+
+
+
+
+<footer>
+    <span class="copyleft">&copy;</span> 2018 - 2023
+</footer>
+</body>
+</html>
+
