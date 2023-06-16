@@ -5,10 +5,37 @@
     <description>Recent content in Tags on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 May 2023 15:53:36 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 16 Jun 2023 10:23:06 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AWS</title>
+      <link>https://manhtai.github.io/tags/aws/</link>
+      <pubDate>Fri, 16 Jun 2023 10:23:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Fair-queue</title>
+      <link>https://manhtai.github.io/tags/fair-queue/</link>
+      <pubDate>Fri, 16 Jun 2023 10:23:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/fair-queue/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SQS</title>
+      <link>https://manhtai.github.io/tags/sqs/</link>
+      <pubDate>Fri, 16 Jun 2023 10:23:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/tags/sqs/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Postgres</title>
@@ -61,15 +88,6 @@
       <pubDate>Sun, 15 Jan 2023 16:03:00 +0700</pubDate>
       
       <guid>https://manhtai.github.io/tags/mas/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AWS</title>
-      <link>https://manhtai.github.io/tags/aws/</link>
-      <pubDate>Fri, 13 Jan 2023 22:49:31 +0700</pubDate>
-      
-      <guid>https://manhtai.github.io/tags/aws/</guid>
       <description></description>
     </item>
     

@@ -5,10 +5,47 @@
     <description>Recent content in AWS on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 13 Jan 2023 22:49:31 +0700</lastBuildDate>
+    <lastBuildDate>Fri, 16 Jun 2023 10:23:06 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>SQS Simple Fair Queuing</title>
+      <link>https://manhtai.github.io/posts/sqs-simple-fair-queuing/</link>
+      <pubDate>Fri, 16 Jun 2023 10:23:06 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/sqs-simple-fair-queuing/</guid>
+      <description>&lt;p&gt;In a system with different user workloads, fairness is a must, unless
+you honestly want the big fish to consume all the resources and let
+the smaller ones wait in line.&lt;/p&gt;
+&lt;p&gt;There are &lt;a href=&#34;https://en.wikipedia.org/wiki/Fair_queuing&#34;&gt;many&lt;/a&gt; fair-queuing algorithms out there, mostly constructed
+to solve the fairness in network schedulers. But for simple web applications,
+we only need a 2-queues system to solve the fairness problem:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;One priority queue, which handles messages selectively, is rate-limited by
+a user basis&lt;/li&gt;
+&lt;li&gt;One regular queue, which handles all the messages sequentially&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Fortunately, AWS SQS comes with the dead-letter queues feature that fits
+nicely in our use case. Let&amp;rsquo;s create 2 queues, one dead-letter queue as the
+regular queue, and another queue as the priority queue, with a redrive policy
+that set max receive to 1 and dead-letter queue to the regular.&lt;/p&gt;
+&lt;p&gt;The fairness logic should be clear now:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The first worker pulls messages from the priority queue, and checks if
+it&amp;rsquo;s rate limited. If not, go ahead and consume the message, otherwise,
+put it back. Redrive policy will ensure the message is moved to the
+dead-letter queue.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The second worker will work on the dead-letter queue, which consumes
+messages one by one.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>S3 Setup for Serving Public Content</title>

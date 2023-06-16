@@ -3,17 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://manhtai.github.io/</loc>
-    <lastmod>2023-05-09T15:53:36+07:00</lastmod>
+    <loc>https://manhtai.github.io/tags/aws/</loc>
+    <lastmod>2023-06-16T10:23:06+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://manhtai.github.io/tags/postgres/</loc>
-    <lastmod>2023-05-09T15:53:36+07:00</lastmod>
+    <loc>https://manhtai.github.io/tags/fair-queue/</loc>
+    <lastmod>2023-06-16T10:23:06+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/</loc>
+    <lastmod>2023-06-16T10:23:06+07:00</lastmod>
   </url>
   
   <url>
     <loc>https://manhtai.github.io/posts/</loc>
+    <lastmod>2023-06-16T10:23:06+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/sqs/</loc>
+    <lastmod>2023-06-16T10:23:06+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/posts/sqs-simple-fair-queuing/</loc>
+    <lastmod>2023-06-16T10:23:06+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/</loc>
+    <lastmod>2023-06-16T10:23:06+07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://manhtai.github.io/tags/postgres/</loc>
     <lastmod>2023-05-09T15:53:36+07:00</lastmod>
   </url>
   
@@ -24,11 +49,6 @@
   
   <url>
     <loc>https://manhtai.github.io/posts/sql-aggregation-by-date/</loc>
-    <lastmod>2023-05-09T15:53:36+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/</loc>
     <lastmod>2023-05-09T15:53:36+07:00</lastmod>
   </url>
   
@@ -65,11 +85,6 @@
   <url>
     <loc>https://manhtai.github.io/tags/mas/</loc>
     <lastmod>2023-01-15T16:03:00+07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://manhtai.github.io/tags/aws/</loc>
-    <lastmod>2023-01-13T22:49:31+07:00</lastmod>
   </url>
   
   <url>
