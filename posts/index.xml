@@ -27,7 +27,7 @@ we only need a 2-queues system to solve the fairness problem:&lt;/p&gt;
 a user basis&lt;/li&gt;
 &lt;li&gt;One regular queue, which handles all the messages sequentially&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Fortunately, AWS SQS comes with the dead-letter queues feature that fits
+&lt;p&gt;Fortunately, AWS SQS comes with the &lt;a href=&#34;https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html&#34;&gt;dead-letter&lt;/a&gt; queues feature that fits
 nicely in our use case. Let&amp;rsquo;s create 2 queues, one dead-letter queue as the
 regular queue, and another queue as the priority queue, with a redrive policy
 that set max receive to 1 and dead-letter queue to the regular.&lt;/p&gt;
