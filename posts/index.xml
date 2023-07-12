@@ -5,10 +5,52 @@
     <description>Recent content in Posts on Go slowly</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 16 Jun 2023 10:23:06 +0700</lastBuildDate>
+    <lastBuildDate>Wed, 12 Jul 2023 16:46:24 +0700</lastBuildDate>
     
         <atom:link href="https://manhtai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Big Data Aggregation Strategy</title>
+      <link>https://manhtai.github.io/posts/big-data-aggregation-strategy/</link>
+      <pubDate>Wed, 12 Jul 2023 16:46:24 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/big-data-aggregation-strategy/</guid>
+      <description>&lt;p&gt;We collect data in raw form and then display them in aggregations.
+That&amp;rsquo;s the most basic form of data analytics. Writing data aggregation
+queries should be a trivial task. The catch is when data got big, we
+can&amp;rsquo;t do real-time aggregations on raw data anymore. And the solution
+is to do pre-aggregation beforehand.&lt;/p&gt;
+&lt;p&gt;This post sketches out a simple plan that may suit many use cases that
+are in need of pre-aggregations.&lt;/p&gt;
+&lt;h2 id=&#34;1-examination-worker&#34;&gt;1. Examination worker&lt;/h2&gt;
+&lt;p&gt;This worker examines the raw data for objects that need to run the
+aggregations on. This should be a cron job that triggers after a fixed
+time range, based on your requirements for aggregation freshness. The
+examination worker will create a &lt;code&gt;queued&lt;/code&gt; task in the task queue table
+for the aggregation worker to work on.&lt;/p&gt;
+&lt;p&gt;A not-so-minor issue here is raw data may arrive after or before the
+examining time. So once in a while, we need to trigger a back-fill job
+that will do the data missing hunt.&lt;/p&gt;
+&lt;h2 id=&#34;2-aggregation-worker&#34;&gt;2. Aggregation worker&lt;/h2&gt;
+&lt;p&gt;This worker pulls the tasks from the task queue table, changes the
+status from &lt;code&gt;queued&lt;/code&gt; to &lt;code&gt;started&lt;/code&gt;, and then works on the real aggregation
+job. After done with it, change the &lt;code&gt;started&lt;/code&gt; to &lt;code&gt;completed&lt;/code&gt;. The status
+change is a kind of optimistic lock mechanism that we will ensure by
+setting the where condition when updating the value. Something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;UPDATE&lt;/span&gt; task_queue
+&lt;span style=&#34;color:#66d9ef&#34;&gt;SET&lt;/span&gt; status &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;completed&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; status &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;started&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For aggregation data, new aggregated rows will replace the olds.
+We handle the switch by using 2 extra columns: &lt;code&gt;valid&lt;/code&gt; and &lt;code&gt;aggregation_time&lt;/code&gt;.
+The invalidation will look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;UPDATE&lt;/span&gt; agg_table
+&lt;span style=&#34;color:#66d9ef&#34;&gt;SET&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;valid&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;CASE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;WHEN&lt;/span&gt; aggregation_time &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;$&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THEN&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;FALSE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;ELSE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;TRUE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;END&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-clean-up-worker&#34;&gt;3. Clean-up worker&lt;/h2&gt;
+&lt;p&gt;This worker will work like a vacuum, cleaning out completed tasks and
+invalidated aggregation rows.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>SQS Simple Fair Queuing</title>
