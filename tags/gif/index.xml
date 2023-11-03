@@ -1,0 +1,87 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GIF on Go slowly</title>
+    <link>https://manhtai.github.io/tags/gif/</link>
+    <description>Recent content in GIF on Go slowly</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 03 Nov 2023 20:38:51 +0700</lastBuildDate>
+    
+        <atom:link href="https://manhtai.github.io/tags/gif/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Fast GIF generation in Go</title>
+      <link>https://manhtai.github.io/posts/fast-gif-generation-in-go/</link>
+      <pubDate>Fri, 03 Nov 2023 20:38:51 +0700</pubDate>
+      
+      <guid>https://manhtai.github.io/posts/fast-gif-generation-in-go/</guid>
+      <description>&lt;p&gt;Go has a built-in GIF &lt;a href=&#34;https://pkg.go.dev/image/gif&#34;&gt;package&lt;/a&gt;. This works fine for encoding static images into a GIF image. The
+slow problem resides in another &lt;a href=&#34;https://pkg.go.dev/image/draw&#34;&gt;package&lt;/a&gt; that we use to prepare those static images. But let&amp;rsquo;s talk
+about the &lt;code&gt;gif&lt;/code&gt; package first.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;EncodeAll(w io.Writer, g *GIF) error&lt;/code&gt; function converts a &lt;code&gt;*GIF&lt;/code&gt; struct, which contains an array of
+&lt;code&gt;*image.Paletted&lt;/code&gt; into GIF format, and then writes into &lt;code&gt;io.Writer&lt;/code&gt;. &lt;code&gt;image.Paletted&lt;/code&gt; is an in-memory image of
+uint8 indices into a given palette.&lt;/p&gt;
+&lt;p&gt;We must use a paletted image here instead of a &amp;ldquo;normal&amp;rdquo; image because GIF files can hold up to 256 colors,
+whatever it is, that&amp;rsquo;s called a palette. So to make a GIF, we need to choose a color palette beforehand, up
+to 256 colors, and then convert all the needed images into that color space. With the hex format, we have at
+least 16 million colors, we have to map those 16M colors into 256 colors of our GIF. And we need the &lt;code&gt;draw&lt;/code&gt;
+package for that.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Draw(dst Image, r image.Rectangle, src image.Image, sp image.Point, op Op)&lt;/code&gt; will replace the rectangle &lt;code&gt;r&lt;/code&gt;
+of destination image &lt;code&gt;dst&lt;/code&gt; by the source image &lt;code&gt;src&lt;/code&gt;, align by point &lt;code&gt;sp&lt;/code&gt;. We&amp;rsquo;re on the paletted image case
+so the &lt;code&gt;dst&lt;/code&gt; image will be a paletted one. &lt;code&gt;Draw&lt;/code&gt; will call &lt;code&gt;DrawMask&lt;/code&gt;, and then it will call &lt;code&gt;drawPaletted&lt;/code&gt;.
+&lt;code&gt;drawPaletted&lt;/code&gt; will loop over each source pixel, finding the matching color for each pixel from the color
+palette by minimizing the sum squared difference. The code looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bestIndex&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;bestSum&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, uint32(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;index&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;range&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;palette&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sqDiff&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;er&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sqDiff&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;eg&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sqDiff&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;eb&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sqDiff&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;ea&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;])
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt; &amp;lt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bestSum&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;bestIndex&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;bestSum&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;index&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The problem here is for each GIF frame, we have to loop over &lt;code&gt;palette&lt;/code&gt; every time to find the matching colors.
+If we use up 256 colors on the palette, then this loop will run 256 times for each pixel, which is slow. Solution?
+A cache! Let&amp;rsquo;s put that in. We use &lt;code&gt;sync.Map&lt;/code&gt; here because of course we will generate GIF frames concurrently,
+and the normal Go &lt;code&gt;map&lt;/code&gt; is not thread-safe.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// Out of pixel loop
+cache := sync.Map{}
+
+// The use the cache
+cachedKey := [4]int32{er, eg, eb, ea}
+bi, ok := cached.Load(cachedKey)
+if ok {
+    bestIndex = bi.(int)
+} else {
+    for index, p := range palette {
+        sum := sqDiff(er, p[0]) + sqDiff(eg, p[1]) + sqDiff(eb, p[2]) + sqDiff(ea, p[3])
+        if sum &amp;lt; bestSum {
+            bestIndex, bestSum = index, sum
+            if sum == 0 {
+                break
+            }
+        }
+    }
+    cached.Store(cachedKey, bestIndex)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And how do I know how to optimize this specific piece of code again? Well, inject this into your slow code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;github.com/pkg/profile&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;profile&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Start&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;Stop&lt;/span&gt;()
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Your slow code here
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It will output something like &lt;code&gt;/var/folders/y0/9l417xks1_s9_hdpxh88lrwr0000gn/T/profile1238445006/cpu.pprof&lt;/code&gt;, then
+use your Go:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;go tool pprof -web /var/folders/y0/9l417xks1_s9_hdpxh88lrwr0000gn/T/profile1238445006/cpu.pprof
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s it. I found the bottleneck using &lt;code&gt;pprof&lt;/code&gt;, then I cloned the &lt;code&gt;draw&lt;/code&gt; package, added a cache, and made the GIF
+generator run fast. Now I enjoy my GIFs.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://manhtai.github.io/gif.webp&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
