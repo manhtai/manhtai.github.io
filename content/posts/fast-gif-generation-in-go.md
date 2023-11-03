@@ -39,15 +39,18 @@ for index, p := range palette {
 ```
 
 The problem here is for each GIF frame, we have to loop over `palette` every time to find the matching colors.
-If we use up 256 colors on the palette, then this loop will run 256 times for each pixel, which is slow. Solution?
-A cache! Let's put that in. We use `sync.Map` here because of course we will generate GIF frames concurrently,
+If we use up 256 colors on the palette, then this loop will run 256 times for each pixel, which is slow.
+
+Solution? A cache!
+
+Let's put that in. We use `sync.Map` here because of course we will generate GIF frames concurrently,
 and the normal Go `map` is not thread-safe.
 
 ```
 // Out of pixel loop
 cache := sync.Map{}
 
-// The use the cache
+// Then use the cache
 cachedKey := [4]int32{er, eg, eb, ea}
 bi, ok := cached.Load(cachedKey)
 if ok {
