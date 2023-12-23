@@ -1,7 +1,7 @@
 ---
 title: "2023 in Review"
 date: 2023-12-23T20:54:40+07:00
-tags: ["short", "end of year"]
+tags: ["short", "end year"]
 draft: false
 ---
 
